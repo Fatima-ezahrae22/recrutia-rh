@@ -154,8 +154,6 @@ def reset_et_rediriger():
 
 @app.get("/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-@app.get("/carrieres", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-@app.get("/jobs", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_candidat():
     """Sert l'interface publique candidat (Page d'accueil principale)."""
     chemin = os.path.join("frontend", "candidat", "index.html")
