@@ -1,0 +1,32 @@
+[
+  "Python", "Java", "JavaScript", "TypeScript", "C", "C++", "C#", "PHP", "Ruby", "Go",
+  "Rust", "Swift", "Kotlin", "Scala", "R", "MATLAB", "Perl", "Shell", "Bash", "PowerShell",
+
+  "HTML", "CSS", "React", "Angular", "Vue.js", "Next.js", "Nuxt.js", "Django", "Flask",
+  "FastAPI", "Spring", "Spring Boot", "Laravel", "Symfony", "Express.js", "Node.js",
+  "Bootstrap", "Tailwind CSS", "jQuery",
+
+  "MySQL", "PostgreSQL", "MongoDB", "SQLite", "Oracle", "SQL Server", "Redis",
+  "Elasticsearch", "Cassandra", "MariaDB", "Firebase",
+
+  "Machine Learning", "Deep Learning", "NLP", "Computer Vision", "TensorFlow", "PyTorch",
+  "Keras", "Scikit-learn", "OpenCV", "Pandas", "NumPy", "Matplotlib", "Seaborn",
+  "Hugging Face", "BERT", "GPT", "LLM", "RAG", "LangChain",
+
+  "Docker", "Kubernetes", "CI/CD", "Jenkins", "GitHub Actions", "GitLab CI",
+  "Terraform", "Ansible", "AWS", "Azure", "GCP", "Linux", "Git",
+
+  "Agile", "Scrum", "Kanban", "Jira", "Confluence",
+
+  "Power BI", "Tableau", "Excel", "Word", "PowerPoint",
+
+  "REST API", "GraphQL", "Microservices", "WebSocket", "gRPC",
+
+  "Cybersécurité", "Réseau", "TCP/IP", "DevOps", "Cloud", "Big Data", "Hadoop", "Spark",
+
+  "UX/UI", "Figma", "Adobe XD", "Photoshop",
+
+  "Communication", "Leadership", "Travail en équipe", "Gestion de projet",
+  "Résolution de problèmes", "Autonomie", "Créativité", "Adaptabilité",
+  "Gestion du temps", "Sens des responsabilités"
+]

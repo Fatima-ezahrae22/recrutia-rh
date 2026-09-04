@@ -1,0 +1,29 @@
+{
+  "OFFRE_001_BACKEND_PYTHON": {
+    "id": "OFFRE_001",
+    "titre": "Développeur Senior Backend Python / Django",
+    "experience_min_annees": 3,
+    "competences_obligatoires": ["Python", "Django"],
+    "competences_souhaitees": ["PostgreSQL", "Docker", "REST API", "Redis", "Git", "CI/CD"],
+    "formation_exigee": "Master / Ingénieur",
+    "description": "Nous recherchons un Développeur Backend Python expérimenté pour concevoir des API REST performantes et intégrer des bases de données PostgreSQL avec Docker et CI/CD."
+  },
+  "OFFRE_002_DATA_SCIENCE_AI": {
+    "id": "OFFRE_002",
+    "titre": "Ingénieur Data Science & Machine Learning",
+    "experience_min_annees": 1,
+    "competences_obligatoires": ["Python", "Machine Learning"],
+    "competences_souhaitees": ["TensorFlow", "PyTorch", "Scikit-learn", "Pandas", "NLP", "Computer Vision"],
+    "formation_exigee": "Master / Ingénieur",
+    "description": "Poste dédié à la création de modèles de Machine Learning, Deep Learning et NLP. Vous travaillerez avec TensorFlow, PyTorch et Scikit-learn pour valoriser nos données."
+  },
+  "OFFRE_003_DEVOPS_EXPERT": {
+    "id": "OFFRE_003",
+    "titre": "Expert Cloud & DevOps Senior",
+    "experience_min_annees": 5,
+    "competences_obligatoires": ["Kubernetes", "AWS"],
+    "competences_souhaitees": ["Docker", "Terraform", "Ansible", "Linux", "CI/CD", "Jenkins"],
+    "formation_exigee": "Master / Ingénieur",
+    "description": "Recherche d'un architecte DevOps très expérimenté (5 ans min) maîtrisant parfaitement Kubernetes, AWS et la gestion d'infrastructures Cloud automatisées."
+  }
+}
