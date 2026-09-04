@@ -153,10 +153,23 @@ def reset_et_rediriger():
 
 
 @app.get("/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-@app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/carrieres", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/jobs", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+def servir_dashboard_candidat():
+    """Sert l'interface publique candidat (Page d'accueil principale)."""
+    chemin = os.path.join("frontend", "candidat", "index.html")
+    headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
+    if os.path.exists(chemin):
+        return FileResponse(chemin, headers=headers)
+    return HTMLResponse("<h1>ArtiWeb Candidat — Interface non trouvée.</h1>")
+
+
 @app.get("/rh", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/admin", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_rh():
-    """Sert l'interface RH (tableau de bord recruteur)."""
+    """Sert l'interface RH (tableau de bord recruteur protégé)."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0", "Pragma": "no-cache", "Expires": "0"}
     chemin = os.path.join("frontend", "rh", "index.html")
     if os.path.exists(chemin):
@@ -165,23 +178,3 @@ def servir_dashboard_rh():
     if os.path.exists(chemin_legacy):
         return FileResponse(chemin_legacy, headers=no_cache)
     return HTMLResponse("<h1>RecrutIA RH — Interface non trouvée.</h1>")
-
-
-@app.get("/rh/register", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-def servir_inscription_rh():
-    """Sert la page d'inscription RH."""
-    chemin = os.path.join("frontend", "rh", "register.html")
-    headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
-    if os.path.exists(chemin):
-        return FileResponse(chemin, headers=headers)
-    return HTMLResponse("<h1>RecrutIA Inscription RH — Interface non trouvée.</h1>")
-
-
-@app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-def servir_dashboard_candidat():
-    """Sert l'interface publique candidat."""
-    chemin = os.path.join("frontend", "candidat", "index.html")
-    headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
-    if os.path.exists(chemin):
-        return FileResponse(chemin, headers=headers)
-    return HTMLResponse("<h1>RecrutIA Candidat — Interface non trouvée.</h1>")
