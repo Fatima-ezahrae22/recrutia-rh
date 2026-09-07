@@ -163,6 +163,16 @@ def servir_dashboard_candidat():
     return HTMLResponse("<h1>ArtiWeb Candidat — Interface non trouvée.</h1>")
 
 
+@app.get("/rh/register", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+def servir_inscription_rh():
+    """Sert la page d'inscription RH."""
+    no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
+    chemin = os.path.join("frontend", "rh", "register.html")
+    if os.path.exists(chemin):
+        return FileResponse(chemin, headers=no_cache)
+    return HTMLResponse("<h1>RecrutIA — Page d'inscription non trouvée.</h1>")
+
+
 @app.get("/rh", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/admin", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard Web UI"])
