@@ -1428,23 +1428,10 @@
           return;
         }
       } catch {}
-      TOKEN = null; localStorage.removeItem("recrutia_token");
+      TOKEN = null; 
+      localStorage.removeItem("recrutia_token");
+      localStorage.removeItem("recrutia_username");
     }
-
-    try {
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: "recruteur", password: "recruteur123" })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        TOKEN = data.access_token; USERNAME = data.username;
-        localStorage.setItem("recrutia_token", TOKEN);
-        localStorage.setItem("recrutia_username", USERNAME);
-        afficherApp();
-      }
-    } catch {}
   }
 
   window.addEventListener("DOMContentLoaded", () => {
@@ -1705,8 +1692,10 @@
 
   function doLogout() {
     TOKEN = null; USERNAME = null;
-    localStorage.removeItem("recrutia_token"); localStorage.removeItem("recrutia_username");
-    location.reload();
+    localStorage.removeItem("recrutia_token"); 
+    localStorage.removeItem("recrutia_username");
+    document.getElementById("app-screen").classList.remove("visible");
+    document.getElementById("auth-screen").classList.remove("hidden");
   }
 
   function afficherApp() {
