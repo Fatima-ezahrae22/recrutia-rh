@@ -157,11 +157,13 @@ def reset_et_rediriger():
 </body></html>""", headers={"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"})
 
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 @app.get("/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_candidat():
     """Sert l'interface publique candidat (Page d'accueil principale)."""
-    chemin = os.path.join("frontend", "candidat", "index.html")
+    chemin = os.path.join(BASE_DIR, "frontend", "candidat", "index.html")
     headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
     if os.path.exists(chemin):
         return FileResponse(chemin, headers=headers)
@@ -172,7 +174,7 @@ def servir_dashboard_candidat():
 def servir_inscription_rh():
     """Sert la page d'inscription RH."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
-    chemin = os.path.join("frontend", "rh", "register.html")
+    chemin = os.path.join(BASE_DIR, "frontend", "rh", "register.html")
     if os.path.exists(chemin):
         return FileResponse(chemin, headers=no_cache)
     return HTMLResponse("<h1>RecrutIA — Page d'inscription non trouvée.</h1>")
@@ -184,10 +186,10 @@ def servir_inscription_rh():
 def servir_dashboard_rh():
     """Sert l'interface RH (tableau de bord recruteur protégé)."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0", "Pragma": "no-cache", "Expires": "0"}
-    chemin = os.path.join("frontend", "rh", "index.html")
+    chemin = os.path.join(BASE_DIR, "frontend", "rh", "index.html")
     if os.path.exists(chemin):
         return FileResponse(chemin, headers=no_cache)
-    chemin_legacy = os.path.join("frontend", "index.html")
+    chemin_legacy = os.path.join(BASE_DIR, "frontend", "index.html")
     if os.path.exists(chemin_legacy):
         return FileResponse(chemin_legacy, headers=no_cache)
     return HTMLResponse("<h1>RecrutIA RH — Interface non trouvée.</h1>")

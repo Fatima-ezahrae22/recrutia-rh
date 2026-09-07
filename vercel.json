@@ -1,9 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/rh/register", "destination": "/frontend/rh/register.html" },
-    { "source": "/rh", "destination": "/frontend/rh/index.html" },
-    { "source": "/candidat", "destination": "/frontend/candidat/index.html" },
-    { "source": "/", "destination": "/frontend/candidat/index.html" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index.py" }
   ]
 }
