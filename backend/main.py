@@ -116,8 +116,13 @@ async def websocket_notifications(websocket: WebSocket):
         ws_manager.disconnect(websocket)
 
 # ✅ Servir les fichiers CV uploadés (dossier uploads/)
-os.makedirs("uploads/cv", exist_ok=True)
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+try:
+    UPLOADS_DIR = "/tmp/uploads/cv" if os.environ.get("VERCEL") else "uploads/cv"
+    os.makedirs(UPLOADS_DIR, exist_ok=True)
+    uploads_root = "/tmp/uploads" if os.environ.get("VERCEL") else "uploads"
+    app.mount("/uploads", StaticFiles(directory=uploads_root), name="uploads")
+except Exception as e:
+    logger.warning(f"[Init] Dossier uploads non monté (mode serverless) : {e}")
 
 
 # ─── Inclusions des Routers ───────────────────────────────────────────────────
