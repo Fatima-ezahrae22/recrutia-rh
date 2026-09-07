@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from backend.database import get_db
 from backend.models import User
-from backend.schemas import UserCreate, UserLogin, Token, UserResponse
+from backend.schemas import UserCreate, UserLogin, Token, UserResponse, PasswordChangeRequest
 from backend.auth import (
     hash_password, verify_password,
     creer_access_token, get_current_user
@@ -91,3 +91,41 @@ def supprimer_utilisateur(
     db.commit()
     logger.info(f"[Auth] Compte {user.username} supprimé par l'admin {current_user.username}")
     return {"message": f"Le compte '{user.username}' a été supprimé avec succès."}
+
+
+@router.post("/change-password", status_code=status.HTTP_200_OK)
+def changer_mot_de_passe(
+    body: PasswordChangeRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Permet à l'utilisateur connecté de modifier son mot de passe."""
+    if not verify_password(body.old_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="L'ancien mot de passe est incorrect.")
+    if len(body.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Le nouveau mot de passe doit contenir au moins 6 caractères.")
+    current_user.hashed_password = hash_password(body.new_password)
+    db.commit()
+    logger.info(f"[Auth] Mot de passe modifié pour l'utilisateur {current_user.username}")
+    return {"message": "Mot de passe modifié avec succès."}
+
+
+@router.patch("/users/{user_id}/status", status_code=status.HTTP_200_OK)
+def basculer_statut_utilisateur(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Permet à un Admin d'activer ou suspendre un compte utilisateur."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Seul un Administrateur peut modifier le statut des comptes.")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
+    if user.username == current_user.username:
+        raise HTTPException(status_code=400, detail="Vous ne pouvez pas modifier le statut de votre propre compte.")
+    user.is_active = not user.is_active
+    db.commit()
+    etat = "activé" if user.is_active else "suspendu"
+    logger.info(f"[Auth] Compte {user.username} {etat} par {current_user.username}")
+    return {"message": f"Le compte '{user.username}' est désormais {etat}.", "is_active": user.is_active}

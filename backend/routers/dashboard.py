@@ -3,9 +3,10 @@ Module : routers/dashboard.py
 Rôle   : Statistiques globales, entretiens planifiés, suppression d'entretiens et logs d'audit.
 """
 
-import logging
-from typing import List
+import csv
+import io
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
 from backend.database import get_db
@@ -94,3 +95,36 @@ def annuler_entretien(candidature_id: int, db: Session = Depends(get_db), curren
 def lister_logs_audit(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Journal d'audit de toutes les actions système et RH."""
     return db.query(AuditLog).order_by(AuditLog.timestamp.desc()).all()
+
+
+@router.get("/api/candidatures/export/csv")
+def exporter_candidatures_csv(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Exporte la liste de toutes les candidatures et évaluations IA au format CSV (Excel)."""
+    candidatures = db.query(Candidature).order_by(Candidature.created_at.desc()).all()
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';')
+    writer.writerow(["ID", "Nom Candidat", "Email", "Offre", "Score IA (%)", "Statut RH", "Date Entretien", "Lieu / Lien Entretien", "Date Dépôt"])
+    
+    for c in candidatures:
+        nom = c.candidat.nom if c.candidat else "Candidat"
+        email = c.candidat.email if c.candidat else ""
+        offre_titre = c.offre.titre if c.offre else ""
+        writer.writerow([
+            c.id,
+            nom,
+            email,
+            offre_titre,
+            f"{c.score:.1f}",
+            c.decision_rh,
+            c.date_entretien or "",
+            c.lieu_entretien or "",
+            c.created_at.strftime("%Y-%m-%d %H:%M") if c.created_at else ""
+        ])
+    
+    csv_content = output.getvalue().encode('utf-8-sig')  # UTF-8 BOM pour Excel
+    return Response(
+        content=csv_content,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=recrutia_export_candidatures.csv"}
+    )

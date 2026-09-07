@@ -1004,6 +1004,10 @@
           <i class="fa-solid fa-clipboard-list"></i> Audit
         </button>
 
+        <button class="stat-chip" onclick="exporterCandidaturesCSV()" style="cursor:pointer; border:none; background:#D1FAE5; color:#047857; font-weight:700;" title="Télécharger l'ensemble des candidatures au format CSV / Excel">
+          <i class="fa-solid fa-file-csv"></i> Exporter CSV
+        </button>
+
         <button class="stat-chip" onclick="ouvrirCalendrier()" style="cursor:pointer; border:none; background:var(--primary); color:#fff; font-weight:700;" title="Planning des entretiens planifiés">
           <i class="fa-solid fa-calendar-days"></i> Calendrier RH
         </button>
@@ -1928,6 +1932,27 @@
     } catch {}
   }
 
+  function exporterCandidaturesCSV() {
+    const token = localStorage.getItem("recrutia_token");
+    window.location.href = `${API}/candidatures/export/csv?token=${encodeURIComponent(token || '')}`;
+    toast("Téléchargement du fichier CSV des candidatures...", "success");
+  }
+
+  async function basculerStatutUserAdmin(id, username) {
+    try {
+      const res = await fetch(`${API}/auth/users/${id}/status`, { method: "PATCH", headers: headers() });
+      const data = await res.json();
+      if (res.ok) {
+        toast(data.message || "Statut mis à jour.");
+        chargerGestionComptesAdmin();
+      } else {
+        toast(data.detail || "Erreur lors de la mise à jour.", "error");
+      }
+    } catch {
+      toast("Erreur de connexion.", "error");
+    }
+  }
+
   async function chargerGestionComptesAdmin() {
     const tbody = document.getElementById("table-users-admin-body");
     if (!tbody) return;
@@ -1949,19 +1974,28 @@
             ? '<span style="background:#FEF3C7; color:#D97706; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #FDE68A;">⚙️ Administrateur</span>'
             : '<span style="background:#EEF2FF; color:#4F46E5; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #C7D2FE;">👤 Recruteur RH</span>';
           
+          const statusBadge = u.is_active
+            ? '<span style="color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Actif</span>'
+            : '<span style="color:#DC2626; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Suspendu</span>';
+
           tbody.innerHTML += `
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px; font-weight:700;">
                 <div style="display:flex; align-items:center; gap:8px;">
                   <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">${u.username.charAt(0).toUpperCase()}</div>
-                  <span>${u.username}</span>
-                  ${isSelf ? '<span style="color:var(--accent-green); font-size:11px; font-weight:700;">(Vous)</span>' : ''}
+                  <div>
+                    <span>${u.username}</span> ${isSelf ? '<span style="color:var(--accent-green); font-size:11px; font-weight:700;">(Vous)</span>' : ''}
+                    <div style="font-size:10px; margin-top:2px;">${statusBadge}</div>
+                  </div>
                 </div>
               </td>
               <td style="padding:12px 16px;">${roleBadge}</td>
               <td style="padding:12px 16px; color:var(--text-muted); font-size:12px;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
               <td style="padding:12px 16px; text-align:right;">
-                ${!isSelf ? `<button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:6px 12px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i> Supprimer</button>` : '<span style="color:var(--text-muted); font-size:11px; font-weight:600;">Compte actif</span>'}
+                ${!isSelf ? `
+                  <button onclick="basculerStatutUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; margin-right:4px;">${u.is_active ? '⏸️ Suspendre' : '▶️ Activer'}</button>
+                  <button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>
+                ` : '<span style="color:var(--text-muted); font-size:11px; font-weight:600;">Compte actif</span>'}
               </td>
             </tr>
           `;
