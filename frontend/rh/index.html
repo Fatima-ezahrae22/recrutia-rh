@@ -904,23 +904,23 @@
         <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
         <div class="sidebar-brand-text">
           <h1>RecrutIA</h1>
-          <p>ArtiWeb RH</p>
+          <p id="sb-brand-sub">ArtiWeb RH</p>
         </div>
       </div>
 
       <nav class="sidebar-nav">
-        <a class="nav-item active" onclick="navTo('dashboard')">
-          <div class="nav-item-left"><i class="fa-solid fa-chart-pie"></i><span>Tableau de bord</span></div>
+        <a class="nav-item active" id="nav-item-dashboard" onclick="navTo('dashboard')">
+          <div class="nav-item-left"><i class="fa-solid fa-chart-pie"></i><span id="sb-dashboard-label">Tableau de bord</span></div>
         </a>
-        <a class="nav-item" onclick="navTo('candidats')">
+        <a class="nav-item" id="nav-rh-candidats" onclick="navTo('candidats')">
           <div class="nav-item-left"><i class="fa-solid fa-users"></i><span>Candidats & CVs</span></div>
           <span class="nav-badge" id="sb-count-candidats">0</span>
         </a>
-        <a class="nav-item" onclick="navTo('offres')">
+        <a class="nav-item" id="nav-rh-offres" onclick="navTo('offres')">
           <div class="nav-item-left"><i class="fa-solid fa-briefcase"></i><span>Offres d'emploi</span></div>
           <span class="nav-badge" id="sb-count-offres">0</span>
         </a>
-        <a class="nav-item" onclick="ouvrirCalendrier()">
+        <a class="nav-item" id="nav-rh-calendrier" onclick="ouvrirCalendrier()">
           <div class="nav-item-left"><i class="fa-solid fa-calendar-days"></i><span>Calendrier RH</span></div>
           <span class="nav-badge" id="sb-count-entretiens" style="background:var(--accent-gold); color:#1E1B4B;">0</span>
         </a>
@@ -928,16 +928,16 @@
           <div class="nav-item-left"><i class="fa-solid fa-users-gear" style="color:#F59E0B;"></i><span>Gestion des Comptes</span></div>
           <span class="nav-badge" id="sb-count-users" style="background:#F59E0B; color:#1E1B4B;">0</span>
         </a>
-        <a class="nav-item" onclick="ouvrirConfigIA()">
+        <a class="nav-item" id="nav-config-ia" onclick="ouvrirConfigIA()">
           <div class="nav-item-left"><i class="fa-solid fa-sliders"></i><span>Paramètres IA & Ollama</span></div>
         </a>
-        <a class="nav-item" onclick="ouvrirAudit()">
+        <a class="nav-item" id="nav-audit" onclick="ouvrirAudit()">
           <div class="nav-item-left"><i class="fa-solid fa-clipboard-list"></i><span>Journal d'Audit</span></div>
         </a>
-        <a class="nav-item" onclick="ouvrirProfilRH()">
-          <div class="nav-item-left"><i class="fa-solid fa-user-gear"></i><span>Profil RH</span></div>
+        <a class="nav-item" id="nav-profil" onclick="ouvrirProfilRH()">
+          <div class="nav-item-left"><i class="fa-solid fa-user-gear"></i><span id="sb-profil-label">Profil RH</span></div>
         </a>
-        <a href="/candidat" target="_blank" class="nav-item">
+        <a href="/candidat" target="_blank" class="nav-item" id="nav-portail">
           <div class="nav-item-left"><i class="fa-solid fa-globe"></i><span>Portail Candidat</span></div>
           <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; opacity:0.6;"></i>
         </a>
@@ -2189,33 +2189,71 @@
     document.getElementById("sb-avatar").innerText = USERNAME.substring(0, 1).toUpperCase();
 
     const navComptes = document.getElementById("nav-gestion-comptes");
+    const navCandidats = document.getElementById("nav-rh-candidats");
+    const navOffres = document.getElementById("nav-rh-offres");
+    const navCalendrier = document.getElementById("nav-rh-calendrier");
+    const navConfigIA = document.getElementById("nav-config-ia");
+    const navAudit = document.getElementById("nav-audit");
+
     const adminBanner = document.getElementById("admin-dashboard-banner");
     const adminContainer = document.getElementById("admin-dashboard-container");
     const rhContainer = document.getElementById("rh-dashboard-container");
     const pageTitle = document.getElementById("page-title");
     const pageSub = document.getElementById("page-subtitle");
     const roleSpan = document.getElementById("sb-user-role");
-
-    if (navComptes) navComptes.style.display = 'flex';
+    const brandSub = document.getElementById("sb-brand-sub");
+    const dashboardLabel = document.getElementById("sb-dashboard-label");
+    const profilLabel = document.getElementById("sb-profil-label");
 
     try {
       const res = await fetch(`${API}/auth/me`, { headers: headers() });
       if (res.ok) {
         const me = await res.json();
         if (me.role === 'admin') {
+          // --- BARRE LATÉRALE ET ESPACE DÉDIÉS À L'ADMINISTRATEUR SYSTÈME ---
           if (roleSpan) roleSpan.innerText = 'Administrateur Système';
+          if (brandSub) brandSub.innerText = 'ArtiWeb Admin';
+          if (dashboardLabel) dashboardLabel.innerText = 'Supervision Système';
+          if (profilLabel) profilLabel.innerText = 'Mon Profil Admin';
+
+          if (navComptes) navComptes.style.display = 'flex';
+          if (navConfigIA) navConfigIA.style.display = 'flex';
+          if (navAudit) navAudit.style.display = 'flex';
+
+          // Masquer les menus opérationnels RH pour l'Administrateur
+          if (navCandidats) navCandidats.style.display = 'none';
+          if (navOffres) navOffres.style.display = 'none';
+          if (navCalendrier) navCalendrier.style.display = 'none';
+
           if (adminBanner) adminBanner.style.display = 'block';
           if (adminContainer) adminContainer.style.display = 'block';
           if (rhContainer) rhContainer.style.display = 'none';
+
           if (pageTitle) pageTitle.innerText = '⚙️ Tableau de Bord Administrateur & Supervision';
           if (pageSub) pageSub.innerText = 'Supervision globale des utilisateurs, sécurité, audit système & moteur IA';
+
           chargerGestionComptesAdmin();
           chargerAudit();
         } else {
+          // --- BARRE LATÉRALE ET ESPACE DÉDIÉS AU RECRUTEUR RH ---
           if (roleSpan) roleSpan.innerText = 'Responsable RH';
+          if (brandSub) brandSub.innerText = 'ArtiWeb RH';
+          if (dashboardLabel) dashboardLabel.innerText = 'Tableau de bord';
+          if (profilLabel) profilLabel.innerText = 'Mon Profil RH';
+
+          if (navComptes) navComptes.style.display = 'none';
+          if (navConfigIA) navConfigIA.style.display = 'none';
+          if (navAudit) navAudit.style.display = 'none';
+
+          // Afficher les menus opérationnels RH
+          if (navCandidats) navCandidats.style.display = 'flex';
+          if (navOffres) navOffres.style.display = 'flex';
+          if (navCalendrier) navCalendrier.style.display = 'flex';
+
           if (adminBanner) adminBanner.style.display = 'none';
           if (adminContainer) adminContainer.style.display = 'none';
           if (rhContainer) rhContainer.style.display = 'block';
+
           if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
           if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
         }
