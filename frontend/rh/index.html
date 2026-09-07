@@ -885,7 +885,6 @@
     </form>
     <div class="demo-hint" style="text-align:left; font-size:11px; line-height:1.6;">
       <strong>Comptes disponibles :</strong><br>
-      • ⚙️ Admin : <strong>admin</strong> / <strong>admin123</strong><br>
       • 👤 Recruteur 1 : <strong>fatimamekki</strong> / <strong>fatima123</strong><br>
       • 👤 Recruteur 2 : <strong>recruteur</strong> / <strong>recruteur123</strong>
     </div>
@@ -924,10 +923,6 @@
         <a class="nav-item" id="nav-rh-calendrier" onclick="ouvrirCalendrier()">
           <div class="nav-item-left"><i class="fa-solid fa-calendar-days"></i><span>Calendrier RH</span></div>
           <span class="nav-badge" id="sb-count-entretiens" style="background:var(--accent-gold); color:#1E1B4B;">0</span>
-        </a>
-        <a class="nav-item" id="nav-gestion-comptes" onclick="ouvrirGestionComptes()" style="display:none;">
-          <div class="nav-item-left"><i class="fa-solid fa-users-gear" style="color:#F59E0B;"></i><span>Gestion des Comptes</span></div>
-          <span class="nav-badge" id="sb-count-users" style="background:#F59E0B; color:#1E1B4B;">0</span>
         </a>
         <a class="nav-item" id="nav-config-ia" onclick="ouvrirConfigIA()">
           <div class="nav-item-left"><i class="fa-solid fa-sliders"></i><span>Paramètres IA & Ollama</span></div>
@@ -1016,127 +1011,6 @@
     </header>
 
     <div class="content-body">
-
-      <!-- ⚙️ BANNIÈRE D'ADMINISTRATION SYSTÈME & SUPERVISION -->
-      <div id="admin-dashboard-banner" style="display:none; background:linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%); border:1px solid rgba(245, 158, 11, 0.35); border-radius:16px; padding:24px; margin-bottom:24px; color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-          <div style="display:flex; align-items:center; gap:16px;">
-            <div style="width:56px; height:56px; border-radius:14px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 8px 20px rgba(245, 158, 11, 0.4);">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <div>
-              <h3 style="font-size:20px; font-weight:800; color:#FFF; font-family:'Outfit', sans-serif;">Espace de Supervision Administrateur</h3>
-              <p style="font-size:13px; color:#A5B4FC; margin-top:2px;">Contrôle des comptes utilisateurs, traçabilité des actions et paramétrage du moteur IA.</p>
-            </div>
-          </div>
-          
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button onclick="ouvrirGestionComptes()" style="padding:11px 18px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#1E1B4B; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(245, 158, 11, 0.4);">
-              <i class="fa-solid fa-users-gear"></i> Gérer les Utilisateurs
-            </button>
-            <button onclick="ouvrirAudit()" style="padding:11px 18px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
-              <i class="fa-solid fa-clipboard-list"></i> Consulter l'Audit
-            </button>
-            <button onclick="ouvrirConfigIA()" style="padding:11px 18px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
-              <i class="fa-solid fa-sliders"></i> Moteur IA
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ⚙️ TABLEAU DE BORD EXCLUSIF ADMINISTRATEUR SYSTÈME -->
-      <div id="admin-dashboard-container" style="display:none;">
-
-        <!-- KPIS DE SUPERVISION SYSTÈME -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:24px;">
-          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
-            <div style="width:52px; height:52px; border-radius:14px; background:#FEF3C7; color:#D97706; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(245,158,11,0.2);">
-              <i class="fa-solid fa-users"></i>
-            </div>
-            <div>
-              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Comptes Utilisateurs</span>
-              <div style="font-size:24px; font-weight:800; color:var(--text-primary);" id="admin-kpi-users">0</div>
-            </div>
-          </div>
-
-          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
-            <div style="width:52px; height:52px; border-radius:14px; background:#EEF2FF; color:#4F46E5; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(79,70,229,0.2);">
-              <i class="fa-solid fa-clipboard-list"></i>
-            </div>
-            <div>
-              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Logs d'Audit Système</span>
-              <div style="font-size:24px; font-weight:800; color:var(--text-primary);" id="admin-kpi-audits">0</div>
-            </div>
-          </div>
-
-          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
-            <div style="width:52px; height:52px; border-radius:14px; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(16,185,129,0.2);">
-              <i class="fa-solid fa-server"></i>
-            </div>
-            <div>
-              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Serveur & APIs</span>
-              <div style="font-size:14px; font-weight:800; color:#059669;">🟢 Opérationnel (FastAPI)</div>
-            </div>
-          </div>
-
-          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
-            <div style="width:52px; height:52px; border-radius:14px; background:#F3E8FF; color:#7C3AED; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(124,58,237,0.2);">
-              <i class="fa-solid fa-brain"></i>
-            </div>
-            <div>
-              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Moteur IA</span>
-              <div style="font-size:14px; font-weight:800; color:#7C3AED;" id="admin-kpi-ai">Actif (NLP + Scoring)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PANNEAU ADMINISTRATEUR : SUPERVISION ET GESTION DIRECTE DES UTILISATEURS -->
-        <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:24px; box-shadow:var(--shadow-sm);">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
-            <div>
-              <h3 style="font-size:18px; font-weight:800; color:var(--text-primary);"><i class="fa-solid fa-users-gear" style="color:#D97706;"></i> Panneau Administrateur : Gestion des Comptes & Droits</h3>
-              <p style="font-size:12px; color:var(--text-muted);">Vue directe sur les comptes utilisateurs et état des accès au système.</p>
-            </div>
-            <button onclick="toggleFormNouveauCompteAdmin()" style="padding:10px 16px; background:linear-gradient(135deg, #4F46E5, #4338CA); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
-              <i class="fa-solid fa-plus"></i> Créer un Nouveau Compte
-            </button>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
-              <thead>
-                <tr style="background:#EEF2FF; color:var(--primary); font-weight:700;">
-                  <th style="padding:12px 16px;">Utilisateur</th>
-                  <th style="padding:12px 16px;">Rôle</th>
-                  <th style="padding:12px 16px;">Statut</th>
-                  <th style="padding:12px 16px;">Date de Création</th>
-                  <th style="padding:12px 16px; text-align:right;">Actions d'Administration</th>
-                </tr>
-              </thead>
-              <tbody id="admin-main-users-table">
-                <tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Chargement des utilisateurs...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- PANNEAU ADMINISTRATEUR : AUDIT EN TEMPS RÉEL -->
-        <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow-sm);">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-            <div>
-              <h3 style="font-size:18px; font-weight:800; color:var(--text-primary);"><i class="fa-solid fa-clipboard-list" style="color:var(--primary);"></i> Activité du Système & Logs d'Audit en Direct</h3>
-              <p style="font-size:12px; color:var(--text-muted);">Historique et traçabilité de toutes les opérations effectuées.</p>
-            </div>
-            <button onclick="ouvrirAudit()" style="padding:8px 14px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
-              Voir l'Audit Complet
-            </button>
-          </div>
-          <div id="admin-main-audit-feed" style="display:flex; flex-direction:column; gap:10px; max-height:280px; overflow-y:auto;">
-            <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:15px;">Chargement des logs d'audit...</div>
-          </div>
-        </div>
-
-      </div>
 
       <!-- 💼 TABLEAU DE BORD RECRUTEUR RH -->
       <div id="rh-dashboard-container">
@@ -1334,146 +1208,178 @@
   </div>
 </div>
 
-<!-- 👤 MODAL PROFIL RH & DE GESTION -->
+<!-- 👤 MODAL PROFIL RH ENRICHI (INFOS, PRÉFÉRENCES, SIGNATURE & SÉCURITÉ) -->
 <div id="modal-profil-rh" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:580px; width:92%; max-height:90vh; overflow-y:auto; position:relative; background:#fff; border-radius:16px; padding:28px; color:var(--text-primary); box-shadow:0 20px 40px rgba(0,0,0,0.3);">
-    <button onclick="fermerProfilRH()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
+  <div class="auth-card" style="max-width:680px; width:92%; max-height:92vh; overflow-y:auto; position:relative; background:#fff; border-radius:18px; padding:28px; color:var(--text-primary); box-shadow:0 25px 50px rgba(0,0,0,0.35);">
+    <button onclick="fermerProfilRH()" style="position:absolute; top:18px; right:18px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
     
-    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:16px;">
-      <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent-gold)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:18px;">
+      <div style="width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
         R
       </div>
       <div style="flex:1;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
-          <span id="profil-modal-badge" style="background:#EEF2FF; color:var(--primary); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; border:1px solid #C7D2FE;">Responsable Recrutement</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <h3 style="font-size:22px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
+          <span id="profil-modal-badge" style="background:#EEF2FF; color:var(--primary); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; border:1px solid #C7D2FE;">👤 Responsable RH</span>
         </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-top:2px;" id="profil-modal-email">recruteur@artiweb.ma</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:2px;" id="profil-modal-title-display">Responsable Recrutement — ArtiWeb RH</p>
       </div>
     </div>
 
-    <!-- STATS RAPIDES -->
-    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:20px;">
-      <div style="background:var(--primary-light); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center;">
-        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Offres Actives</span>
-        <div style="font-size:18px; font-weight:800; color:var(--primary);" id="profil-stat-offres">0</div>
+    <!-- STATS RAPIDES RECRUTEUR -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px;">
+      <div style="background:var(--primary-light); border:1px solid #C7D2FE; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-briefcase"></i> Offres Actives</span>
+        <div style="font-size:20px; font-weight:800; color:var(--primary);" id="profil-stat-offres">0</div>
       </div>
-      <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:10px; padding:12px; text-align:center;">
-        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Candidatures</span>
-        <div style="font-size:18px; font-weight:800; color:#D97706;" id="profil-stat-candidats">0</div>
+      <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-users"></i> Candidatures</span>
+        <div style="font-size:20px; font-weight:800; color:#D97706;" id="profil-stat-candidats">0</div>
       </div>
-      <div style="background:#D1FAE5; border:1px solid #A7F3D0; border-radius:10px; padding:12px; text-align:center;">
-        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Entretiens</span>
-        <div style="font-size:18px; font-weight:800; color:#059669;" id="profil-stat-entretiens">0</div>
+      <div style="background:#D1FAE5; border:1px solid #A7F3D0; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-calendar-check"></i> Entretiens</span>
+        <div style="font-size:20px; font-weight:800; color:#059669;" id="profil-stat-entretiens">0</div>
       </div>
     </div>
 
-    <!-- SECTION 1 : CHANGER MOT DE PASSE -->
-    <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px;">
-      <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-        <i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Changer mon mot de passe
-      </h4>
-      <form onsubmit="doChangerMotDePasse(event)" style="display:flex; flex-direction:column; gap:10px;">
+    <!-- BARRE D'ONGLETS DU PROFIL RH -->
+    <div style="display:flex; gap:8px; border-bottom:1px solid var(--border); margin-bottom:18px; overflow-x:auto; padding-bottom:4px;">
+      <button onclick="changerOngletProfil('infos')" id="tab-btn-infos" class="tab-profil-btn active-tab" style="padding:8px 14px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">
+        <i class="fa-solid fa-id-card"></i> Infos Personnelles
+      </button>
+      <button onclick="changerOngletProfil('prefs')" id="tab-btn-prefs" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-sliders"></i> Préférences RH
+      </button>
+      <button onclick="changerOngletProfil('signature')" id="tab-btn-signature" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-pen-nib"></i> Signature E-mail
+      </button>
+      <button onclick="changerOngletProfil('securite')" id="tab-btn-securite" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-lock"></i> Sécurité
+      </button>
+    </div>
+
+    <!-- 📌 TAB 1 : INFOS PERSONNELLES -->
+    <div id="tab-content-infos" class="tab-profil-content" style="display:block;">
+      <form onsubmit="sauvegarderInfosProfilRH(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Nom & Prénom</label>
+            <input type="text" id="profil-fullname" placeholder="ex: Fatima Mekki" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Adresse E-mail Pro</label>
+            <input type="email" id="profil-email-input" placeholder="recruteur@artiweb.ma" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Intitulé du Poste</label>
+            <input type="text" id="profil-title-input" placeholder="ex: Responsable Recrutement Tech" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Téléphone Professionnel</label>
+            <input type="tel" id="profil-phone-input" placeholder="+212 6 00 00 00 00" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+        </div>
+
         <div>
-          <label style="font-size:11px; font-weight:600; color:var(--text-muted);">Ancien mot de passe</label>
-          <input type="password" id="change-pass-old" placeholder="••••••••" required style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Département / Filiale</label>
+          <input type="text" id="profil-dept-input" placeholder="ex: Direction RH & Talents — ArtiWeb Fès" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-floppy-disk"></i> Enregistrer les Informations
+        </button>
+      </form>
+    </div>
+
+    <!-- ⚙️ TAB 2 : PRÉFÉRENCES RH & NOTIFICATIONS -->
+    <div id="tab-content-prefs" class="tab-profil-content" style="display:none;">
+      <form onsubmit="sauvegarderPrefsProfilRH(event)" style="display:flex; flex-direction:column; gap:14px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🔊 Signal Sonore de Réception CV</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Joue un son discret lors de la réception d'un nouveau CV en direct.</p>
+          </div>
+          <input type="checkbox" id="pref-sound-toggle" checked style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary);">
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🛡️ Activation du Mode Anonyme au Démarrage</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Masque automatiquement les noms et e-mails des candidats lors de la connexion.</p>
+          </div>
+          <input type="checkbox" id="pref-anonyme-auto" style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary);">
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🔔 Notifications Système Navigateur</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Affiche des popups système lorsque vous êtes sur un autre onglet.</p>
+          </div>
+          <button type="button" onclick="demanderPermissionNotifsNav()" style="padding:6px 12px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">
+            <i class="fa-solid fa-bell"></i> Tester / Autoriser
+          </button>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Seuil d'Alerte IA Prioritaire (%)</label>
+          <input type="number" id="pref-seuil-alerte" value="80" min="50" max="95" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none; font-weight:700; color:var(--primary);">
+          <span style="font-size:11px; color:var(--text-muted);">Les candidats avec un score supérieur à ce seuil afficheront une alerte dorée prioritaire.</span>
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-sliders"></i> Enregistrer les Préférences
+        </button>
+      </form>
+    </div>
+
+    <!-- ✍️ TAB 3 : SIGNATURE & MODÈLES CONVOCATIONS -->
+    <div id="tab-content-signature" class="tab-profil-content" style="display:none;">
+      <form onsubmit="sauvegarderSignatureRH(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Signature par Défaut pour Convocations E-mail</label>
+          <textarea id="profil-signature-input" rows="4" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:12px; outline:none; font-family:monospace;" placeholder="Bien cordialement,&#10;L'Équipe Recrutement ArtiWeb&#10;Contact : recrutement@artiweb.ma"></textarea>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Note / Modèle de Convocations Rapide</label>
+          <input type="text" id="profil-convoc-note" placeholder="ex: Se présenter à l'accueil avec une pièce d'identité 10 min avant l'entretien." style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:12px; outline:none;">
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-pen-nib"></i> Enregistrer la Signature
+        </button>
+      </form>
+    </div>
+
+    <!-- 🔒 TAB 4 : SÉCURITÉ & MOT DE PASSE -->
+    <div id="tab-content-securite" class="tab-profil-content" style="display:none;">
+      <form onsubmit="doChangerMotDePasse(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <h4 style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">
+          <i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Modifier mon mot de passe de connexion
+        </h4>
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:4px;">Ancien mot de passe</label>
+          <input type="password" id="change-pass-old" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
         </div>
         <div>
-          <label style="font-size:11px; font-weight:600; color:var(--text-muted);">Nouveau mot de passe (min. 6 car.)</label>
-          <input type="password" id="change-pass-new" placeholder="••••••••" required minlength="6" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:4px;">Nouveau mot de passe (min. 6 caractères)</label>
+          <input type="password" id="change-pass-new" placeholder="••••••••" required minlength="6" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
         </div>
-        <button type="submit" id="btn-change-pass" style="padding:9px 14px; background:var(--primary); color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; align-self:flex-end; transition:all 0.2s;">
+        <button type="submit" id="btn-change-pass" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; transition:all 0.2s; display:flex; align-items:center; gap:6px;">
           <i class="fa-solid fa-check"></i> Mettre à jour le mot de passe
         </button>
       </form>
     </div>
 
-    <!-- SECTION 2 : GESTION DES COMPTES UTILISATEURS (ADMIN SEULEMENT) -->
-    <div id="profil-admin-users-section" style="display:none; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px;">
-      <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
-        <span><i class="fa-solid fa-users-gear" style="color:var(--primary);"></i> Comptes & Utilisateurs de la plateforme</span>
-        <button onclick="chargerListeUtilisateursAdmin()" style="border:none; background:none; color:var(--primary); font-size:12px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-rotate"></i> Actualiser</button>
-      </h4>
-      <div id="admin-users-list" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
-        <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Chargement...</div>
-      </div>
-    </div>
-
-    <div style="display:flex; gap:10px;">
-      <button class="btn btn-primary" onclick="doLogout()" style="flex:1; background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3); padding:12px; font-weight:700;">
+    <!-- BOUTON SE DÉCONNECTER -->
+    <div style="display:flex; gap:10px; margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+      <button class="btn btn-primary" onclick="doLogout()" style="flex:1; background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3); padding:11px; font-weight:700;">
         <i class="fa-solid fa-power-off"></i> Se déconnecter du compte
       </button>
     </div>
-  </div>
-</div>
-
-<!-- 👥 MODAL GESTION DES COMPTES (ADMINISTRATEUR) -->
-<div id="modal-gestion-comptes" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:760px; width:92%; max-height:85vh; overflow-y:auto; position:relative; background:#fff; border-radius:16px; padding:32px; color:var(--text-primary); box-shadow:0 20px 50px rgba(0,0,0,0.4);">
-    <button onclick="fermerGestionComptes()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
-    
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:48px; height:48px; border-radius:12px; background:#FEF3C7; color:#D97706; display:flex; align-items:center; justify-content:center; font-size:22px;">
-          <i class="fa-solid fa-users-gear"></i>
-        </div>
-        <div>
-          <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);">Gestion des Comptes & Droits d'Accès</h3>
-          <p style="font-size:12px; color:var(--text-muted);">Administration complète des utilisateurs de RecrutIA RH.</p>
-        </div>
-      </div>
-      <button onclick="toggleFormNouveauCompteAdmin()" style="padding:10px 16px; background:linear-gradient(135deg, #4F46E5, #4338CA); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
-        <i class="fa-solid fa-plus"></i> Créer un Compte
-      </button>
-    </div>
-
-    <!-- FORMULAIRE CRÉATION DE COMPTE (DÉROULANT) -->
-    <div id="form-creer-user-admin" style="display:none; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:24px;">
-      <h4 style="font-size:14px; font-weight:700; margin-bottom:14px; color:var(--primary);"><i class="fa-solid fa-user-plus"></i> Nouveau Compte Utilisateur</h4>
-      <form onsubmit="doCreerUserAdmin(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Nom d'utilisateur</label>
-          <input type="text" id="admin-new-user" placeholder="ex: rh_sarah" required style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Rôle / Accès</label>
-          <select id="admin-new-role" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
-            <option value="recruteur">👤 Responsable RH / Recruteur</option>
-            <option value="admin">⚙️ Administrateur Système</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Mot de passe (min. 6 car.)</label>
-          <input type="password" id="admin-new-pass" placeholder="••••••••" required minlength="6" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
-        </div>
-        <div style="display:flex; align-items:flex-end; gap:10px;">
-          <button type="submit" id="btn-submit-user-admin" style="flex:1; padding:10px; background:var(--accent-green); color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            <i class="fa-solid fa-check"></i> Enregistrer
-          </button>
-          <button type="button" onclick="toggleFormNouveauCompteAdmin()" style="padding:10px 14px; background:#E2E8F0; color:var(--text-secondary); border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-            Annuler
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- TABLEAU DE TOUS LES COMPTES -->
-    <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:12px; overflow:hidden;">
-      <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
-        <thead>
-          <tr style="background:#EEF2FF; color:var(--primary); font-weight:700; border-bottom:1px solid var(--border);">
-            <th style="padding:12px 16px;">Utilisateur</th>
-            <th style="padding:12px 16px;">Rôle</th>
-            <th style="padding:12px 16px;">Création</th>
-            <th style="padding:12px 16px; text-align:right;">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="table-users-admin-body">
-          <tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Chargement des utilisateurs...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
   </div>
 </div>
 
@@ -1644,12 +1550,14 @@
   const WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + (window.location.host || '127.0.0.1:8000') + '/ws/notifications';
   let TOKEN = localStorage.getItem("recrutia_token") || null;
   let USERNAME = localStorage.getItem("recrutia_username") || "recruteur";
+  let USER_ROLE = null; // Rôle global de l'utilisateur connecté (admin / recruteur)
   let toutesOffres = [];
   let toutesCandidatures = [];
   let knownCandidateIds = new Set();
   let candidatureActive = null;
   let filtreActif = 'TOUS';
   let modeAnonymeActif = false;
+  let pollingInterval = null; // Référence au setInterval pour pouvoir l'arrêter
 
   // 🔔 NOTIFICATIONS PERSISTANTES STOCKÉES EN LOCALSTORAGE (REQUIS PAR L'UTILISATEUR)
   let notificationsList = JSON.parse(localStorage.getItem("recrutia_notifications") || "[]");
@@ -1664,11 +1572,13 @@
         if (res.ok) {
           const me = await res.json();
           USERNAME = me.username;
+          USER_ROLE = me.role;
           afficherApp();
           return;
         }
       } catch {}
-      TOKEN = null; 
+      TOKEN = null;
+      USER_ROLE = null;
       localStorage.removeItem("recrutia_token");
       localStorage.removeItem("recrutia_username");
     }
@@ -1678,10 +1588,22 @@
     initialiserApp();
     initWebSocket();
     afficherNotifications();
-    setInterval(chargerCandidatures, 3000); // Surveillance active en continu
+    // Le polling des candidatures est démarré dans afficherApp() uniquement pour les RH
   });
 
   function headers() { return { "Content-Type": "application/json", "Authorization": `Bearer ${TOKEN}` }; }
+
+  // ── Gestion centralisée des erreurs d'authentification 401 ───────────────────
+  function handleAuthError() {
+    TOKEN = null;
+    USER_ROLE = null;
+    localStorage.removeItem("recrutia_token");
+    localStorage.removeItem("recrutia_username");
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+    document.getElementById("app-screen").classList.remove("visible");
+    document.getElementById("auth-screen").classList.remove("hidden");
+    toast("Session expirée. Veuillez vous reconnecter.", "error");
+  }
 
   // ── WEBSOCKET EN DIRECT & NOTIFICATIONS PERSISTANTES ──────────────────────────────
   function jouerSonNotification() {
@@ -1905,8 +1827,103 @@
     fermerConfigIA();
   }
 
-  // 👤 PROFIL RH & ADMINISTRATION MODAL
+  // 👤 PROFIL RH MODAL & GESTION DES PREFERENCES
   let userRole = 'recruteur';
+
+  function changerOngletProfil(tabName) {
+    document.querySelectorAll(".tab-profil-btn").forEach(btn => {
+      btn.style.background = "#fff";
+      btn.style.color = "var(--text-secondary)";
+      btn.style.borderColor = "var(--border)";
+      btn.classList.remove("active-tab");
+    });
+    document.querySelectorAll(".tab-profil-content").forEach(content => {
+      content.style.display = "none";
+    });
+
+    const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+    if (activeBtn) {
+      activeBtn.style.background = "var(--primary-light)";
+      activeBtn.style.color = "var(--primary)";
+      activeBtn.style.borderColor = "#C7D2FE";
+      activeBtn.classList.add("active-tab");
+    }
+    const activeContent = document.getElementById(`tab-content-${tabName}`);
+    if (activeContent) activeContent.style.display = "block";
+  }
+
+  function chargerDetailsProfilRH() {
+    const infos = JSON.parse(localStorage.getItem("recrutia_rh_infos") || '{}');
+    document.getElementById("profil-fullname").value = infos.fullname || (USERNAME === 'fatimamekki' ? 'Fatima Mekki' : 'Responsable RH');
+    document.getElementById("profil-email-input").value = infos.email || `${USERNAME}@artiweb.ma`;
+    document.getElementById("profil-title-input").value = infos.title || 'Senior Talent Acquisition Manager';
+    document.getElementById("profil-phone-input").value = infos.phone || '+212 6 61 00 11 22';
+    document.getElementById("profil-dept-input").value = infos.dept || 'Direction RH & Talents — ArtiWeb Fès';
+    
+    const displayTitle = document.getElementById("profil-modal-title-display");
+    if (displayTitle) displayTitle.innerText = `${infos.title || 'Responsable Recrutement'} — ${infos.dept || 'ArtiWeb RH'}`;
+
+    const prefs = JSON.parse(localStorage.getItem("recrutia_rh_prefs") || '{"sound":true,"anonyme":false,"seuil":80}');
+    document.getElementById("pref-sound-toggle").checked = prefs.sound !== false;
+    document.getElementById("pref-anonyme-auto").checked = prefs.anonyme === true;
+    document.getElementById("pref-seuil-alerte").value = prefs.seuil || 80;
+
+    const sig = JSON.parse(localStorage.getItem("recrutia_rh_signature") || '{}');
+    document.getElementById("profil-signature-input").value = sig.text || `Bien cordialement,\n${infos.fullname || USERNAME}\n${infos.title || 'Département Recrutement'}\nArtiWeb Fès — ${infos.email || USERNAME + '@artiweb.ma'}`;
+    document.getElementById("profil-convoc-note").value = sig.note || "Se présenter à l'accueil 10 min avant l'heure fixée.";
+  }
+
+  function sauvegarderInfosProfilRH(e) {
+    e.preventDefault();
+    const infos = {
+      fullname: document.getElementById("profil-fullname").value.trim(),
+      email: document.getElementById("profil-email-input").value.trim(),
+      title: document.getElementById("profil-title-input").value.trim(),
+      phone: document.getElementById("profil-phone-input").value.trim(),
+      dept: document.getElementById("profil-dept-input").value.trim()
+    };
+    localStorage.setItem("recrutia_rh_infos", JSON.stringify(infos));
+    const displayTitle = document.getElementById("profil-modal-title-display");
+    if (displayTitle) displayTitle.innerText = `${infos.title} — ${infos.dept}`;
+    toast("Informations personnelles mises à jour !", "success");
+    ajouterNotification(`Profil RH mis à jour : ${infos.fullname} (${infos.title})`);
+  }
+
+  function sauvegarderPrefsProfilRH(e) {
+    e.preventDefault();
+    const prefs = {
+      sound: document.getElementById("pref-sound-toggle").checked,
+      anonyme: document.getElementById("pref-anonyme-auto").checked,
+      seuil: parseFloat(document.getElementById("pref-seuil-alerte").value) || 80
+    };
+    localStorage.setItem("recrutia_rh_prefs", JSON.stringify(prefs));
+    toast("Préférences RH enregistrées !", "success");
+  }
+
+  function sauvegarderSignatureRH(e) {
+    e.preventDefault();
+    const sig = {
+      text: document.getElementById("profil-signature-input").value.trim(),
+      note: document.getElementById("profil-convoc-note").value.trim()
+    };
+    localStorage.setItem("recrutia_rh_signature", JSON.stringify(sig));
+    toast("Signature d'e-mail enregistrée avec succès !", "success");
+  }
+
+  function demanderPermissionNotifsNav() {
+    if ("Notification" in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          new Notification("🔔 RecrutIA RH", { body: "Les notifications du navigateur sont bien activées !" });
+          toast("Notifications navigateur activées !", "success");
+        } else {
+          toast("Permission refusée par le navigateur.", "error");
+        }
+      });
+    } else {
+      toast("Votre navigateur ne supporte pas les notifications.", "error");
+    }
+  }
 
   async function ouvrirProfilRH() {
     document.getElementById("profil-modal-name").innerText = USERNAME;
@@ -1915,29 +1932,16 @@
     document.getElementById("profil-stat-candidats").innerText = toutesCandidatures ? toutesCandidatures.length : 0;
     document.getElementById("profil-stat-entretiens").innerText = document.getElementById("sb-count-entretiens") ? document.getElementById("sb-count-entretiens").innerText : 0;
 
-    try {
-      const res = await fetch(`${API}/auth/me`, { headers: headers() });
-      if (res.ok) {
-        const me = await res.json();
-        userRole = me.role || 'recruteur';
-        const badge = document.getElementById("profil-modal-badge");
-        if (userRole === 'admin') {
-          badge.innerText = "⚙️ Administrateur Système";
-          badge.style.background = "#FEF3C7";
-          badge.style.color = "#D97706";
-          badge.style.borderColor = "#FDE68A";
-          document.getElementById("profil-admin-users-section").style.display = "block";
-          chargerListeUtilisateursAdmin();
-        } else {
-          badge.innerText = "👤 Responsable RH";
-          badge.style.background = "#EEF2FF";
-          badge.style.color = "#4F46E5";
-          badge.style.borderColor = "#C7D2FE";
-          document.getElementById("profil-admin-users-section").style.display = "none";
-        }
-      }
-    } catch {}
+    const badge = document.getElementById("profil-modal-badge");
+    if (badge) {
+      badge.innerText = "👤 Responsable RH";
+      badge.style.background = "#EEF2FF";
+      badge.style.color = "#4F46E5";
+      badge.style.borderColor = "#C7D2FE";
+    }
 
+    chargerDetailsProfilRH();
+    changerOngletProfil('infos');
     document.getElementById("modal-profil-rh").style.display = "flex";
   }
 
@@ -1972,36 +1976,9 @@
     btn.disabled = false;
   }
 
-  async function chargerListeUtilisateursAdmin() {
-    const listEl = document.getElementById("admin-users-list");
-    if (!listEl) return;
-    try {
-      const res = await fetch(`${API}/auth/users`, { headers: headers() });
-      if (res.ok) {
-        const users = await res.json();
-        listEl.innerHTML = "";
-        if (!users || users.length === 0) {
-          listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Aucun autre compte enregistré.</div>';
-          return;
-        }
-        users.forEach(u => {
-          const isSelf = u.username === USERNAME;
-          listEl.innerHTML += `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#fff; border:1px solid var(--border); border-radius:8px; font-size:12px;">
-              <div>
-                <strong>${u.username} ${isSelf ? '<span style="color:var(--primary); font-size:10px;">(Vous)</span>' : ''}</strong>
-                <div style="font-size:10px; color:var(--text-muted);">${u.role === 'admin' ? '⚙️ Administrateur' : '👤 Recruteur RH'} • ${new Date(u.created_at).toLocaleDateString('fr-FR')}</div>
-              </div>
-              ${!isSelf ? `<button onclick="supprimerCompteUser(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i> Supprimer</button>` : ''}
-            </div>
-          `;
-        });
-      } else {
-        listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Accès restreint.</div>';
-      }
-    } catch {
-      listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Erreur de chargement.</div>';
-    }
+  // Délégué vers chargerGestionComptesAdmin (qui met à jour aussi admin-users-list)
+  function chargerListeUtilisateursAdmin() {
+    chargerGestionComptesAdmin();
   }
 
   // 👥 GESTION DES COMPTES ADMINISTRATEUR
@@ -2020,16 +1997,7 @@
     f.style.display = f.style.display === "none" ? "block" : "none";
   }
 
-  async function chargerCountUsersAdmin() {
-    try {
-      const res = await fetch(`${API}/auth/users`, { headers: headers() });
-      if (res.ok) {
-        const users = await res.json();
-        const badge = document.getElementById("sb-count-users");
-        if (badge) badge.innerText = users.length || 0;
-      }
-    } catch {}
-  }
+  // chargerCountUsersAdmin fusionné dans chargerGestionComptesAdmin — plus besoin de cet appel séparé
 
   function exporterCandidaturesCSV() {
     const token = localStorage.getItem("recrutia_token");
@@ -2056,25 +2024,33 @@
     const tbody = document.getElementById("table-users-admin-body");
     const mainTbody = document.getElementById("admin-main-users-table");
     const kpiUsers = document.getElementById("admin-kpi-users");
+    const compactList = document.getElementById("admin-users-list"); // Liste compacte dans le modal profil
 
     try {
       const res = await fetch(`${API}/auth/users`, { headers: headers() });
+
+      if (res.status === 401) {
+        handleAuthError();
+        return;
+      }
+
       if (res.ok) {
         const users = await res.json();
+        // Mise à jour des compteurs (sidebar + KPI admin)
         const badge = document.getElementById("sb-count-users");
         if (badge) badge.innerText = users.length || 0;
         if (kpiUsers) kpiUsers.innerText = users.length || 0;
 
+        // ── Tableau principal (panneau admin) ──
         let rowsHtml = "";
         if (!users || users.length === 0) {
           rowsHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Aucun compte utilisateur trouvé.</td></tr>';
         } else {
           users.forEach(u => {
             const isSelf = u.username === USERNAME;
-            const roleBadge = u.role === 'admin' 
+            const roleBadge = u.role === 'admin'
               ? '<span style="background:#FEF3C7; color:#D97706; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #FDE68A;">⚙️ Administrateur</span>'
               : '<span style="background:#EEF2FF; color:#4F46E5; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #C7D2FE;">👤 Recruteur RH</span>';
-            
             const statusBadge = u.is_active
               ? '<span style="color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Actif</span>'
               : '<span style="color:#DC2626; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Suspendu</span>';
@@ -2105,8 +2081,35 @@
 
         if (tbody) tbody.innerHTML = rowsHtml;
         if (mainTbody) mainTbody.innerHTML = rowsHtml;
+
+        // ── Liste compacte du modal profil (éliminer la redondance de chargerListeUtilisateursAdmin) ──
+        if (compactList) {
+          if (!users || users.length === 0) {
+            compactList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Aucun compte enregistré.</div>';
+          } else {
+            compactList.innerHTML = users.map(u => {
+              const isSelf = u.username === USERNAME;
+              return `<div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#fff; border:1px solid var(--border); border-radius:8px; font-size:12px;">
+                <div>
+                  <strong>${u.username} ${isSelf ? '<span style="color:var(--primary); font-size:10px;">(Vous)</span>' : ''}</strong>
+                  <div style="font-size:10px; color:var(--text-muted);">${u.role === 'admin' ? '⚙️ Administrateur' : '👤 Recruteur RH'} • ${new Date(u.created_at).toLocaleDateString('fr-FR')}</div>
+                </div>
+                ${!isSelf ? `<button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-trash"></i> Supprimer</button>` : ''}
+              </div>`;
+            }).join('');
+          }
+        }
+
+      } else {
+        const errHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Impossible de charger la liste. Veuillez vous reconnecter.</td></tr>';
+        if (tbody) tbody.innerHTML = errHtml;
+        if (mainTbody) mainTbody.innerHTML = errHtml;
       }
-    } catch {}
+    } catch {
+      const errHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Erreur de connexion avec le serveur.</td></tr>';
+      if (tbody) tbody.innerHTML = errHtml;
+      if (mainTbody) mainTbody.innerHTML = errHtml;
+    }
   }
 
   async function doCreerUserAdmin(e) {
@@ -2176,8 +2179,9 @@
   }
 
   function doLogout() {
-    TOKEN = null; USERNAME = null;
-    localStorage.removeItem("recrutia_token"); 
+    TOKEN = null; USERNAME = null; USER_ROLE = null;
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+    localStorage.removeItem("recrutia_token");
     localStorage.removeItem("recrutia_username");
     document.getElementById("app-screen").classList.remove("visible");
     document.getElementById("auth-screen").classList.remove("hidden");
@@ -2189,15 +2193,9 @@
     document.getElementById("sb-user-name").innerText = USERNAME;
     document.getElementById("sb-avatar").innerText = USERNAME.substring(0, 1).toUpperCase();
 
-    const navComptes = document.getElementById("nav-gestion-comptes");
     const navCandidats = document.getElementById("nav-rh-candidats");
     const navOffres = document.getElementById("nav-rh-offres");
     const navCalendrier = document.getElementById("nav-rh-calendrier");
-    const navConfigIA = document.getElementById("nav-config-ia");
-    const navAudit = document.getElementById("nav-audit");
-
-    const adminBanner = document.getElementById("admin-dashboard-banner");
-    const adminContainer = document.getElementById("admin-dashboard-container");
     const rhContainer = document.getElementById("rh-dashboard-container");
     const pageTitle = document.getElementById("page-title");
     const pageSub = document.getElementById("page-subtitle");
@@ -2208,58 +2206,30 @@
 
     try {
       const res = await fetch(`${API}/auth/me`, { headers: headers() });
+      if (res.status === 401) { handleAuthError(); return; }
       if (res.ok) {
         const me = await res.json();
-        if (me.role === 'admin') {
-          // --- BARRE LATÉRALE ET ESPACE DÉDIÉS À L'ADMINISTRATEUR SYSTÈME ---
-          if (roleSpan) roleSpan.innerText = 'Administrateur Système';
-          if (brandSub) brandSub.innerText = 'ArtiWeb Admin';
-          if (dashboardLabel) dashboardLabel.innerText = 'Supervision Système';
-          if (profilLabel) profilLabel.innerText = 'Mon Profil Admin';
-
-          if (navComptes) navComptes.style.display = 'flex';
-          if (navConfigIA) navConfigIA.style.display = 'flex';
-          if (navAudit) navAudit.style.display = 'flex';
-
-          // Masquer les menus opérationnels RH pour l'Administrateur
-          if (navCandidats) navCandidats.style.display = 'none';
-          if (navOffres) navOffres.style.display = 'none';
-          if (navCalendrier) navCalendrier.style.display = 'none';
-
-          if (adminBanner) adminBanner.style.display = 'block';
-          if (adminContainer) adminContainer.style.display = 'block';
-          if (rhContainer) rhContainer.style.display = 'none';
-
-          if (pageTitle) pageTitle.innerText = '⚙️ Tableau de Bord Administrateur & Supervision';
-          if (pageSub) pageSub.innerText = 'Supervision globale des utilisateurs, sécurité, audit système & moteur IA';
-
-          chargerGestionComptesAdmin();
-          chargerAudit();
-        } else {
-          // --- BARRE LATÉRALE ET ESPACE DÉDIÉS AU RECRUTEUR RH ---
-          if (roleSpan) roleSpan.innerText = 'Responsable RH';
-          if (brandSub) brandSub.innerText = 'ArtiWeb RH';
-          if (dashboardLabel) dashboardLabel.innerText = 'Tableau de bord';
-          if (profilLabel) profilLabel.innerText = 'Mon Profil RH';
-
-          if (navComptes) navComptes.style.display = 'none';
-          if (navConfigIA) navConfigIA.style.display = 'none';
-          if (navAudit) navAudit.style.display = 'none';
-
-          // Afficher les menus opérationnels RH
-          if (navCandidats) navCandidats.style.display = 'flex';
-          if (navOffres) navOffres.style.display = 'flex';
-          if (navCalendrier) navCalendrier.style.display = 'flex';
-
-          if (adminBanner) adminBanner.style.display = 'none';
-          if (adminContainer) adminContainer.style.display = 'none';
-          if (rhContainer) rhContainer.style.display = 'block';
-
-          if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
-          if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
-        }
+        USER_ROLE = me.role;
       }
     } catch {}
+
+    // --- BARRE LATÉRALE ET ESPACE DÉDIÉS AU RECRUTEUR RH ---
+    if (roleSpan) roleSpan.innerText = 'Responsable RH';
+    if (brandSub) brandSub.innerText = 'ArtiWeb RH';
+    if (dashboardLabel) dashboardLabel.innerText = 'Tableau de bord';
+    if (profilLabel) profilLabel.innerText = 'Mon Profil RH';
+
+    if (navCandidats) navCandidats.style.display = 'flex';
+    if (navOffres) navOffres.style.display = 'flex';
+    if (navCalendrier) navCalendrier.style.display = 'flex';
+
+    if (rhContainer) rhContainer.style.display = 'block';
+
+    if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
+    if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
+
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(chargerCandidatures, 5000);
 
     chargerOffres();
     fetch(`${API}/entretiens`, { headers: headers() })

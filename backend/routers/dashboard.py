@@ -5,6 +5,8 @@ Rôle   : Statistiques globales, entretiens planifiés, suppression d'entretiens
 
 import csv
 import io
+import logging
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import Response
 from sqlalchemy.orm import Session

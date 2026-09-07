@@ -143,6 +143,10 @@ class Token(BaseModel):
     username: str
     role: str
 
+class PasswordChangeRequest(BaseModel):
+    old_password: str
+    new_password: str
+
 class UserResponse(BaseModel):
     id: int
     username: str

@@ -175,15 +175,7 @@
     <form id="form-register" class="auth-form" onsubmit="doRegister(event)">
       <div class="form-field">
         <label><i class="fa-solid fa-user" style="color:var(--accent-gold);"></i> Nom d'utilisateur</label>
-        <input type="text" id="reg-user" placeholder="ex: rh_sarah ou admin_main" required minlength="3">
-      </div>
-
-      <div class="form-field">
-        <label><i class="fa-solid fa-user-shield" style="color:var(--accent-gold);"></i> Rôle / Type de compte</label>
-        <select id="reg-role" required>
-          <option value="recruteur">👤 Responsable RH / Recruteur</option>
-          <option value="admin">⚙️ Administrateur Système RH</option>
-        </select>
+        <input type="text" id="reg-user" placeholder="ex: rh_sarah" required minlength="3">
       </div>
 
       <div class="form-field">
@@ -242,7 +234,7 @@
           body: JSON.stringify({
             username: document.getElementById("reg-user").value.trim(),
             password: pass,
-            role: document.getElementById("reg-role").value
+            role: "recruteur"
           })
         });
         const data = await res.json();
