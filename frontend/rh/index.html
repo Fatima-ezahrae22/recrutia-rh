@@ -1043,6 +1043,103 @@
         </div>
       </div>
 
+      <!-- ⚙️ TABLEAU DE BORD EXCLUSIF ADMINISTRATEUR SYSTÈME -->
+      <div id="admin-dashboard-container" style="display:none;">
+
+        <!-- KPIS DE SUPERVISION SYSTÈME -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:24px;">
+          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
+            <div style="width:52px; height:52px; border-radius:14px; background:#FEF3C7; color:#D97706; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(245,158,11,0.2);">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Comptes Utilisateurs</span>
+              <div style="font-size:24px; font-weight:800; color:var(--text-primary);" id="admin-kpi-users">0</div>
+            </div>
+          </div>
+
+          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
+            <div style="width:52px; height:52px; border-radius:14px; background:#EEF2FF; color:#4F46E5; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(79,70,229,0.2);">
+              <i class="fa-solid fa-clipboard-list"></i>
+            </div>
+            <div>
+              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Logs d'Audit Système</span>
+              <div style="font-size:24px; font-weight:800; color:var(--text-primary);" id="admin-kpi-audits">0</div>
+            </div>
+          </div>
+
+          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
+            <div style="width:52px; height:52px; border-radius:14px; background:#D1FAE5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(16,185,129,0.2);">
+              <i class="fa-solid fa-server"></i>
+            </div>
+            <div>
+              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Serveur & APIs</span>
+              <div style="font-size:14px; font-weight:800; color:#059669;">🟢 Opérationnel (FastAPI)</div>
+            </div>
+          </div>
+
+          <div style="background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px;">
+            <div style="width:52px; height:52px; border-radius:14px; background:#F3E8FF; color:#7C3AED; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(124,58,237,0.2);">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Moteur IA</span>
+              <div style="font-size:14px; font-weight:800; color:#7C3AED;" id="admin-kpi-ai">Actif (NLP + Scoring)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANNEAU ADMINISTRATEUR : SUPERVISION ET GESTION DIRECTE DES UTILISATEURS -->
+        <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:24px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+            <div>
+              <h3 style="font-size:18px; font-weight:800; color:var(--text-primary);"><i class="fa-solid fa-users-gear" style="color:#D97706;"></i> Panneau Administrateur : Gestion des Comptes & Droits</h3>
+              <p style="font-size:12px; color:var(--text-muted);">Vue directe sur les comptes utilisateurs et état des accès au système.</p>
+            </div>
+            <button onclick="toggleFormNouveauCompteAdmin()" style="padding:10px 16px; background:linear-gradient(135deg, #4F46E5, #4338CA); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
+              <i class="fa-solid fa-plus"></i> Créer un Nouveau Compte
+            </button>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+              <thead>
+                <tr style="background:#EEF2FF; color:var(--primary); font-weight:700;">
+                  <th style="padding:12px 16px;">Utilisateur</th>
+                  <th style="padding:12px 16px;">Rôle</th>
+                  <th style="padding:12px 16px;">Statut</th>
+                  <th style="padding:12px 16px;">Date de Création</th>
+                  <th style="padding:12px 16px; text-align:right;">Actions d'Administration</th>
+                </tr>
+              </thead>
+              <tbody id="admin-main-users-table">
+                <tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Chargement des utilisateurs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANNEAU ADMINISTRATEUR : AUDIT EN TEMPS RÉEL -->
+        <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div>
+              <h3 style="font-size:18px; font-weight:800; color:var(--text-primary);"><i class="fa-solid fa-clipboard-list" style="color:var(--primary);"></i> Activité du Système & Logs d'Audit en Direct</h3>
+              <p style="font-size:12px; color:var(--text-muted);">Historique et traçabilité de toutes les opérations effectuées.</p>
+            </div>
+            <button onclick="ouvrirAudit()" style="padding:8px 14px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+              Voir l'Audit Complet
+            </button>
+          </div>
+          <div id="admin-main-audit-feed" style="display:flex; flex-direction:column; gap:10px; max-height:280px; overflow-y:auto;">
+            <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:15px;">Chargement des logs d'audit...</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 💼 TABLEAU DE BORD RECRUTEUR RH -->
+      <div id="rh-dashboard-container">
+
       <!-- 📊 SECTION GRAPHES RH -->
       <div class="charts-row" id="section-graphes">
         <div class="chart-card">
@@ -1177,6 +1274,7 @@
           </div>
         </div>
       </div>
+      </div> <!-- /rh-dashboard-container -->
 
     </div>
   </div>
@@ -1955,57 +2053,59 @@
 
   async function chargerGestionComptesAdmin() {
     const tbody = document.getElementById("table-users-admin-body");
-    if (!tbody) return;
+    const mainTbody = document.getElementById("admin-main-users-table");
+    const kpiUsers = document.getElementById("admin-kpi-users");
+
     try {
       const res = await fetch(`${API}/auth/users`, { headers: headers() });
       if (res.ok) {
         const users = await res.json();
         const badge = document.getElementById("sb-count-users");
         if (badge) badge.innerText = users.length || 0;
+        if (kpiUsers) kpiUsers.innerText = users.length || 0;
 
-        tbody.innerHTML = "";
+        let rowsHtml = "";
         if (!users || users.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Aucun compte utilisateur trouvé.</td></tr>';
-          return;
-        }
-        users.forEach(u => {
-          const isSelf = u.username === USERNAME;
-          const roleBadge = u.role === 'admin' 
-            ? '<span style="background:#FEF3C7; color:#D97706; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #FDE68A;">⚙️ Administrateur</span>'
-            : '<span style="background:#EEF2FF; color:#4F46E5; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #C7D2FE;">👤 Recruteur RH</span>';
-          
-          const statusBadge = u.is_active
-            ? '<span style="color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Actif</span>'
-            : '<span style="color:#DC2626; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Suspendu</span>';
+          rowsHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Aucun compte utilisateur trouvé.</td></tr>';
+        } else {
+          users.forEach(u => {
+            const isSelf = u.username === USERNAME;
+            const roleBadge = u.role === 'admin' 
+              ? '<span style="background:#FEF3C7; color:#D97706; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #FDE68A;">⚙️ Administrateur</span>'
+              : '<span style="background:#EEF2FF; color:#4F46E5; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #C7D2FE;">👤 Recruteur RH</span>';
+            
+            const statusBadge = u.is_active
+              ? '<span style="color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Actif</span>'
+              : '<span style="color:#DC2626; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Suspendu</span>';
 
-          tbody.innerHTML += `
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:12px 16px; font-weight:700;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">${u.username.charAt(0).toUpperCase()}</div>
-                  <div>
-                    <span>${u.username}</span> ${isSelf ? '<span style="color:var(--accent-green); font-size:11px; font-weight:700;">(Vous)</span>' : ''}
-                    <div style="font-size:10px; margin-top:2px;">${statusBadge}</div>
+            rowsHtml += `
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:12px 16px; font-weight:700;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">${u.username.charAt(0).toUpperCase()}</div>
+                    <div>
+                      <span>${u.username}</span> ${isSelf ? '<span style="color:var(--accent-green); font-size:11px; font-weight:700;">(Vous)</span>' : ''}
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td style="padding:12px 16px;">${roleBadge}</td>
-              <td style="padding:12px 16px; color:var(--text-muted); font-size:12px;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
-              <td style="padding:12px 16px; text-align:right;">
-                ${!isSelf ? `
-                  <button onclick="basculerStatutUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; margin-right:4px;">${u.is_active ? '⏸️ Suspendre' : '▶️ Activer'}</button>
-                  <button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>
-                ` : '<span style="color:var(--text-muted); font-size:11px; font-weight:600;">Compte actif</span>'}
-              </td>
-            </tr>
-          `;
-        });
-      } else {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Accès réservé aux administrateurs.</td></tr>';
+                </td>
+                <td style="padding:12px 16px;">${roleBadge}</td>
+                <td style="padding:12px 16px;">${statusBadge}</td>
+                <td style="padding:12px 16px; color:var(--text-muted); font-size:12px;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
+                <td style="padding:12px 16px; text-align:right;">
+                  ${!isSelf ? `
+                    <button onclick="basculerStatutUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; margin-right:4px;">${u.is_active ? '⏸️ Suspendre' : '▶️ Activer'}</button>
+                    <button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>
+                  ` : '<span style="color:var(--text-muted); font-size:11px; font-weight:600;">Compte actif</span>'}
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        if (tbody) tbody.innerHTML = rowsHtml;
+        if (mainTbody) mainTbody.innerHTML = rowsHtml;
       }
-    } catch {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Erreur de chargement des utilisateurs.</td></tr>';
-    }
+    } catch {}
   }
 
   async function doCreerUserAdmin(e) {
@@ -2088,28 +2188,34 @@
     document.getElementById("sb-user-name").innerText = USERNAME;
     document.getElementById("sb-avatar").innerText = USERNAME.substring(0, 1).toUpperCase();
 
+    const navComptes = document.getElementById("nav-gestion-comptes");
+    const adminBanner = document.getElementById("admin-dashboard-banner");
+    const adminContainer = document.getElementById("admin-dashboard-container");
+    const rhContainer = document.getElementById("rh-dashboard-container");
+    const pageTitle = document.getElementById("page-title");
+    const pageSub = document.getElementById("page-subtitle");
+    const roleSpan = document.getElementById("sb-user-role");
+
+    if (navComptes) navComptes.style.display = 'flex';
+
     try {
       const res = await fetch(`${API}/auth/me`, { headers: headers() });
       if (res.ok) {
         const me = await res.json();
-        const roleSpan = document.getElementById("sb-user-role");
-        const navComptes = document.getElementById("nav-gestion-comptes");
-        const adminBanner = document.getElementById("admin-dashboard-banner");
-        const pageTitle = document.getElementById("page-title");
-        const pageSub = document.getElementById("page-subtitle");
-
-        const navComptes = document.getElementById("nav-gestion-comptes");
-        if (navComptes) navComptes.style.display = 'flex';
-        chargerCountUsersAdmin();
-
         if (me.role === 'admin') {
           if (roleSpan) roleSpan.innerText = 'Administrateur Système';
           if (adminBanner) adminBanner.style.display = 'block';
+          if (adminContainer) adminContainer.style.display = 'block';
+          if (rhContainer) rhContainer.style.display = 'none';
           if (pageTitle) pageTitle.innerText = '⚙️ Tableau de Bord Administrateur & Supervision';
           if (pageSub) pageSub.innerText = 'Supervision globale des utilisateurs, sécurité, audit système & moteur IA';
+          chargerGestionComptesAdmin();
+          chargerAudit();
         } else {
           if (roleSpan) roleSpan.innerText = 'Responsable RH';
           if (adminBanner) adminBanner.style.display = 'none';
+          if (adminContainer) adminContainer.style.display = 'none';
+          if (rhContainer) rhContainer.style.display = 'block';
           if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
           if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
         }
@@ -2129,23 +2235,44 @@
 
   async function chargerAudit() {
     const container = document.getElementById("audit-list-container");
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Chargement...</div>';
+    const feedContainer = document.getElementById("admin-main-audit-feed");
+    const kpiAudits = document.getElementById("admin-kpi-audits");
+    if (container) container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Chargement...</div>';
+    
     try {
       const res = await fetch(`${API}/audit`, { headers: headers() });
       if (res.ok) {
         const logs = await res.json();
-        container.innerHTML = "";
-        logs.forEach(log => {
-          container.innerHTML += `
-            <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:12px;">
-              <div style="display:flex; justify-content:space-between;">
-                <strong><i class="fa-solid fa-user-circle"></i> ${log.utilisateur || 'Système'}</strong>
-                <span style="color:var(--text-muted);">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
-              </div>
-              <div style="color:var(--primary); font-weight:600; margin-top:4px;">${log.action}</div>
-              <div style="color:var(--text-secondary); font-family:monospace; font-size:11px; margin-top:4px;">${JSON.stringify(log.details)}</div>
-            </div>`;
-        });
+        if (kpiAudits) kpiAudits.innerText = logs.length || 0;
+
+        if (container) {
+          container.innerHTML = "";
+          logs.forEach(log => {
+            container.innerHTML += `
+              <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:12px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <strong><i class="fa-solid fa-user-circle"></i> ${log.utilisateur || 'Système'}</strong>
+                  <span style="color:var(--text-muted);">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+                </div>
+                <div style="color:var(--primary); font-weight:600; margin-top:4px;">${log.action}</div>
+                <div style="color:var(--text-secondary); font-family:monospace; font-size:11px; margin-top:4px;">${JSON.stringify(log.details)}</div>
+              </div>`;
+          });
+        }
+
+        if (feedContainer) {
+          feedContainer.innerHTML = "";
+          logs.slice(0, 8).forEach(log => {
+            feedContainer.innerHTML += `
+              <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12px; display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <strong><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> ${log.utilisateur || 'Système'}</strong>
+                  <span style="margin-left:8px; color:var(--primary); font-weight:600;">${log.action}</span>
+                </div>
+                <span style="color:var(--text-muted); font-size:11px;">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+              </div>`;
+          });
+        }
       }
     } catch {}
   }
