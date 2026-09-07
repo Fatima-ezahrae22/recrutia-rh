@@ -946,7 +946,7 @@
         <div class="user-avatar" id="sb-avatar">R</div>
         <div class="user-details">
           <p id="sb-user-name">recruteur</p>
-          <span>Responsable RH</span>
+          <span id="sb-user-role">Responsable RH</span>
         </div>
       </div>
       <button class="btn-logout-sidebar" onclick="event.stopPropagation(); doLogout();" title="Déconnexion">
@@ -1776,6 +1776,10 @@
       if (res.ok) {
         const users = await res.json();
         listEl.innerHTML = "";
+        if (!users || users.length === 0) {
+          listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Aucun autre compte enregistré.</div>';
+          return;
+        }
         users.forEach(u => {
           const isSelf = u.username === USERNAME;
           listEl.innerHTML += `
@@ -1784,12 +1788,16 @@
                 <strong>${u.username} ${isSelf ? '<span style="color:var(--primary); font-size:10px;">(Vous)</span>' : ''}</strong>
                 <div style="font-size:10px; color:var(--text-muted);">${u.role === 'admin' ? '⚙️ Administrateur' : '👤 Recruteur RH'} • ${new Date(u.created_at).toLocaleDateString('fr-FR')}</div>
               </div>
-              ${!isSelf ? `<button onclick="supprimerCompteUser(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>` : ''}
+              ${!isSelf ? `<button onclick="supprimerCompteUser(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i> Supprimer</button>` : ''}
             </div>
           `;
         });
+      } else {
+        listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Accès restreint.</div>';
       }
-    } catch {}
+    } catch {
+      listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Erreur de chargement.</div>';
+    }
   }
 
   async function supprimerCompteUser(id, username) {
@@ -1833,11 +1841,23 @@
     document.getElementById("auth-screen").classList.remove("hidden");
   }
 
-  function afficherApp() {
+  async function afficherApp() {
     document.getElementById("auth-screen").classList.add("hidden");
     document.getElementById("app-screen").classList.add("visible");
     document.getElementById("sb-user-name").innerText = USERNAME;
     document.getElementById("sb-avatar").innerText = USERNAME.substring(0, 1).toUpperCase();
+
+    try {
+      const res = await fetch(`${API}/auth/me`, { headers: headers() });
+      if (res.ok) {
+        const me = await res.json();
+        const roleSpan = document.getElementById("sb-user-role");
+        if (roleSpan) {
+          roleSpan.innerText = me.role === 'admin' ? 'Administrateur Système' : 'Responsable RH';
+        }
+      }
+    } catch {}
+
     chargerOffres();
     fetch(`${API}/entretiens`, { headers: headers() })
       .then(r => r.ok ? r.json() : [])
