@@ -59,3 +59,35 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
 def get_me(current_user: User = Depends(get_current_user)):
     """Retourne les informations de l'utilisateur connecté."""
     return current_user
+
+
+@router.get("/users", response_model=List[UserResponse])
+def lister_utilisateurs(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Permet à l'Administrateur de lister tous les comptes de la plateforme."""
+    if current_user.role != "admin":
+        # Seul un admin peut voir tous les comptes, sinon retourne une liste limitée
+        return [current_user]
+    return db.query(User).order_by(User.created_at.desc()).all()
+
+
+@router.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
+def supprimer_utilisateur(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Permet à un Admin de supprimer un compte utilisateur."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Seul un Administrateur peut supprimer des comptes.")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
+    if user.username == current_user.username:
+        raise HTTPException(status_code=400, detail="Vous ne pouvez pas supprimer votre propre compte.")
+    db.delete(user)
+    db.commit()
+    logger.info(f"[Auth] Compte {user.username} supprimé par l'admin {current_user.username}")
+    return {"message": f"Le compte '{user.username}' a été supprimé avec succès."}
