@@ -2098,16 +2098,17 @@
         const pageTitle = document.getElementById("page-title");
         const pageSub = document.getElementById("page-subtitle");
 
+        const navComptes = document.getElementById("nav-gestion-comptes");
+        if (navComptes) navComptes.style.display = 'flex';
+        chargerCountUsersAdmin();
+
         if (me.role === 'admin') {
           if (roleSpan) roleSpan.innerText = 'Administrateur Système';
-          if (navComptes) navComptes.style.display = 'flex';
           if (adminBanner) adminBanner.style.display = 'block';
           if (pageTitle) pageTitle.innerText = '⚙️ Tableau de Bord Administrateur & Supervision';
           if (pageSub) pageSub.innerText = 'Supervision globale des utilisateurs, sécurité, audit système & moteur IA';
-          chargerCountUsersAdmin();
         } else {
           if (roleSpan) roleSpan.innerText = 'Responsable RH';
-          if (navComptes) navComptes.style.display = 'none';
           if (adminBanner) adminBanner.style.display = 'none';
           if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
           if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";

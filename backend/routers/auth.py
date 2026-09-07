@@ -66,10 +66,7 @@ def lister_utilisateurs(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Permet à l'Administrateur de lister tous les comptes de la plateforme."""
-    if current_user.role != "admin":
-        # Seul un admin peut voir tous les comptes, sinon retourne une liste limitée
-        return [current_user]
+    """Permet de lister tous les comptes enregistrés sur la plateforme."""
     return db.query(User).order_by(User.created_at.desc()).all()
 
 
