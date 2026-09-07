@@ -1198,42 +1198,76 @@
   </div>
 </div>
 
-<!-- 👤 MODAL PROFIL RH -->
-<div id="modal-profil-rh" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.65); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:500px; width:90%; position:relative; background:#fff; border-radius:16px; padding:32px; color:var(--text-primary);">
-    <button onclick="fermerProfilRH()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:22px; color:var(--text-muted); cursor:pointer;">&times;</button>
-    <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; margin-bottom:20px;">
-      <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent-gold)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
+<!-- 👤 MODAL PROFIL RH & DE GESTION -->
+<div id="modal-profil-rh" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;">
+  <div class="auth-card" style="max-width:580px; width:92%; max-height:90vh; overflow-y:auto; position:relative; background:#fff; border-radius:16px; padding:28px; color:var(--text-primary); box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+    <button onclick="fermerProfilRH()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
+    
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:16px;">
+      <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent-gold)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
         R
       </div>
-      <div>
-        <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
-        <span style="background:#EEF2FF; color:var(--primary); font-size:12px; font-weight:700; padding:3px 12px; border-radius:20px; border:1px solid #C7D2FE;">Responsable Recrutement RH</span>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
+          <span id="profil-modal-badge" style="background:#EEF2FF; color:var(--primary); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; border:1px solid #C7D2FE;">Responsable Recrutement</span>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:2px;" id="profil-modal-email">recruteur@artiweb.ma</p>
       </div>
     </div>
 
-    <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:20px; font-size:13px; display:flex; flex-direction:column; gap:10px;">
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-building" style="color:var(--primary);"></i> Entreprise</span>
-        <strong>ArtiWeb Fès — Maroc</strong>
+    <!-- STATS RAPIDES -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:20px;">
+      <div style="background:var(--primary-light); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Offres Actives</span>
+        <div style="font-size:18px; font-weight:800; color:var(--primary);" id="profil-stat-offres">0</div>
       </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> E-mail officiel</span>
-        <strong>recruteur@artiweb.ma</strong>
+      <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:10px; padding:12px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Candidatures</span>
+        <div style="font-size:18px; font-weight:800; color:#D97706;" id="profil-stat-candidats">0</div>
       </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Statut compte</span>
-        <strong style="color:var(--accent-green);">Actif & Sécurisé</strong>
-      </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Rôle API</span>
-        <strong>Administrateur RH</strong>
+      <div style="background:#D1FAE5; border:1px solid #A7F3D0; border-radius:10px; padding:12px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Entretiens</span>
+        <div style="font-size:18px; font-weight:800; color:#059669;" id="profil-stat-entretiens">0</div>
       </div>
     </div>
 
-    <button class="btn btn-primary" onclick="doLogout()" style="background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3);">
-      <i class="fa-solid fa-power-off"></i> Se déconnecter du compte
-    </button>
+    <!-- SECTION 1 : CHANGER MOT DE PASSE -->
+    <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px;">
+      <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Changer mon mot de passe
+      </h4>
+      <form onsubmit="doChangerMotDePasse(event)" style="display:flex; flex-direction:column; gap:10px;">
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted);">Ancien mot de passe</label>
+          <input type="password" id="change-pass-old" placeholder="••••••••" required style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted);">Nouveau mot de passe (min. 6 car.)</label>
+          <input type="password" id="change-pass-new" placeholder="••••••••" required minlength="6" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <button type="submit" id="btn-change-pass" style="padding:9px 14px; background:var(--primary); color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; align-self:flex-end; transition:all 0.2s;">
+          <i class="fa-solid fa-check"></i> Mettre à jour le mot de passe
+        </button>
+      </form>
+    </div>
+
+    <!-- SECTION 2 : GESTION DES COMPTES UTILISATEURS (ADMIN SEULEMENT) -->
+    <div id="profil-admin-users-section" style="display:none; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px;">
+      <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+        <span><i class="fa-solid fa-users-gear" style="color:var(--primary);"></i> Comptes & Utilisateurs de la plateforme</span>
+        <button onclick="chargerListeUtilisateursAdmin()" style="border:none; background:none; color:var(--primary); font-size:12px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-rotate"></i> Actualiser</button>
+      </h4>
+      <div id="admin-users-list" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
+        <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Chargement...</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary" onclick="doLogout()" style="flex:1; background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3); padding:12px; font-weight:700;">
+        <i class="fa-solid fa-power-off"></i> Se déconnecter du compte
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1665,13 +1699,112 @@
     fermerConfigIA();
   }
 
-  // 👤 PROFIL RH MODAL
-  function ouvrirProfilRH() {
+  // 👤 PROFIL RH & ADMINISTRATION MODAL
+  let userRole = 'recruteur';
+
+  async function ouvrirProfilRH() {
     document.getElementById("profil-modal-name").innerText = USERNAME;
-    document.getElementById("profil-modal-avatar").innerText = USERNAME.charAt(0).toUpperCase();
+    document.getElementById("profil-modal-avatar").innerText = USERNAME ? USERNAME.charAt(0).toUpperCase() : 'R';
+    document.getElementById("profil-stat-offres").innerText = toutesOffres ? toutesOffres.length : 0;
+    document.getElementById("profil-stat-candidats").innerText = toutesCandidatures ? toutesCandidatures.length : 0;
+    document.getElementById("profil-stat-entretiens").innerText = document.getElementById("sb-count-entretiens") ? document.getElementById("sb-count-entretiens").innerText : 0;
+
+    try {
+      const res = await fetch(`${API}/auth/me`, { headers: headers() });
+      if (res.ok) {
+        const me = await res.json();
+        userRole = me.role || 'recruteur';
+        const badge = document.getElementById("profil-modal-badge");
+        if (userRole === 'admin') {
+          badge.innerText = "⚙️ Administrateur Système";
+          badge.style.background = "#FEF3C7";
+          badge.style.color = "#D97706";
+          badge.style.borderColor = "#FDE68A";
+          document.getElementById("profil-admin-users-section").style.display = "block";
+          chargerListeUtilisateursAdmin();
+        } else {
+          badge.innerText = "👤 Responsable RH";
+          badge.style.background = "#EEF2FF";
+          badge.style.color = "#4F46E5";
+          badge.style.borderColor = "#C7D2FE";
+          document.getElementById("profil-admin-users-section").style.display = "none";
+        }
+      }
+    } catch {}
+
     document.getElementById("modal-profil-rh").style.display = "flex";
   }
+
   function fermerProfilRH() { document.getElementById("modal-profil-rh").style.display = "none"; }
+
+  async function doChangerMotDePasse(e) {
+    e.preventDefault();
+    const oldPass = document.getElementById("change-pass-old").value;
+    const newPass = document.getElementById("change-pass-new").value;
+    const btn = document.getElementById("btn-change-pass");
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mise à jour...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API}/auth/change-password`, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ old_password: oldPass, new_password: newPass })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast("Mot de passe modifié avec succès !");
+        document.getElementById("change-pass-old").value = "";
+        document.getElementById("change-pass-new").value = "";
+      } else {
+        toast(data.detail || "Erreur lors du changement de mot de passe.", "error");
+      }
+    } catch (err) {
+      toast("Erreur de connexion serveur.", "error");
+    }
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Mettre à jour le mot de passe';
+    btn.disabled = false;
+  }
+
+  async function chargerListeUtilisateursAdmin() {
+    const listEl = document.getElementById("admin-users-list");
+    if (!listEl) return;
+    try {
+      const res = await fetch(`${API}/auth/users`, { headers: headers() });
+      if (res.ok) {
+        const users = await res.json();
+        listEl.innerHTML = "";
+        users.forEach(u => {
+          const isSelf = u.username === USERNAME;
+          listEl.innerHTML += `
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#fff; border:1px solid var(--border); border-radius:8px; font-size:12px;">
+              <div>
+                <strong>${u.username} ${isSelf ? '<span style="color:var(--primary); font-size:10px;">(Vous)</span>' : ''}</strong>
+                <div style="font-size:10px; color:var(--text-muted);">${u.role === 'admin' ? '⚙️ Administrateur' : '👤 Recruteur RH'} • ${new Date(u.created_at).toLocaleDateString('fr-FR')}</div>
+              </div>
+              ${!isSelf ? `<button onclick="supprimerCompteUser(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>` : ''}
+            </div>
+          `;
+        });
+      }
+    } catch {}
+  }
+
+  async function supprimerCompteUser(id, username) {
+    if (!confirm(`Voulez-vous vraiment supprimer le compte "${username}" ?`)) return;
+    try {
+      const res = await fetch(`${API}/auth/users/${id}`, { method: "DELETE", headers: headers() });
+      const data = await res.json();
+      if (res.ok) {
+        toast(`Compte "${username}" supprimé.`);
+        chargerListeUtilisateursAdmin();
+      } else {
+        toast(data.detail || "Erreur de suppression.", "error");
+      }
+    } catch {
+      toast("Erreur de connexion.", "error");
+    }
+  }
 
   async function doLogin(e) {
     e.preventDefault();
