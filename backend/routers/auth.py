@@ -22,19 +22,20 @@ router = APIRouter(prefix="/api/auth", tags=["Authentification"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
-    """Inscription d'un nouveau compte recruteur."""
+    """Inscription d'un nouveau compte recruteur ou administrateur."""
     existing = db.query(User).filter(User.username == user_in.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Ce nom d'utilisateur est déjà pris.")
+    role_choisi = user_in.role if user_in.role in ["recruteur", "admin"] else "recruteur"
     user = User(
         username=user_in.username,
         hashed_password=hash_password(user_in.password),
-        role="recruteur"
+        role=role_choisi
     )
     db.add(user)
     db.commit()
     db.refresh(user)
-    logger.info(f"[Auth] Nouveau compte créé : {user.username}")
+    logger.info(f"[Auth] Nouveau compte créé ({role_choisi}) : {user.username}")
     return user
 
 

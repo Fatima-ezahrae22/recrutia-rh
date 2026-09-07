@@ -131,6 +131,7 @@ class AuditLogResponse(BaseModel):
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, json_schema_extra={"example": "recruteur"})
     password: str = Field(..., min_length=6, json_schema_extra={"example": "RecrutIA2026!"})
+    role: Optional[str] = Field("recruteur", json_schema_extra={"example": "recruteur"})
 
 class UserLogin(BaseModel):
     username: str
