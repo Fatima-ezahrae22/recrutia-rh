@@ -965,7 +965,7 @@
     <header>
       <div class="header-title">
         <h2 id="page-title">Tableau de bord RH & Scoring IA Multi-Critères</h2>
-        <p>Gestion d'offres, Ingestion de CVs & Explicabilité</p>
+        <p id="page-subtitle">Gestion d'offres, Ingestion de CVs & Explicabilité</p>
       </div>
 
       <div class="header-right">
@@ -1011,6 +1011,33 @@
     </header>
 
     <div class="content-body">
+
+      <!-- ⚙️ BANNIÈRE D'ADMINISTRATION SYSTÈME & SUPERVISION -->
+      <div id="admin-dashboard-banner" style="display:none; background:linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%); border:1px solid rgba(245, 158, 11, 0.35); border-radius:16px; padding:24px; margin-bottom:24px; color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="width:56px; height:56px; border-radius:14px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 8px 20px rgba(245, 158, 11, 0.4);">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <h3 style="font-size:20px; font-weight:800; color:#FFF; font-family:'Outfit', sans-serif;">Espace de Supervision Administrateur</h3>
+              <p style="font-size:13px; color:#A5B4FC; margin-top:2px;">Contrôle des comptes utilisateurs, traçabilité des actions et paramétrage du moteur IA.</p>
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button onclick="ouvrirGestionComptes()" style="padding:11px 18px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#1E1B4B; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(245, 158, 11, 0.4);">
+              <i class="fa-solid fa-users-gear"></i> Gérer les Utilisateurs
+            </button>
+            <button onclick="ouvrirAudit()" style="padding:11px 18px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+              <i class="fa-solid fa-clipboard-list"></i> Consulter l'Audit
+            </button>
+            <button onclick="ouvrirConfigIA()" style="padding:11px 18px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+              <i class="fa-solid fa-sliders"></i> Moteur IA
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- 📊 SECTION GRAPHES RH -->
       <div class="charts-row" id="section-graphes">
@@ -2033,13 +2060,23 @@
         const me = await res.json();
         const roleSpan = document.getElementById("sb-user-role");
         const navComptes = document.getElementById("nav-gestion-comptes");
+        const adminBanner = document.getElementById("admin-dashboard-banner");
+        const pageTitle = document.getElementById("page-title");
+        const pageSub = document.getElementById("page-subtitle");
+
         if (me.role === 'admin') {
           if (roleSpan) roleSpan.innerText = 'Administrateur Système';
           if (navComptes) navComptes.style.display = 'flex';
+          if (adminBanner) adminBanner.style.display = 'block';
+          if (pageTitle) pageTitle.innerText = '⚙️ Tableau de Bord Administrateur & Supervision';
+          if (pageSub) pageSub.innerText = 'Supervision globale des utilisateurs, sécurité, audit système & moteur IA';
           chargerCountUsersAdmin();
         } else {
           if (roleSpan) roleSpan.innerText = 'Responsable RH';
           if (navComptes) navComptes.style.display = 'none';
+          if (adminBanner) adminBanner.style.display = 'none';
+          if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
+          if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
         }
       }
     } catch {}
