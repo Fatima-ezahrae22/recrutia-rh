@@ -24,9 +24,18 @@ from backend.models import Offre, Candidat, Candidature, AuditLog
 
 logger = logging.getLogger(__name__)
 
-# ✅ Dossier permanent pour stocker les CVs uploadés
-UPLOADS_DIR = os.path.join("uploads", "cv")
-os.makedirs(UPLOADS_DIR, exist_ok=True)
+def _get_safe_uploads_dir():
+    try:
+        d = os.path.join("uploads", "cv")
+        os.makedirs(d, exist_ok=True)
+        return d
+    except Exception:
+        d = os.path.join("/tmp", "uploads", "cv")
+        os.makedirs(d, exist_ok=True)
+        return d
+
+# ✅ Dossier permanent/temporaire pour stocker les CVs uploadés
+UPLOADS_DIR = _get_safe_uploads_dir()
 
 
 def _extraire_contact_depuis_texte(texte: str) -> Tuple[str, str, str]:

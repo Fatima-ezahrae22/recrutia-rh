@@ -115,14 +115,19 @@ async def websocket_notifications(websocket: WebSocket):
         logger.warning(f"[WebSocket] Exception : {e}")
         ws_manager.disconnect(websocket)
 
-# ✅ Servir les fichiers CV uploadés (dossier uploads/)
-try:
-    UPLOADS_DIR = "/tmp/uploads/cv" if os.environ.get("VERCEL") else "uploads/cv"
-    os.makedirs(UPLOADS_DIR, exist_ok=True)
-    uploads_root = "/tmp/uploads" if os.environ.get("VERCEL") else "uploads"
-    app.mount("/uploads", StaticFiles(directory=uploads_root), name="uploads")
-except Exception as e:
-    logger.warning(f"[Init] Dossier uploads non monté (mode serverless) : {e}")
+def _setup_uploads_mount():
+    try:
+        os.makedirs("uploads/cv", exist_ok=True)
+        app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+    except Exception:
+        try:
+            tmp_cv = os.path.join("/tmp", "uploads", "cv")
+            os.makedirs(tmp_cv, exist_ok=True)
+            app.mount("/uploads", StaticFiles(directory=os.path.join("/tmp", "uploads")), name="uploads")
+        except Exception as e:
+            logger.warning(f"[Init] Montage static uploads non disponible : {e}")
+
+_setup_uploads_mount()
 
 
 # ─── Inclusions des Routers ───────────────────────────────────────────────────

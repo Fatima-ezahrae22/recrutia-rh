@@ -11,9 +11,20 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 logger = logging.getLogger(__name__)
 
-# URL par défaut : PostgreSQL si configuré, sinon SQLite (/tmp sur Vercel/Serverless)
-default_db = "sqlite:////tmp/agent_rh.db" if (os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV")) else "sqlite:///./agent_rh.db"
-DATABASE_URL = os.environ.get("DATABASE_URL", default_db)
+def _get_database_url():
+    env_url = os.environ.get("DATABASE_URL")
+    if env_url:
+        return env_url
+    try:
+        test_path = "./.write_test"
+        with open(test_path, "w") as f:
+            f.write("ok")
+        os.remove(test_path)
+        return "sqlite:///./agent_rh.db"
+    except Exception:
+        return "sqlite:////tmp/agent_rh.db"
+
+DATABASE_URL = _get_database_url()
 
 # Configuration du moteur selon le SGBD
 if DATABASE_URL.startswith("sqlite"):
