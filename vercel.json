@@ -1,38 +1,10 @@
 {
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "frontend/**"
     }
-  ],
+  },
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/docs",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/openapi.json",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/rh/register",
-      "dest": "frontend/rh/register.html"
-    },
-    {
-      "src": "/rh(.*)",
-      "dest": "frontend/rh/index.html"
-    },
-    {
-      "src": "/candidat(.*)",
-      "dest": "frontend/candidat/index.html"
-    },
-    {
-      "src": "/",
-      "dest": "frontend/candidat/index.html"
-    }
+    { "src": "/(.*)", "dest": "/api/index.py" }
   ]
 }

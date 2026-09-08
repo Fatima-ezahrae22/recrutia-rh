@@ -169,25 +169,32 @@ def reset_et_rediriger():
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+def _lire_html(relative_path: str) -> str:
+    try:
+        chemin = os.path.join(BASE_DIR, relative_path)
+        if os.path.exists(chemin):
+            with open(chemin, "r", encoding="utf-8") as f:
+                return f.read()
+    except Exception as e:
+        logger.error(f"[HTML] Erreur lecture {relative_path} : {e}")
+    return f"<h1>Interface RecrutIA RH — ({relative_path} non disponible)</h1>"
+
+
 @app.get("/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_candidat():
     """Sert l'interface publique candidat (Page d'accueil principale)."""
-    chemin = os.path.join(BASE_DIR, "frontend", "candidat", "index.html")
     headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
-    if os.path.exists(chemin):
-        return FileResponse(chemin, headers=headers)
-    return HTMLResponse("<h1>ArtiWeb Candidat — Interface non trouvée.</h1>")
+    html = _lire_html("frontend/candidat/index.html")
+    return HTMLResponse(content=html, headers=headers)
 
 
 @app.get("/rh/register", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_inscription_rh():
     """Sert la page d'inscription RH."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
-    chemin = os.path.join(BASE_DIR, "frontend", "rh", "register.html")
-    if os.path.exists(chemin):
-        return FileResponse(chemin, headers=no_cache)
-    return HTMLResponse("<h1>RecrutIA — Page d'inscription non trouvée.</h1>")
+    html = _lire_html("frontend/rh/register.html")
+    return HTMLResponse(content=html, headers=no_cache)
 
 
 @app.get("/rh", response_class=HTMLResponse, tags=["Dashboard Web UI"])
@@ -196,10 +203,5 @@ def servir_inscription_rh():
 def servir_dashboard_rh():
     """Sert l'interface RH (tableau de bord recruteur protégé)."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0", "Pragma": "no-cache", "Expires": "0"}
-    chemin = os.path.join(BASE_DIR, "frontend", "rh", "index.html")
-    if os.path.exists(chemin):
-        return FileResponse(chemin, headers=no_cache)
-    chemin_legacy = os.path.join(BASE_DIR, "frontend", "index.html")
-    if os.path.exists(chemin_legacy):
-        return FileResponse(chemin_legacy, headers=no_cache)
-    return HTMLResponse("<h1>RecrutIA RH — Interface non trouvée.</h1>")
+    html = _lire_html("frontend/rh/index.html")
+    return HTMLResponse(content=html, headers=no_cache)
