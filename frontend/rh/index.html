@@ -2667,6 +2667,34 @@
         </div>
       </div>
 
+      ${dt.confirmation_entretien ? `
+        <div class="detail-section" style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:10px; padding:14px; margin-bottom:12px;">
+          <h4 style="color:#047857; margin-bottom:6px;"><i class="fa-solid fa-calendar-check"></i> Statut Réponse Entretien (Candidat)</h4>
+          <div style="font-size:13px; font-weight:800; color:${dt.confirmation_entretien.statut === 'CONFIRME' ? '#047857' : '#D97706'};">
+            ${dt.confirmation_entretien.statut === 'CONFIRME' ? '✅ PRÉSENCE CONFIRMÉE PAR LE CANDIDAT' : '⚠️ DEMANDE DE REPORT D\'ENTRETIEN'}
+          </div>
+          <div style="font-size:11px; color:#065F46; margin-top:4px;"><i class="fa-regular fa-clock"></i> Reçu le : ${dt.confirmation_entretien.date_reponse || ''}</div>
+          ${dt.confirmation_entretien.message ? `<div style="font-size:12px; color:#334155; margin-top:6px; font-style:italic; background:#FFF; padding:6px 10px; border-radius:6px;">"${dt.confirmation_entretien.message}"</div>` : ''}
+        </div>
+      ` : ''}
+
+      ${dt.messages_candidat && dt.messages_candidat.length > 0 ? `
+        <div class="detail-section" style="background:#EEF2FF; border:1px solid #C7D2FE; border-radius:10px; padding:14px; margin-bottom:12px;">
+          <h4 style="color:#4338CA; margin-bottom:8px;"><i class="fa-solid fa-comments"></i> Questions & Messages reçus du Candidat (${dt.messages_candidat.length})</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto; padding-right:4px;">
+            ${dt.messages_candidat.map(m => `
+              <div style="background:#FFF; border:1px solid #C7D2FE; border-radius:8px; padding:8px 12px; font-size:12px;">
+                <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:10px; font-weight:700; margin-bottom:4px;">
+                  <span><i class="fa-solid fa-user"></i> ${m.expediteur || 'Candidat'}</span>
+                  <span><i class="fa-regular fa-clock"></i> ${m.date || ''}</span>
+                </div>
+                <div style="color:var(--text-primary); font-weight:600; line-height:1.4;">${m.texte}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
       <div class="detail-section">
         <h4><i class="fa-solid fa-chart-pie"></i> Décomposition des 4 Sous-Scores Multi-Critères</h4>
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; text-align:center;">
