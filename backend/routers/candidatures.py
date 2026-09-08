@@ -4,6 +4,7 @@ Rôle   : Gestion des candidatures (Soumission, Scoring, Décisions RH, Export P
 """
 
 import os
+import json
 import shutil
 import tempfile
 import logging
@@ -199,7 +200,9 @@ def confirmer_entretien_public(
     log = AuditLog(
         utilisateur=candidat_nom,
         action=f"Réponse Entretien : {action_log}",
-        details={"candidature_id": cand.id, "email": cand.candidat.email if cand.candidat else "", "note": msg_opt}
+        entite_type="candidature",
+        entite_id=cand.id,
+        details=json.dumps({"candidature_id": cand.id, "email": cand.candidat.email if cand.candidat else "", "note": msg_opt})
     )
     db.add(log)
     db.commit()
@@ -239,7 +242,9 @@ def envoyer_message_rh_public(
     log = AuditLog(
         utilisateur=candidat_nom,
         action="Question / Message Candidat RH",
-        details={"candidature_id": cand.id, "message": texte}
+        entite_type="candidature",
+        entite_id=cand.id,
+        details=json.dumps({"candidature_id": cand.id, "message": texte})
     )
     db.add(log)
     db.commit()

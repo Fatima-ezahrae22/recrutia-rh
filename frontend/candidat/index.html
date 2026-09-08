@@ -650,9 +650,11 @@
             alert(data.message || 'Réponse enregistrée !');
             const r = await fetch(`${API_BASE}/candidatures?email=${encodeURIComponent(suiviEmail.trim())}`);
             if (r.ok) setSuiviResult(await r.json());
+          } else {
+            alert(data.detail || 'Erreur lors de la transmission de la réponse.');
           }
         } catch(e) {
-          alert('Erreur lors de la transmission de la réponse.');
+          alert('Erreur de connexion au serveur.');
         }
       };
 
@@ -673,9 +675,11 @@
             alert('Votre message a été transmis à l\'équipe RH !');
             const r = await fetch(`${API_BASE}/candidatures?email=${encodeURIComponent(suiviEmail.trim())}`);
             if (r.ok) setSuiviResult(await r.json());
+          } else {
+            alert(data.detail || 'Erreur lors de l\'envoi du message.');
           }
         } catch(e) {
-          alert('Erreur lors de l\'envoi du message.');
+          alert('Erreur de connexion au serveur.');
         }
       };
 
