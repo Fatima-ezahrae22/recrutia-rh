@@ -36,55 +36,66 @@ def generer_html_convocation(
     lieu_ou_lien: str,
     message_personnalise: str = None
 ) -> str:
-    """Génère le modèle d'email HTML professionnel de convocation."""
+    """Génère le modèle d'email HTML professionnel de convocation assorti au thème RecrutIA."""
     type_format = "en nos locaux à Fès" if format_entretien.upper() == "PRESENTIEL" else "en visioconférence (Google Meet)"
-    
-    html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <style>
-        body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #0F172A; background-color: #F8FAFC; padding: 20px; }}
-        .card {{ background-color: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; max-width: 600px; margin: 0 auto; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }}
-        .header {{ border-bottom: 2px solid #059669; padding-bottom: 16px; margin-bottom: 24px; }}
-        .brand {{ font-size: 20px; font-weight: 800; color: #059669; }}
-        .title {{ font-size: 18px; font-weight: 700; color: #0F172A; margin-top: 8px; }}
-        .content {{ line-height: 1.6; font-size: 14px; color: #334155; }}
-        .details-box {{ background-color: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 16px; margin: 20px 0; }}
-        .detail-item {{ font-size: 14px; margin-bottom: 8px; }}
-        .detail-item strong {{ color: #047857; }}
-        .footer {{ border-top: 1px solid #E2E8F0; margin-top: 24px; padding-top: 16px; font-size: 12px; color: #94A3B8; text-align: center; }}
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <div class="header">
-          <div class="brand">RecrutIA RH</div>
-          <div class="title">Convocation à un entretien de recrutement</div>
-        </div>
-        <div class="content">
-          <p>Bonjour <strong>{nom_candidat}</strong>,</p>
-          <p>Suite à l'analyse de votre candidature pour le poste de <strong>{titre_offre}</strong>, nous avons le plaisir de vous informer que votre profil a été retenu pour l'étape suivante.</p>
-          
-          <div class="details-box">
-            <div class="detail-item">📅 <strong>Date et Heure :</strong> {date_heure}</div>
-            <div class="detail-item">📍 <strong>Format :</strong> Entretien {type_format}</div>
-            <div class="detail-item">🗺️ <strong>Lieu / Lien :</strong> {lieu_ou_lien}</div>
-          </div>
-          
-          {f"<p><em>Message de l'équipe RH :</em> {message_personnalise}</p>" if message_personnalise else ""}
-          
-          <p>Merci de bien vouloir nous confirmer votre présence en répondant à cet e-mail.</p>
-          <p>Cordialement,<br><strong>L'Équipe RecrutIA RH</strong></p>
-        </div>
-        <div class="footer">
-          RecrutIA — Système Intelligent d'Automatisation & Scoring du Recrutement
-        </div>
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {{ font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #E2E8F0; background-color: #090D16; padding: 24px; margin: 0; }}
+    .card {{ background-color: #0F172A; border: 1px solid #312E81; border-radius: 20px; max-width: 620px; margin: 0 auto; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25); }}
+    .hero {{ background: linear-gradient(135deg, #312E81 0%, #4F46E5 50%, #D97706 100%); padding: 36px 32px; text-align: center; border-bottom: 2px solid #F59E0B; }}
+    .hero-brand {{ font-size: 11px; font-weight: 900; color: #F59E0B; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }}
+    .hero-title {{ color: #FFFFFF; font-size: 24px; font-weight: 900; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }}
+    .body {{ padding: 32px; }}
+    .greeting {{ font-size: 15px; line-height: 1.7; color: #CBD5E1; margin-bottom: 20px; }}
+    .details-box {{ background: #1E1B4B; border: 1px solid #6366F1; border-left: 5px solid #F59E0B; border-radius: 14px; padding: 20px; margin: 24px 0; }}
+    .detail-row {{ font-size: 14px; margin-bottom: 10px; color: #E2E8F0; }}
+    .detail-row:last-child {{ margin-bottom: 0; }}
+    .detail-row strong {{ color: #F59E0B; }}
+    .msg-rh {{ background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px 18px; margin: 18px 0; font-size: 13px; color: #FDE68A; font-style: italic; }}
+    .footer {{ background-color: #05070E; border-top: 1px solid #1E1B4B; padding: 20px 32px; text-align: center; font-size: 11px; color: #64748B; }}
+    .badge {{ display: inline-block; background: rgba(245, 158, 11, 0.2); color: #F59E0B; font-size: 11px; font-weight: 800; padding: 5px 14px; border-radius: 99px; border: 1px solid #F59E0B; text-transform: uppercase; letter-spacing: 1px; }}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="hero">
+      <div class="hero-brand">✨ RECRUTIA RH &bull; ARTIWEB FÈS</div>
+      <h1 class="hero-title">Convocation à votre Entretien</h1>
+    </div>
+    <div class="body">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <span class="badge">📅 Entretien RH Programmé</span>
       </div>
-    </body>
-    </html>
-    """
+      <div class="greeting">
+        <p>Bonjour <strong style="color:#FFF;">{nom_candidat}</strong>,</p>
+        <p>Suite à l'analyse sémantique de votre candidature par notre moteur d'Intelligence Artificielle pour le poste de <strong style="color:#818CF8;">{titre_offre}</strong>, nous avons le plaisir de vous confirmer votre sélection pour l'étape d'entretien.</p>
+      </div>
+
+      <div class="details-box">
+        <div class="detail-row">📅 <strong>Date & Heure :</strong> <span style="color:#FFF;">{date_heure}</span></div>
+        <div class="detail-row">📍 <strong>Format :</strong> <span style="color:#FFF;">Entretien {type_format}</span></div>
+        <div class="detail-row">🗺️ <strong>Lieu / Lien :</strong> <span style="color:#FFF;">{lieu_ou_lien}</span></div>
+      </div>
+
+      {f'<div class="msg-rh">💬 <strong>Message de l\'Équipe RH :</strong><br>{message_personnalise}</div>' if message_personnalise else ""}
+
+      <p style="font-size: 13.5px; color: #94A3B8; line-height: 1.6; margin-top: 24px;">
+        Merci de bien vouloir nous confirmer votre disponibilité en répondant à cet e-mail.<br><br>
+        Cordialement,<br>
+        <strong style="color:#FFF;">L'Équipe RH — ArtiWeb Fès</strong><br>
+        <em style="font-size: 11px; color: #64748B;">Plateforme d'Évaluation & Scoring IA RecrutIA</em>
+      </p>
+    </div>
+    <div class="footer">
+      RecrutIA &bull; Système Intelligent d'Automatisation & Scoring du Recrutement &bull; ArtiWeb Fès
+    </div>
+  </div>
+</body>
+</html>"""
     return html
 
 
@@ -158,27 +169,27 @@ def generer_html_embauche(
     note_rh: str = None,
     score_ia: float = None
 ) -> str:
-    """Génère un email HTML professionnel de confirmation d'embauche."""
+    """Génère un email HTML professionnel d'embauche aux couleurs de la plateforme candidat RecrutIA."""
     score_section = ""
     if score_ia is not None:
         score_section = f"""
         <div style="text-align:center; margin: 20px 0;">
-          <div style="display:inline-block; background:linear-gradient(135deg,#10B981,#059669);
-               color:#fff; border-radius:50%; width:80px; height:80px;
-               line-height:80px; font-size:24px; font-weight:900; font-family:sans-serif;">
+          <div style="display:inline-block; background:linear-gradient(135deg, #10B981, #059669);
+               color:#fff; border-radius:50%; width:86px; height:86px;
+               line-height:86px; font-size:26px; font-weight:900; font-family:sans-serif; box-shadow:0 0 25px rgba(16,185,129,0.4); border:2px solid #6EE7B7;">
             {round(score_ia)}%
           </div>
-          <div style="font-size:11px; color:#6B7280; margin-top:6px; text-transform:uppercase; letter-spacing:1px;">
-            Score d'Adéquation IA
+          <div style="font-size:11px; color:#10B981; margin-top:8px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">
+            Score d'Adéquation IA Validé
           </div>
         </div>"""
 
     note_section = ""
     if note_rh:
         note_section = f"""
-        <div style="background:#F0FDF4; border-left:4px solid #10B981; border-radius:0 8px 8px 0;
-             padding:14px 16px; margin:16px 0; font-size:13px; color:#065F46; font-style:italic;">
-          <strong>Message de l'équipe RH :</strong><br>{note_rh}
+        <div style="background:rgba(16,185,129,0.1); border-left:4px solid #10B981; border-radius:0 12px 12px 0;
+             padding:16px 20px; margin:20px 0; font-size:13.5px; color:#A7F3D0; font-style:italic;">
+          <strong style="color:#10B981;">Note de l'Équipe RH :</strong><br>{note_rh}
         </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -186,29 +197,29 @@ def generer_html_embauche(
 <head>
   <meta charset="utf-8">
   <style>
-    body {{ font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; color:#0F172A; background:#F0FDF4; padding:24px; }}
-    .card {{ background:#ffffff; border:1px solid #A7F3D0; border-radius:16px; max-width:620px;
-             margin:0 auto; overflow:hidden; box-shadow:0 20px 40px rgba(16,185,129,0.12); }}
-    .hero {{ background:linear-gradient(135deg,#10B981 0%,#059669 100%); padding:40px 32px; text-align:center; }}
+    body {{ font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#E2E8F0; background:#090D16; padding:24px; margin:0; }}
+    .card {{ background:#0F172A; border:1px solid #047857; border-radius:20px; max-width:620px;
+             margin:0 auto; overflow:hidden; box-shadow:0 25px 50px -12px rgba(16,185,129,0.25); }}
+    .hero {{ background:linear-gradient(135deg,#047857 0%,#10B981 50%,#D97706 100%); padding:40px 32px; text-align:center; border-bottom:2px solid #10B981; }}
     .hero-icon {{ font-size:48px; margin-bottom:12px; }}
-    .hero-title {{ color:#fff; font-size:26px; font-weight:900; font-family:'Segoe UI',sans-serif; margin:0; }}
-    .hero-sub {{ color:rgba(255,255,255,0.85); font-size:14px; margin-top:6px; }}
+    .hero-title {{ color:#FFFFFF; font-size:26px; font-weight:900; margin:0; text-shadow:0 2px 10px rgba(0,0,0,0.3); }}
+    .hero-sub {{ color:rgba(255,255,255,0.9); font-size:14px; margin-top:6px; font-weight:600; }}
     .body {{ padding:32px; }}
-    .greeting {{ font-size:16px; line-height:1.6; color:#1E293B; margin-bottom:20px; }}
-    .details-box {{ background:#ECFDF5; border:1px solid #6EE7B7; border-radius:10px; padding:20px; margin:20px 0; }}
-    .detail-row {{ display:flex; align-items:flex-start; gap:10px; font-size:14px; margin-bottom:10px; color:#065F46; }}
+    .greeting {{ font-size:15px; line-height:1.7; color:#CBD5E1; margin-bottom:20px; }}
+    .details-box {{ background:#1E1B4B; border:1px solid #10B981; border-radius:14px; padding:20px; margin:24px 0; }}
+    .detail-row {{ font-size:14px; margin-bottom:10px; color:#E2E8F0; }}
     .detail-row:last-child {{ margin-bottom:0; }}
-    .detail-label {{ font-weight:700; min-width:100px; }}
+    .detail-label {{ font-weight:700; color:#10B981; min-width:110px; display:inline-block; }}
     .steps {{ margin:24px 0; }}
     .step {{ display:flex; gap:14px; margin-bottom:16px; align-items:flex-start; }}
     .step-num {{ background:linear-gradient(135deg,#10B981,#059669); color:#fff; border-radius:50%;
                  width:28px; height:28px; min-width:28px; display:flex; align-items:center;
-                 justify-content:center; font-size:12px; font-weight:800; }}
-    .step-text {{ font-size:13.5px; line-height:1.55; color:#334155; padding-top:4px; }}
-    .footer {{ background:#F8FAFC; border-top:1px solid #E2E8F0; padding:20px 32px;
-               text-align:center; font-size:11px; color:#94A3B8; }}
-    .badge {{ display:inline-block; background:#D1FAE5; color:#065F46; font-size:11px;
-              font-weight:700; padding:4px 12px; border-radius:99px; border:1px solid #6EE7B7;
+                 justify-content:center; font-size:12px; font-weight:900; shadow:0 4px 10px rgba(16,185,129,0.3); }}
+    .step-text {{ font-size:13.5px; line-height:1.55; color:#CBD5E1; padding-top:4px; }}
+    .footer {{ background:#05070E; border-top:1px solid #1E1B4B; padding:20px 32px;
+               text-align:center; font-size:11px; color:#64748B; }}
+    .badge {{ display:inline-block; background:rgba(16,185,129,0.2); color:#10B981; font-size:11px;
+              font-weight:800; padding:5px 14px; border-radius:99px; border:1px solid #10B981;
               text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }}
   </style>
 </head>
@@ -217,68 +228,54 @@ def generer_html_embauche(
     <div class="hero">
       <div class="hero-icon">🎉</div>
       <h1 class="hero-title">Félicitations, {nom_candidat} !</h1>
-      <div class="hero-sub">Votre candidature a été sélectionnée</div>
+      <div class="hero-sub">Votre recrutement chez {agence} est officiel</div>
     </div>
     <div class="body">
       <div style="text-align:center; margin-bottom:20px;">
-        <span class="badge">✅ Candidat Retenu · Embauche Confirmée</span>
+        <span class="badge">✅ Candidature Retenue &bull; Embauche Confirmée</span>
       </div>
       {score_section}
       <div class="greeting">
-        <p>Cher(e) <strong>{nom_candidat}</strong>,</p>
-        <p>Nous avons l'immense plaisir de vous informer que votre candidature pour le poste de
-           <strong>{titre_offre}</strong> chez <strong>{agence}</strong> a été officiellement
-           <strong style="color:#059669;">acceptée et confirmée</strong>.</p>
-        <p>Notre équipe a soigneusement évalué votre profil via notre moteur d'intelligence artificielle
-           et votre parcours correspond parfaitement à nos attentes.</p>
+        <p>Cher(e) <strong style="color:#FFF;">{nom_candidat}</strong>,</p>
+        <p>Nous avons le grand plaisir de vous informer que suite aux étapes d'évaluation et d'entretien, votre candidature pour le poste de
+           <strong style="color:#10B981;">{titre_offre}</strong> chez <strong style="color:#FFF;">{agence}</strong> a été officiellement
+           <strong style="color:#10B981;">retenue et validée par la direction RH</strong>.</p>
       </div>
 
       <div class="details-box">
         <div class="detail-row">
           <span class="detail-label">📋 Poste :</span>
-          <span>{titre_offre}</span>
+          <span style="color:#FFF; font-weight:700;">{titre_offre}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">🏢 Entreprise :</span>
-          <span>{agence}</span>
+          <span style="color:#FFF;">{agence}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">📍 Lieu :</span>
-          <span>Fès, Maroc</span>
+          <span class="detail-label">📍 Localisation :</span>
+          <span style="color:#FFF;">Fès, Maroc</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">🚀 Statut :</span>
-          <span><strong>Embauche confirmée — En attente de contrat</strong></span>
+          <span style="color:#10B981; font-weight:700;">Embauche confirmée &bull; Dossier Validé</span>
         </div>
       </div>
 
       {note_section}
 
       <div class="steps">
-        <div style="font-size:13px; font-weight:700; color:#64748B; text-transform:uppercase;
-             letter-spacing:1px; margin-bottom:14px;">Prochaines étapes :</div>
+        <div style="font-size:12px; font-weight:800; color:#818CF8; text-transform:uppercase;
+             letter-spacing:1px; margin-bottom:14px;">Prochaines étapes de votre intégration :</div>
         <div class="step">
           <div class="step-num">1</div>
-          <div class="step-text">Notre équipe RH va vous contacter dans les <strong>48 heures</strong> pour planifier votre date de démarrage.</div>
+          <div class="step-text">Notre responsable RH va vous contacter sous <strong>48 heures</strong> pour convenir de votre date exacte de prise de poste.</div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-text">Vous recevrez votre contrat de travail par e-mail pour signature.</div>
+          <div class="step-text">Votre contrat de travail vous sera transmis par voie électronique pour signature.</div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <div class="step-text">Préparez vos documents administratifs (CIN, diplômes, justificatif de domicile).</div>
-        </div>
-      </div>
-
-      <p style="font-size:14px; color:#334155; line-height:1.65; margin-top:20px;">
-        Nous sommes ravis de vous accueillir au sein de l'équipe <strong>{agence}</strong> et nous
-        avons hâte de collaborer avec vous.<br><br>
-        Cordialement,<br>
-        <strong>L'Équipe Recrutement — {agence}</strong><br>
-        <em style="font-size:12px; color:#94A3B8;">Powered by RecrutIA</em>
-      </p>
-    </div>
     <div class="footer">
       RecrutIA — Système Intelligent d'Automatisation &amp; Scoring du Recrutement &bull; {agence}
     </div>
