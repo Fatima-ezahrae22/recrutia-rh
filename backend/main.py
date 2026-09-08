@@ -70,7 +70,31 @@ def _creer_offres_demo():
     finally:
         db.close()
 
-# ✅ Initialisation DB (crée les tables si inexistantes)
+def _creer_utilisateurs_demo():
+    from backend.database import SessionLocal
+    from backend.models import User
+    from backend.auth import hash_password
+    db = SessionLocal()
+    try:
+        count = db.query(User).count()
+        if count == 0:
+            users_demo = [
+                User(username="fatimamekki", password_hash=hash_password("fatima123"), role="recruteur", is_active=True),
+                User(username="recruteur", password_hash=hash_password("recruteur123"), role="recruteur", is_active=True),
+                User(username="admin", password_hash=hash_password("admin123"), role="recruteur", is_active=True),
+            ]
+            for u in users_demo:
+                db.add(u)
+            db.commit()
+            logger.info("[Init] 3 utilisateurs RH de démonstration créés avec succès.")
+    except Exception as e:
+        logger.error(f"[Init] Erreur création utilisateurs démo : {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+
+# ✅ Initialisation DB & Données Démo (crée les tables et comptes si inexistants)
 try:
     init_db()
 except Exception as e:
@@ -80,6 +104,11 @@ try:
     _creer_offres_demo()
 except Exception as e:
     logger.error(f"[Main] Erreur _creer_offres_demo : {e}")
+
+try:
+    _creer_utilisateurs_demo()
+except Exception as e:
+    logger.error(f"[Main] Erreur _creer_utilisateurs_demo : {e}")
 
 
 # ─── Application FastAPI ───────────────────────────────────────────────────────
