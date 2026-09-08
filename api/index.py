@@ -12,7 +12,7 @@ async def app(scope, receive, send):
         path = scope.get("path", "")
         if path.startswith("/api/index.py"):
             new_path = path[13:]
-            if not new_path:
+            if not new_path or new_path == "":
                 new_path = "/"
             scope["path"] = new_path
     await fastapi_app(scope, receive, send)
