@@ -1713,6 +1713,12 @@
     notificationsList.unshift(item);
     localStorage.setItem("recrutia_notifications", JSON.stringify(notificationsList));
     afficherNotifications();
+    const bell = document.getElementById("notif-bell-chip");
+    if (bell) {
+      bell.classList.remove("bell-animate");
+      void bell.offsetWidth;
+      bell.classList.add("bell-animate");
+    }
   }
 
   function afficherNotifications() {
@@ -2229,7 +2235,7 @@
     if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
 
     if (pollingInterval) clearInterval(pollingInterval);
-    pollingInterval = setInterval(chargerCandidatures, 5000);
+    pollingInterval = setInterval(chargerCandidatures, 3000);
 
     chargerOffres();
     fetch(`${API}/entretiens`, { headers: headers() })
