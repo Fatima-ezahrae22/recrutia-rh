@@ -56,14 +56,16 @@ def _creer_offres_demo():
         count = db.query(Offre).count()
         if count == 0:
             offres_demo = [
-                Offre(titre="Développeur Full Stack React/Python", description="Conception et développement d'applications web modernes pour ArtiWeb Fès.", experience_min_annees=3, competences_obligatoires=["React", "Python", "FastAPI", "PostgreSQL"], competences_souhaitees=["Docker", "Git", "REST API"], formation_exigee="Bac+3 minimum", seuil_score_min=70.0, statut="ACTIF"),
-                Offre(titre="Data Scientist / Intelligence Artificielle", description="Analyse de données massives et développement de modèles IA innovants.", experience_min_annees=2, competences_obligatoires=["Python", "TensorFlow", "NLP", "Scikit-Learn"], competences_souhaitees=["Power BI", "Spark", "MLflow"], formation_exigee="Bac+4 minimum", seuil_score_min=75.0, statut="ACTIF"),
-                Offre(titre="Designer UI/UX", description="Création d'interfaces utilisateur premium et expériences utilisateur exceptionnelles.", experience_min_annees=1, competences_obligatoires=["Figma", "Adobe XD", "Prototypage", "CSS"], competences_souhaitees=["Motion Design", "Framer"], formation_exigee="Bac+2 minimum", seuil_score_min=65.0, statut="ACTIF"),
+                Offre(titre="Ingénieur DevOps & Cloud AWS/Docker", description="Gestion de l'infrastructure Cloud, automatisation des pipelines CI/CD, conteneurisation des applications.", experience_min_annees=3, competences_obligatoires=["Docker", "Linux", "AWS", "Git", "CI/CD"], competences_souhaitees=["Kubernetes", "Terraform"], formation_exigee="Bac+3 minimum", seuil_score_min=70.0, statut="ACTIF"),
+                Offre(titre="Ingénieur Data / IA & Machine Learning", description="Conception de pipelines d'ingestion de données, prétraitement, entraînement et déploiement de modèles d'apprentissage.", experience_min_annees=2, competences_obligatoires=["Python", "Scikit-Learn", "Pandas", "NLP", "SQL"], competences_souhaitees=["TensorFlow", "PyTorch", "Spark"], formation_exigee="Bac+4 minimum", seuil_score_min=70.0, statut="ACTIF"),
+                Offre(titre="Designer UI/UX & Product Designer", description="Création de maquettes haute fidélité, de design systems et de prototypes interactifs. Réalisation de tests utilisateur.", experience_min_annees=1, competences_obligatoires=["Figma", "Adobe XD", "Prototypage", "Design System", "CSS"], competences_souhaitees=["Framer", "Motion Design"], formation_exigee="Bac+2 minimum", seuil_score_min=70.0, statut="ACTIF"),
+                Offre(titre="Développeur Full Stack React & Node.js", description="Rejoignez notre équipe Web pour créer des interfaces utilisateurs modernes, réactives et fluides en React / TypeScript.", experience_min_annees=2, competences_obligatoires=["React", "JavaScript", "TypeScript", "Node.js", "HTML/CSS"], competences_souhaitees=["Next.js", "TailwindCSS"], formation_exigee="Bac+3 minimum", seuil_score_min=70.0, statut="ACTIF"),
+                Offre(titre="Développeur Senior Python / FastAPI & IA", description="Nous recherchons un développeur Backend chevronné pour concevoir des microservices performants, intégrer des modèles d'IA et créer des APIs REST.", experience_min_annees=3, competences_obligatoires=["Python", "FastAPI", "PostgreSQL", "SQLAlchemy", "Git"], competences_souhaitees=["Docker", "Redis", "Celery"], formation_exigee="Bac+3 minimum", seuil_score_min=70.0, statut="ACTIF"),
             ]
             for o in offres_demo:
                 db.add(o)
             db.commit()
-            logger.info("[Init] 3 offres de démonstration créées avec seuils configurés.")
+            logger.info("[Init] 5 offres de démonstration créées avec succès.")
     except Exception as e:
         logger.error(f"[Init] Erreur création offres démo : {e}")
         db.rollback()
@@ -93,8 +95,87 @@ def _creer_utilisateurs_demo():
     finally:
         db.close()
 
+def _creer_candidatures_demo():
+    from backend.database import SessionLocal
+    from backend.models import Candidat, Candidature, Offre
+    db = SessionLocal()
+    try:
+        if db.query(Candidature).count() == 0:
+            offres = db.query(Offre).all()
+            if not offres:
+                return
 
-# ✅ Initialisation DB & Données Démo (crée les tables et comptes si inexistants)
+            offre_python = next((o for o in offres if "Python" in o.titre), offres[0])
+            offre_data = next((o for o in offres if "Data" in o.titre or "IA" in o.titre), offres[0])
+
+            candidats_demo = [
+                {"nom": "Fatima Ezahrae Mekki", "email": "fatimaezaharemkki@gmail.com", "tel": "+212 6 61 22 33 44", "exp": 3, "comp": ["Python", "FastAPI", "React", "PostgreSQL"]},
+                {"nom": "adil mekki", "email": "adil.mekki@gmail.com", "tel": "+212 6 62 33 44 55", "exp": 4, "comp": ["Python", "Scikit-Learn", "Pandas", "NLP"]},
+                {"nom": "HANAE bouaasoul", "email": "hanae.bouaasoul@gmail.com", "tel": "+212 6 63 44 55 66", "exp": 3, "comp": ["Python", "Machine Learning", "Pandas", "SQL"]},
+                {"nom": "Douae mekki", "email": "douae.mekki@gmail.com", "tel": "+212 6 64 55 66 77", "exp": 2, "comp": ["Python", "Data Science", "SQL", "Pandas"]}
+            ]
+
+            for c_data in candidats_demo:
+                candidat = db.query(Candidat).filter(Candidat.email == c_data["email"]).first()
+                if not candidat:
+                    candidat = Candidat(
+                        nom=c_data["nom"],
+                        email=c_data["email"],
+                        telephone=c_data["tel"],
+                        annees_experience=c_data["exp"],
+                        competences_json=c_data["comp"],
+                        diplome="Master / Ingénieur"
+                    )
+                    db.add(candidat)
+                    db.flush()
+
+                # Candidature 1 sur Data / IA
+                cand1 = Candidature(
+                    candidat_id=candidat.id,
+                    offre_id=offre_data.id,
+                    score=81.2,
+                    statut="EN_ATTENTE",
+                    details_scoring={
+                        "score_global": 81.2,
+                        "hard_filter_pass": True,
+                        "hard_filter_reasons": ["Expérience valide", "Formation diplômante conforme"],
+                        "similarite_semantique": 82.0,
+                        "justification_llm": "Profil très pertinent ! Vos compétences clés correspondent aux besoins prioritaires de l'offre.",
+                        "atouts_majeurs": ["Python", "Scikit-Learn", "NLP", "SQL"],
+                        "lacunes": []
+                    }
+                )
+                db.add(cand1)
+
+                # Si Fatima, ajouter aussi la 2eme candidature Senior Python (score 85%)
+                if c_data["email"] == "fatimaezaharemkki@gmail.com":
+                    cand2 = Candidature(
+                        candidat_id=candidat.id,
+                        offre_id=offre_python.id,
+                        score=85.0,
+                        statut="EN_ATTENTE",
+                        details_scoring={
+                            "score_global": 85.0,
+                            "hard_filter_pass": True,
+                            "hard_filter_reasons": ["3 ans d'expérience validés"],
+                            "similarite_semantique": 86.0,
+                            "justification_llm": "Excellente adéquation technique sur Python, FastAPI et architectures Web.",
+                            "atouts_majeurs": ["Python", "FastAPI", "React", "PostgreSQL"],
+                            "lacunes": []
+                        }
+                    )
+                    db.add(cand2)
+
+            db.commit()
+            logger.info("[Init] Candidatures de démonstration créées avec succès.")
+    except Exception as e:
+        logger.error(f"[Init] Erreur création candidatures démo : {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+
+# ✅ Initialisation DB & Données Démo (crée les tables, offres et candidatures démo)
 try:
     init_db()
 except Exception as e:
@@ -109,6 +190,11 @@ try:
     _creer_utilisateurs_demo()
 except Exception as e:
     logger.error(f"[Main] Erreur _creer_utilisateurs_demo : {e}")
+
+try:
+    _creer_candidatures_demo()
+except Exception as e:
+    logger.error(f"[Main] Erreur _creer_candidatures_demo : {e}")
 
 
 # ─── Application FastAPI ───────────────────────────────────────────────────────
