@@ -15,6 +15,8 @@ def _get_database_url():
     env_url = os.environ.get("DATABASE_URL")
     if env_url:
         return env_url
+    if os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        return "sqlite:////tmp/agent_rh.db"
     try:
         test_path = "./.write_test"
         with open(test_path, "w") as f:
@@ -50,5 +52,8 @@ def get_db():
 
 def init_db():
     """Initialise les tables de la base de données."""
-    logger.info(f"[Database] Initialisation des tables SQLAlchemy sur : {DATABASE_URL}")
-    Base.metadata.create_all(bind=engine)
+    try:
+        logger.info(f"[Database] Initialisation des tables SQLAlchemy sur : {DATABASE_URL}")
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        logger.error(f"[Database] Erreur lors de l'initialisation des tables : {e}")

@@ -20,10 +20,6 @@ from backend.routers import auth, offres, candidatures, dashboard
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("RecrutIA.Backend")
 
-# ✅ Initialisation DB (crée les tables si inexistantes)
-init_db()
-
-
 from typing import List, Dict, Any
 from fastapi import WebSocket, WebSocketDisconnect
 
@@ -74,7 +70,16 @@ def _creer_offres_demo():
     finally:
         db.close()
 
-_creer_offres_demo()
+# ✅ Initialisation DB (crée les tables si inexistantes)
+try:
+    init_db()
+except Exception as e:
+    logger.error(f"[Main] Erreur init_db : {e}")
+
+try:
+    _creer_offres_demo()
+except Exception as e:
+    logger.error(f"[Main] Erreur _creer_offres_demo : {e}")
 
 
 # ─── Application FastAPI ───────────────────────────────────────────────────────
