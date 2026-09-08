@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 def _get_database_url():
     env_url = os.environ.get("DATABASE_URL")
     if env_url:
+        if env_url.startswith("postgres://"):
+            env_url = env_url.replace("postgres://", "postgresql://", 1)
         return env_url
     if os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         return "sqlite:////tmp/agent_rh.db"
