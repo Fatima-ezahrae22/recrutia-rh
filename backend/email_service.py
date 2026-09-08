@@ -18,12 +18,13 @@ except Exception:
 logger = logging.getLogger("RecrutIA.Email")
 
 def get_smtp_config():
+    user = os.environ.get("SMTP_USER", "").strip()
     return {
-        "host": os.environ.get("SMTP_HOST", ""),
+        "host": os.environ.get("SMTP_HOST", "smtp.gmail.com").strip(),
         "port": int(os.environ.get("SMTP_PORT", 587)),
-        "user": os.environ.get("SMTP_USER", ""),
-        "pass": os.environ.get("SMTP_PASS", ""),
-        "sender": os.environ.get("SENDER_EMAIL", "recrutement@artiweb.ma")
+        "user": user,
+        "pass": os.environ.get("SMTP_PASS", "").strip(),
+        "sender": os.environ.get("SENDER_EMAIL", user or "recrutement@artiweb.ma").strip()
     }
 
 
