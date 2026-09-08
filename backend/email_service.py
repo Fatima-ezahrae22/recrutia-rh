@@ -9,10 +9,11 @@ import smtplib
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from dotenv import load_dotenv
-
-# Charger automatiquement le fichier .env
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 logger = logging.getLogger("RecrutIA.Email")
 
