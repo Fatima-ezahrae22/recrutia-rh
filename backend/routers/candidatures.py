@@ -168,10 +168,12 @@ def historique_candidatures_public(email: str, db: Session = Depends(get_db)):
     return result
 
 
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status, Body
+
 @router.post("/api/public/candidatures/{candidature_id}/confirmer-entretien", tags=["Public — Candidats"])
 def confirmer_entretien_public(
     candidature_id: int,
-    payload: dict,
+    payload: dict = Body(...),
     db: Session = Depends(get_db)
 ):
     """[PUBLIC] Confirmation ou demande de report d'entretien par le candidat."""
@@ -208,7 +210,7 @@ def confirmer_entretien_public(
 @router.post("/api/public/candidatures/{candidature_id}/message", tags=["Public — Candidats"])
 def envoyer_message_rh_public(
     candidature_id: int,
-    payload: dict,
+    payload: dict = Body(...),
     db: Session = Depends(get_db)
 ):
     """[PUBLIC] Messagerie Candidat -> Envoi d'une question/message à l'équipe RH."""
