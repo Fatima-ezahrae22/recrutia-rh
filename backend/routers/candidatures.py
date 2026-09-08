@@ -99,6 +99,9 @@ async def soumettre_candidature_publique(
             os.remove(tmp_path)
 
 
+from datetime import datetime
+from sqlalchemy.orm.attributes import flag_modified
+
 @router.get("/api/public/candidatures", tags=["Public — Candidats"])
 def historique_candidatures_public(email: str, db: Session = Depends(get_db)):
     """
@@ -120,14 +123,24 @@ def historique_candidatures_public(email: str, db: Session = Depends(get_db)):
         details_sc = c.details_scoring or {}
         conseils = details_sc.get("conseils_ia", [])
 
+        # Détermination exacte du statut d'embauche ou de sélection
+        statut_final = c.statut or "EN_ATTENTE"
+        if c.decision_rh in ["EMBAUCHE", "EMBAUCHE_CONFIRME"]:
+            statut_final = "EMBAUCHE"
+        elif c.decision_rh in ["VALIDE", "ACCEPT"]:
+            statut_final = "ACCEPTE"
+        elif c.decision_rh in ["REJETE", "REFUSE"]:
+            statut_final = "REFUSE"
+
         # Construction de la timeline d'avancement
         timeline = [
-            {"etape": "Soumission CV", "statut": "TERMINE", "description": f"CV reçu le {c.created_at.strftime('%d/%m/%Y à %H:%H') if c.created_at else ''}"},
+            {"etape": "Soumission CV", "statut": "TERMINE", "description": f"CV reçu le {c.created_at.strftime('%d/%m/%Y à %H:%M') if c.created_at else ''}"},
             {"etape": "Évaluation IA", "statut": "TERMINE", "description": f"Score calculé: {round(c.score)}/100"},
         ]
 
-        if c.decision_rh in ["VALIDE", "REJETE", "CORRIGE"]:
-            statut_rh = "ACCEPTE" if c.decision_rh == "VALIDE" else ("REFUSE" if c.decision_rh == "REJETE" else "EN_ATTENTE")
+        if c.decision_rh in ["EMBAUCHE", "EMBAUCHE_CONFIRME"]:
+            timeline.append({"etape": "Décision RH", "statut": "TERMINE", "description": "🎉 Candidat embauché et confirmé !"})
+        elif c.decision_rh in ["VALIDE", "REJETE"]:
             timeline.append({"etape": "Revue RH", "statut": "TERMINE", "description": f"Décision RH enregistrée : {c.decision_rh}"})
         else:
             timeline.append({"etape": "Revue RH", "statut": "EN_COURS", "description": "Examen en cours par l'équipe RH ArtiWeb"})
@@ -140,7 +153,7 @@ def historique_candidatures_public(email: str, db: Session = Depends(get_db)):
             "offre_titre": c.offre.titre if c.offre else "Offre d'emploi",
             "offre_id": c.offre_id,
             "score": c.score,
-            "statut": c.statut or "EN_ATTENTE",
+            "statut": statut_final,
             "decision_rh": c.decision_rh,
             "date_entretien": c.date_entretien,
             "format_entretien": c.format_entretien_planifie,
@@ -148,9 +161,88 @@ def historique_candidatures_public(email: str, db: Session = Depends(get_db)):
             "justification_ia": c.justification_ia,
             "conseils_ia": conseils,
             "timeline": timeline,
+            "confirmation_entretien": details_sc.get("confirmation_entretien"),
+            "messages_candidat": details_sc.get("messages_candidat", []),
             "created_at": c.created_at.isoformat() if c.created_at else None,
         })
     return result
+
+
+@router.post("/api/public/candidatures/{candidature_id}/confirmer-entretien", tags=["Public — Candidats"])
+def confirmer_entretien_public(
+    candidature_id: int,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+    """[PUBLIC] Confirmation ou demande de report d'entretien par le candidat."""
+    cand = db.query(Candidature).filter(Candidature.id == candidature_id).first()
+    if not cand:
+        raise HTTPException(status_code=404, detail="Candidature introuvable.")
+
+    choix = payload.get("choix", "CONFIRME")
+    msg_opt = payload.get("message", "")
+
+    dt = cand.details_scoring or {}
+    dt["confirmation_entretien"] = {
+        "statut": choix,
+        "date_reponse": datetime.utcnow().strftime("%d/%m/%Y à %H:%M"),
+        "message": msg_opt
+    }
+    cand.details_scoring = dt
+    flag_modified(cand, "details_scoring")
+
+    candidat_nom = cand.candidat.nom if cand.candidat else "Un candidat"
+    action_log = "a confirmé sa présence à l'entretien" if choix == "CONFIRME" else "a demandé un report d'entretien"
+
+    log = AuditLog(
+        utilisateur=candidat_nom,
+        action=f"Réponse Entretien : {action_log}",
+        details={"candidature_id": cand.id, "email": cand.candidat.email if cand.candidat else "", "note": msg_opt}
+    )
+    db.add(log)
+    db.commit()
+
+    return {"message": "Votre réponse a été enregistrée et transmise à l'équipe RH.", "confirmation": dt["confirmation_entretien"]}
+
+
+@router.post("/api/public/candidatures/{candidature_id}/message", tags=["Public — Candidats"])
+def envoyer_message_rh_public(
+    candidature_id: int,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+    """[PUBLIC] Messagerie Candidat -> Envoi d'une question/message à l'équipe RH."""
+    cand = db.query(Candidature).filter(Candidature.id == candidature_id).first()
+    if not cand:
+        raise HTTPException(status_code=404, detail="Candidature introuvable.")
+
+    texte = payload.get("message", "").strip()
+    if not texte:
+        raise HTTPException(status_code=400, detail="Le message ne peut pas être vide.")
+
+    dt = cand.details_scoring or {}
+    msgs = dt.get("messages_candidat", [])
+    candidat_nom = cand.candidat.nom if cand.candidat else "Candidat"
+    
+    nouveau = {
+        "expediteur": candidat_nom,
+        "texte": texte,
+        "date": datetime.utcnow().strftime("%d/%m/%Y à %H:%M")
+    }
+    msgs.append(nouveau)
+    dt["messages_candidat"] = msgs
+    cand.details_scoring = dt
+    flag_modified(cand, "details_scoring")
+
+    log = AuditLog(
+        utilisateur=candidat_nom,
+        action="Question / Message Candidat RH",
+        details={"candidature_id": cand.id, "message": texte}
+    )
+    db.add(log)
+    db.commit()
+
+    return {"message": "Votre question a été transmise à l'équipe RH avec succès.", "messages": msgs}
 
 
 # ─── ENDPOINTS RH PROTÉGÉS ───────────────────────────────────────────────────

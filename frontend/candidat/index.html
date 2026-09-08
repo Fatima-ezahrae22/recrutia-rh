@@ -631,10 +631,44 @@
             const errData = await res.json().catch(() => ({}));
             setSuiviResult({ error: true, message: errData.detail || 'Aucune candidature enregistrée pour cet adresse e-mail.' });
           }
-        } catch (err) {
-          setSuiviResult({ error: true, message: 'Erreur de recherche d\'e-mail.' });
-        } finally {
-          setSuiviLoading(false);
+      const handleConfirmerEntretien = async (candId, choix) => {
+        try {
+          const res = await fetch(`${API_BASE}/candidatures/${candId}/confirmer-entretien`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ choix })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.message || 'Réponse enregistrée !');
+            const r = await fetch(`${API_BASE}/candidatures?email=${encodeURIComponent(suiviEmail.trim())}`);
+            if (r.ok) setSuiviResult(await r.json());
+          }
+        } catch(e) {
+          alert('Erreur lors de la transmission de la réponse.');
+        }
+      };
+
+      const handleEnvoyerMessageRH = async (candId) => {
+        const inputEl = document.getElementById(`msg-input-${candId}`);
+        if (!inputEl || !inputEl.value.trim()) return;
+        const msgText = inputEl.value.trim();
+
+        try {
+          const res = await fetch(`${API_BASE}/candidatures/${candId}/message`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msgText })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            inputEl.value = '';
+            alert('Votre message a été transmis à l\'équipe RH !');
+            const r = await fetch(`${API_BASE}/candidatures?email=${encodeURIComponent(suiviEmail.trim())}`);
+            if (r.ok) setSuiviResult(await r.json());
+          }
+        } catch(e) {
+          alert('Erreur lors de l\'envoi du message.');
         }
       };
 
@@ -879,22 +913,30 @@
                     <p class="text-slate-400 text-center text-sm">Aucune candidature trouvée pour cet e-mail.</p>
                   ) : (
                     suiviResult.map(c => {
-                      const color = c.statut === 'ACCEPTE' ? '#10b981' : c.statut === 'REFUSE' ? '#ef4444' : '#f59e0b';
-                      const label = c.statut === 'ACCEPTE' ? 'Sélectionné' : c.statut === 'REFUSE' ? 'Non Retenu' : 'En cours d\'examen';
+                      const color = c.statut === 'EMBAUCHE' ? '#10b981' : (c.statut === 'ACCEPTE' ? '#10b981' : c.statut === 'REFUSE' ? '#ef4444' : '#f59e0b');
+                      const label = c.statut === 'EMBAUCHE' ? '🎉 EMBOUCHÉ & CONFIRMÉ' : (c.statut === 'ACCEPTE' ? 'Sélectionné' : c.statut === 'REFUSE' ? 'Non Retenu' : 'En cours d\'examen');
                       const date = c.created_at ? new Date(c.created_at).toLocaleDateString('fr-FR') : '';
 
                       return (
-                        <div key={c.id} class="bg-[#1E1B4B]/70 border border-indigo-500/35 rounded-2xl p-6 space-y-6 shadow-xl">
+                        <div key={c.id} class="bg-[#1E1B4B]/80 border border-indigo-500/40 rounded-2xl p-6 space-y-6 shadow-2xl">
                           
                           <div class="flex justify-between items-start flex-wrap gap-4">
                             <div>
                               <h4 class="font-outfit font-bold text-lg text-white">{c.offre_titre}</h4>
                               <p class="text-xs text-slate-300 mt-1">Soumis le {date} &bull; Score IA : <strong class="text-amber-400 text-sm font-black">{Math.round(c.score)}%</strong></p>
                             </div>
-                            <span class="text-xs font-extrabold px-3.5 py-1.5 rounded-full border shadow-sm" style={{ borderColor: color, color: color, background: `${color}20` }}>
+                            <span class="text-xs font-black px-4 py-1.5 rounded-full border shadow-md" style={{ borderColor: color, color: color, background: `${color}25` }}>
                               {label}
                             </span>
                           </div>
+
+                          {/* Bannière de célébration Embauche */}
+                          {c.statut === 'EMBAUCHE' && (
+                            <div class="bg-gradient-to-r from-emerald-500/25 via-emerald-600/25 to-amber-500/20 border-2 border-emerald-400 rounded-2xl p-5 text-emerald-200 shadow-xl space-y-1.5 text-center">
+                              <div class="text-lg font-black text-emerald-300">🎉 Félicitations ! Votre Embauche est Officiellement Confirmée !</div>
+                              <p class="text-xs text-slate-200">Votre profil et votre entretien ont été validés avec succès par l'équipe RH ArtiWeb Fès. Vous allez recevoir les détails de votre contrat d'embauche.</p>
+                            </div>
+                          )}
 
                           {/* Timeline */}
                           <div class="relative flex items-center justify-between py-6 max-w-lg mx-auto">
@@ -919,16 +961,70 @@
                             })}
                           </div>
 
-                          {/* Interview Scheduled */}
+                          {/* Interview Scheduled & RSVP */}
                           {c.date_entretien && (
-                            <div class="bg-emerald-500/15 border border-emerald-500/40 rounded-xl p-5 text-emerald-300 space-y-1 shadow-lg">
-                              <div class="text-xs font-black uppercase tracking-wider flex items-center gap-2 text-emerald-400">
-                                <i class="fa-solid fa-calendar-check"></i> Convocation à l'entretien RH
+                            <div class="bg-emerald-500/15 border border-emerald-500/40 rounded-xl p-5 text-emerald-300 space-y-3 shadow-lg">
+                              <div class="flex justify-between items-center flex-wrap gap-2">
+                                <div class="text-xs font-black uppercase tracking-wider flex items-center gap-2 text-emerald-400">
+                                  <i class="fa-solid fa-calendar-check"></i> Convocation à l'entretien RH
+                                </div>
+                                {c.confirmation_entretien ? (
+                                  <span class="text-[10px] font-extrabold px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 border border-emerald-400">
+                                    ✓ {c.confirmation_entretien.statut === 'CONFIRME' ? 'Présence Confirmée' : 'Report Demande'} ({c.confirmation_entretien.date_reponse || ''})
+                                  </span>
+                                ) : null}
                               </div>
                               <p class="text-xs">Date & Heure : <strong class="text-white">{c.date_entretien}</strong></p>
-                              <p class="text-xs">Format/Lieu : <strong class="text-white">{c.lieu_entretien || 'ArtiWeb Fès'}</strong></p>
+                              <p class="text-xs">Format/Lieu : <strong class="text-white">{c.lieu_entretien || 'Bureaux ArtiWeb, Fès'}</strong></p>
+                              
+                              {!c.confirmation_entretien && (
+                                <div class="pt-2 flex gap-3 flex-wrap">
+                                  <button onClick={() => handleConfirmerEntretien(c.id, 'CONFIRME')} class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check"></i> Confirmer ma présence
+                                  </button>
+                                  <button onClick={() => handleConfirmerEntretien(c.id, 'REPORT')} class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs px-4 py-2 rounded-xl transition-all flex items-center gap-1.5">
+                                    <i class="fa-solid fa-clock-rotate-left"></i> Demander un report
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           )}
+
+                          {/* Messagerie Candidat -> RH */}
+                          <div class="bg-slate-900/80 border border-indigo-500/30 rounded-xl p-4 space-y-3">
+                            <div class="text-xs font-black text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                              <i class="fa-solid fa-comments"></i> Posez une question à l'Équipe RH :
+                            </div>
+                            
+                            {c.messages_candidat && c.messages_candidat.length > 0 && (
+                              <div class="space-y-2 max-h-36 overflow-y-auto pr-1">
+                                {c.messages_candidat.map((m, mIdx) => (
+                                  <div key={mIdx} class="bg-indigo-950/60 border border-indigo-500/25 rounded-lg p-2.5 text-xs text-slate-200">
+                                    <div class="flex justify-between text-[10px] text-slate-400 font-bold mb-1">
+                                      <span>{m.expediteur}</span>
+                                      <span>{m.date}</span>
+                                    </div>
+                                    <p>{m.texte}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            <div class="flex gap-2">
+                              <input
+                                type="text"
+                                id={`msg-input-${c.id}`}
+                                placeholder="Écrivez votre question ici..."
+                                class="flex-1 bg-slate-950 border border-indigo-500/40 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                              />
+                              <button
+                                onClick={() => handleEnvoyerMessageRH(c.id)}
+                                class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-1"
+                              >
+                                <i class="fa-solid fa-paper-plane"></i> Envoyer
+                              </button>
+                            </div>
+                          </div>
 
                           {/* AI tips */}
                           {c.conseils_ia && c.conseils_ia.length > 0 && (
