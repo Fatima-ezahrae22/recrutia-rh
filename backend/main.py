@@ -79,9 +79,9 @@ def _creer_utilisateurs_demo():
         count = db.query(User).count()
         if count == 0:
             users_demo = [
-                User(username="fatimamekki", password_hash=hash_password("fatima123"), role="recruteur", is_active=True),
-                User(username="recruteur", password_hash=hash_password("recruteur123"), role="recruteur", is_active=True),
-                User(username="admin", password_hash=hash_password("admin123"), role="recruteur", is_active=True),
+                User(username="fatimamekki", hashed_password=hash_password("fatima123"), role="recruteur", is_active=True),
+                User(username="recruteur", hashed_password=hash_password("recruteur123"), role="recruteur", is_active=True),
+                User(username="admin", hashed_password=hash_password("admin123"), role="recruteur", is_active=True),
             ]
             for u in users_demo:
                 db.add(u)
