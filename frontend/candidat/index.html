@@ -628,10 +628,11 @@
             const data = await res.json();
             setSuiviResult(data);
           } else {
-            setSuiviResult([]);
+            const errData = await res.json().catch(() => ({}));
+            setSuiviResult({ error: true, message: errData.detail || 'Aucune candidature enregistrée pour cet adresse e-mail.' });
           }
         } catch (err) {
-          setSuiviResult({ error: true, message: 'Connexion serveur échouée.' });
+          setSuiviResult({ error: true, message: 'Erreur de recherche d\'e-mail.' });
         } finally {
           setSuiviLoading(false);
         }
@@ -870,7 +871,10 @@
               {suiviResult && (
                 <div class="mt-8 border-t border-slate-800/80 pt-8 space-y-6">
                   {suiviResult.error ? (
-                    <p class="text-red-400 text-center text-sm font-semibold">{suiviResult.message}</p>
+                    <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 text-center space-y-1.5">
+                      <p class="text-amber-300 text-xs font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-amber-400"></i>{suiviResult.message}</p>
+                      <p class="text-slate-400 text-[11px]">Si vous n'avez pas encore postulé, choisissez une offre ci-dessus pour déposer votre CV.</p>
+                    </div>
                   ) : suiviResult.length === 0 ? (
                     <p class="text-slate-400 text-center text-sm">Aucune candidature trouvée pour cet e-mail.</p>
                   ) : (
