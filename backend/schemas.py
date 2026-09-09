@@ -161,7 +161,7 @@ class UserResponse(BaseModel):
 class ConvocationRequest(BaseModel):
     date_heure: str = Field(..., json_schema_extra={"example": "Vendredi 10 Février 2026 à 14h30"})
     format_entretien: str = Field("PRESENTIEL", json_schema_extra={"example": "PRESENTIEL"})
-    lieu_ou_lien: Optional[str] = Field("Bureaux ArtiWeb, Fès", json_schema_extra={"example": "Bureaux ArtiWeb, Fès"})
+    lieu_ou_lien: Optional[str] = Field("Bureaux ArtiWeb, 18 Rue Charif Erradi, Fès", json_schema_extra={"example": "Bureaux ArtiWeb, 18 Rue Charif Erradi, Fès"})
     message_personnalise: Optional[str] = Field(None, json_schema_extra={"example": "Merci d'apporter votre pièce d'identité."})
 
 
