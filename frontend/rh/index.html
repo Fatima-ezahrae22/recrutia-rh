@@ -2678,22 +2678,30 @@
         </div>
       ` : ''}
 
-      ${dt.messages_candidat && dt.messages_candidat.length > 0 ? `
-        <div class="detail-section" style="background:#EEF2FF; border:1px solid #C7D2FE; border-radius:10px; padding:14px; margin-bottom:12px;">
-          <h4 style="color:#4338CA; margin-bottom:8px;"><i class="fa-solid fa-comments"></i> Questions & Messages reçus du Candidat (${dt.messages_candidat.length})</h4>
-          <div style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto; padding-right:4px;">
+      <div class="detail-section" style="background:#EEF2FF; border:1px solid #C7D2FE; border-radius:10px; padding:14px; margin-bottom:12px;">
+        <h4 style="color:#4338CA; margin-bottom:8px;"><i class="fa-solid fa-comments"></i> Fil de Discussion & Messagerie Candidat (${dt.messages_candidat ? dt.messages_candidat.length : 0})</h4>
+        
+        ${dt.messages_candidat && dt.messages_candidat.length > 0 ? `
+          <div style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto; padding-right:4px; margin-bottom:12px;">
             ${dt.messages_candidat.map(m => `
-              <div style="background:#FFF; border:1px solid #C7D2FE; border-radius:8px; padding:8px 12px; font-size:12px;">
-                <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:10px; font-weight:700; margin-bottom:4px;">
-                  <span><i class="fa-solid fa-user"></i> ${m.expediteur || 'Candidat'}</span>
+              <div style="background:${m.is_rh ? '#E0E7FF' : '#FFF'}; border:1px solid ${m.is_rh ? '#818CF8' : '#C7D2FE'}; border-radius:8px; padding:8px 12px; font-size:12px; margin-left:${m.is_rh ? '16px' : '0'};">
+                <div style="display:flex; justify-content:space-between; color:${m.is_rh ? '#3730A3' : 'var(--text-muted)'}; font-size:10px; font-weight:700; margin-bottom:4px;">
+                  <span><i class="fa-solid ${m.is_rh ? 'fa-user-shield' : 'fa-user'}"></i> ${m.expediteur || 'Candidat'}</span>
                   <span><i class="fa-regular fa-clock"></i> ${m.date || ''}</span>
                 </div>
                 <div style="color:var(--text-primary); font-weight:600; line-height:1.4;">${m.texte}</div>
               </div>
             `).join('')}
           </div>
+        ` : '<div style="font-size:12px; color:var(--text-muted); font-style:italic; margin-bottom:10px;">Aucun message échangé pour le moment.</div>'}
+
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-reponse-rh-${c.id}" placeholder="Écrivez votre réponse RH au candidat..." style="flex:1; padding:8px 12px; border:1px solid #C7D2FE; border-radius:6px; font-size:12px; outline:none;" onkeypress="if(event.key==='Enter') envoyerReponseRH(${c.id})">
+          <button onclick="envoyerReponseRH(${c.id})" style="padding:8px 14px; background:#4F46E5; color:#FFF; border:none; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-paper-plane"></i> Répondre
+          </button>
         </div>
-      ` : ''}
+      </div>
 
       <div class="detail-section">
         <h4><i class="fa-solid fa-chart-pie"></i> Décomposition des 4 Sous-Scores Multi-Critères</h4>
@@ -2735,6 +2743,26 @@
   function embaucherConfetti() {
     if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
     prendreDecision('EMBAUCHE');
+  }
+
+  async function envoyerReponseRH(candId) {
+    const inputEl = document.getElementById(`input-reponse-rh-${candId}`);
+    if (!inputEl || !inputEl.value.trim()) return;
+    const texte = inputEl.value.trim();
+    try {
+      const res = await fetch(`${API}/candidatures/${candId}/repondre-message`, {
+        method: "POST", headers: headers(),
+        body: JSON.stringify({ message: texte })
+      });
+      if (res.ok) {
+        toast("Réponse envoyée au candidat avec succès !", "success");
+        chargerCandidatures(); // Rafraîchir pour voir le message
+      } else {
+        toast("Erreur lors de l'envoi de la réponse.", "error");
+      }
+    } catch {
+      toast("Erreur serveur.", "error");
+    }
   }
 
   async function prendreDecision(decision) {

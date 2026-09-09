@@ -1022,12 +1022,12 @@
                             {c.messages_candidat && c.messages_candidat.length > 0 && (
                               <div class="space-y-2 max-h-36 overflow-y-auto pr-1">
                                 {c.messages_candidat.map((m, mIdx) => (
-                                  <div key={mIdx} class="bg-indigo-950/60 border border-indigo-500/25 rounded-lg p-2.5 text-xs text-slate-200">
-                                    <div class="flex justify-between text-[10px] text-slate-400 font-bold mb-1">
-                                      <span>{m.expediteur}</span>
+                                  <div key={mIdx} class={`${m.is_rh ? 'bg-indigo-500/20 border-indigo-500/50 ml-4' : 'bg-slate-800/60 border-slate-700'} border rounded-lg p-2.5 text-xs text-slate-200`}>
+                                    <div class={`flex justify-between text-[10px] font-bold mb-1 ${m.is_rh ? 'text-indigo-300' : 'text-slate-400'}`}>
+                                      <span><i class={`fa-solid ${m.is_rh ? 'fa-user-shield' : 'fa-user'}`}></i> {m.expediteur}</span>
                                       <span>{m.date}</span>
                                     </div>
-                                    <p>{m.texte}</p>
+                                    <p class={m.is_rh ? 'font-medium' : ''}>{m.texte}</p>
                                   </div>
                                 ))}
                               </div>

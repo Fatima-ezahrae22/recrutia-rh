@@ -247,9 +247,50 @@ def envoyer_message_rh_public(
         details=json.dumps({"candidature_id": cand.id, "message": texte})
     )
     db.add(log)
+    return {"message": "Votre question a été transmise à l'équipe RH avec succès.", "messages": msgs}
+
+
+@router.post("/api/candidatures/{candidature_id}/repondre-message", tags=["Candidatures"])
+def repondre_message_candidat_rh(
+    candidature_id: int,
+    payload: dict = Body(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """[RH] Répondre directement au message / question posée par un candidat."""
+    cand = db.query(Candidature).filter(Candidature.id == candidature_id).first()
+    if not cand:
+        raise HTTPException(status_code=404, detail="Candidature introuvable.")
+
+    texte = payload.get("message", "").strip()
+    if not texte:
+        raise HTTPException(status_code=400, detail="Le message ne peut pas être vide.")
+
+    dt = cand.details_scoring or {}
+    msgs = dt.get("messages_candidat", [])
+    
+    nouveau = {
+        "expediteur": f"Équipe RH ({current_user.username})",
+        "texte": texte,
+        "date": datetime.utcnow().strftime("%d/%m/%Y à %H:%M"),
+        "is_rh": True
+    }
+    msgs.append(nouveau)
+    dt["messages_candidat"] = msgs
+    cand.details_scoring = dt
+    flag_modified(cand, "details_scoring")
+
+    log = AuditLog(
+        utilisateur=current_user.username,
+        action="Réponse RH à la question du Candidat",
+        entite_type="candidature",
+        entite_id=cand.id,
+        details=json.dumps({"candidature_id": cand.id, "reponse": texte})
+    )
+    db.add(log)
     db.commit()
 
-    return {"message": "Votre question a été transmise à l'équipe RH avec succès.", "messages": msgs}
+    return {"message": "Réponse RH transmise au candidat avec succès.", "messages": msgs}
 
 
 # ─── ENDPOINTS RH PROTÉGÉS ───────────────────────────────────────────────────
