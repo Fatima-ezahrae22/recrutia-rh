@@ -248,6 +248,8 @@ def envoyer_message_rh_public(
         details=json.dumps({"candidature_id": cand.id, "message": texte})
     )
     db.add(log)
+    db.commit()
+    db.refresh(cand)
     return {"message": "Votre question a été transmise à l'équipe RH avec succès.", "messages": msgs}
 
 

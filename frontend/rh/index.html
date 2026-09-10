@@ -2567,6 +2567,14 @@
         if (countEl) countEl.innerText = toutesCandidatures.length;
         filtrerListe();
         mettreAJourGraphiques();
+
+        // ✅ Rafraîchir automatiquement le dossier candidat actif s'il est affiché à l'écran
+        if (candidatureActive) {
+          const updated = toutesCandidatures.find(c => c.id === candidatureActive.id);
+          if (updated) {
+            afficherDetail(updated);
+          }
+        }
       } else {
         document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-folder-open"></i><p>Aucune candidature enregistrée pour le moment.</p></div>';
       }
