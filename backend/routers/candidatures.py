@@ -409,11 +409,14 @@ def generer_cv_fallback_pdf(candidat, cand, path_destination):
         section_style = ParagraphStyle('SecTitle', parent=styles['Heading2'], fontName='Helvetica-Bold', fontSize=13, textColor=accent, spaceBefore=10, spaceAfter=6)
         body_style = ParagraphStyle('Body', parent=styles['Normal'], fontName='Helvetica', fontSize=10, textColor=text_dark, leading=14)
 
+        raw = cand.raw_ingestion_json if cand and cand.raw_ingestion_json else {}
         nom = candidat.nom if candidat and candidat.nom else "Candidat RecrutIA"
         email = candidat.email if candidat and candidat.email else "candidat@email.com"
         tel = candidat.telephone if candidat and candidat.telephone else "Non renseigné"
-        exp = f"{candidat.annees_experience} ans" if candidat and candidat.annees_experience else "Non spécifié"
-        diplome = candidat.diplome if candidat and candidat.diplome else "Bac+3 minimum"
+        
+        exp_val = raw.get("experience_annees")
+        exp = f"{exp_val} ans" if exp_val is not None else "Non spécifié"
+        diplome = raw.get("formation") or "Master / Ingénieur"
 
         story.append(Paragraph(f"<b>{nom}</b>", title_style))
         story.append(Paragraph(f"<b>Email :</b> {email} &nbsp;|&nbsp; <b>Tél :</b> {tel} &nbsp;|&nbsp; <b>Expérience :</b> {exp}", sub_style))
@@ -424,7 +427,7 @@ def generer_cv_fallback_pdf(candidat, cand, path_destination):
         story.append(Spacer(1, 8))
 
         story.append(Paragraph("⚡ Compétences Clés Extrait du CV", section_style))
-        comps = candidat.competences_json if candidat and candidat.competences_json else ["Python", "FastAPI", "React", "SQL"]
+        comps = raw.get("competences") or ["Python", "FastAPI", "React", "SQL"]
         comp_str = " • ".join(comps) if isinstance(comps, list) else str(comps)
         story.append(Paragraph(f"<b>Compétences détectées :</b> {comp_str}", body_style))
         story.append(Spacer(1, 8))
@@ -442,7 +445,7 @@ def generer_cv_fallback_pdf(candidat, cand, path_destination):
         doc.build(story)
         return True
     except Exception as e:
-        logger.error(f"[PDF Fallback Error] {e}")
+        logger.error(f"[PDF Fallback Error] {e}", exc_info=True)
         return False
 
 
@@ -472,8 +475,11 @@ def telecharger_cv_original(
         tmp_dir = os.path.join(tempfile.gettempdir(), "uploads", "cv")
         os.makedirs(tmp_dir, exist_ok=True)
         fallback_path = os.path.join(tmp_dir, f"CV_Gen_{candidat.id}.pdf")
-        generer_cv_fallback_pdf(candidat, cand, fallback_path)
-        chemin_cv = fallback_path
+        ok = generer_cv_fallback_pdf(candidat, cand, fallback_path)
+        if ok and os.path.exists(fallback_path):
+            chemin_cv = fallback_path
+        else:
+            raise HTTPException(status_code=404, detail="Fichier CV non disponible sur le serveur.")
 
     return FileResponse(
         chemin_cv,
