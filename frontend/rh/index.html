@@ -2538,6 +2538,11 @@
     const endpoint = (sel.value === "ALL" || !sel.value) ? `${API}/candidatures/toutes` : `${API}/offres/${sel.value}/candidatures`;
     try {
       const res = await fetch(endpoint, { headers: headers() });
+      if (res.status === 401) {
+        if (typeof ouvrirModalAuth === 'function') ouvrirModalAuth();
+        document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-lock"></i><p>Veuillez vous connecter pour afficher les candidats.</p></div>';
+        return;
+      }
       if (res.ok) {
         const cands = await res.json();
         
@@ -2549,18 +2554,25 @@
               const titre = c.offre?.titre || "Offre RH";
               const score = c.score || 0;
               ajouterNotification(`Nouveau CV reçu : ${nom} (${Math.round(score)}/100)`);
-              afficherNotificationCandidatureRiche(nom, score, titre, c.id);
+              if (typeof afficherNotificationCandidatureRiche === 'function') {
+                afficherNotificationCandidatureRiche(nom, score, titre, c.id);
+              }
             }
           });
         }
         
         knownCandidateIds = new Set(cands.map(c => c.id));
-        toutesCandidatures = cands;
-        document.getElementById("sb-count-candidats").innerText = toutesCandidatures.length;
+        toutesCandidatures = cands || [];
+        const countEl = document.getElementById("sb-count-candidats");
+        if (countEl) countEl.innerText = toutesCandidatures.length;
         filtrerListe();
         mettreAJourGraphiques();
+      } else {
+        document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-folder-open"></i><p>Aucune candidature enregistrée pour le moment.</p></div>';
       }
-    } catch {}
+    } catch(err) {
+      document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-folder-open"></i><p>Aucune candidature disponible.</p></div>';
+    }
   }
 
   function mettreAJourGraphiques() {
