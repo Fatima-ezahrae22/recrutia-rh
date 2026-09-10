@@ -78,19 +78,21 @@ def _creer_utilisateurs_demo():
     from backend.auth import hash_password
     db = SessionLocal()
     try:
-        count = db.query(User).count()
-        if count == 0:
-            users_demo = [
-                User(username="fatimamekki", hashed_password=hash_password("fatima123"), role="recruteur", is_active=True),
-                User(username="recruteur", hashed_password=hash_password("recruteur123"), role="recruteur", is_active=True),
-                User(username="admin", hashed_password=hash_password("admin123"), role="recruteur", is_active=True),
-            ]
-            for u in users_demo:
-                db.add(u)
+        # Supprimer les comptes démo superflus pour conserver uniquement 'recruteur'
+        db.query(User).filter(User.username != "recruteur").delete(synchronize_session=False)
+        db.commit()
+
+        # S'assurer que le compte unique RH 'recruteur' existe avec le mot de passe 'recruteur123'
+        recruteur_user = db.query(User).filter(User.username == "recruteur").first()
+        if not recruteur_user:
+            recruteur_user = User(username="recruteur", hashed_password=hash_password("recruteur123"), role="recruteur", is_active=True)
+            db.add(recruteur_user)
             db.commit()
-            logger.info("[Init] 3 utilisateurs RH de démonstration créés avec succès.")
+            logger.info("[Init] Unique compte RH 'recruteur' créé avec succès.")
+        else:
+            logger.info("[Init] Compte unique RH 'recruteur' actif.")
     except Exception as e:
-        logger.error(f"[Init] Erreur création utilisateurs démo : {e}")
+        logger.error(f"[Init] Erreur initialisation compte RH : {e}")
         db.rollback()
     finally:
         db.close()
