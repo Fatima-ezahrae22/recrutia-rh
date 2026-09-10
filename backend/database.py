@@ -52,10 +52,24 @@ def get_db():
         db.close()
 
 
+from sqlalchemy import text
+
 def init_db():
-    """Initialise les tables de la base de données."""
+    """Initialise les tables de la base de données et applique les migrations de colonnes."""
     try:
         logger.info(f"[Database] Initialisation des tables SQLAlchemy sur : {DATABASE_URL}")
         Base.metadata.create_all(bind=engine)
+        
+        # ✅ Migration automatique : Ajout de la colonne cv_base64 si absente (PostgreSQL & SQLite)
+        with engine.connect() as conn:
+            try:
+                if DATABASE_URL.startswith("sqlite"):
+                    conn.execute(text("ALTER TABLE candidats ADD COLUMN cv_base64 TEXT;"))
+                else:
+                    conn.execute(text("ALTER TABLE candidats ADD COLUMN IF NOT EXISTS cv_base64 TEXT;"))
+                conn.commit()
+                logger.info("[Database] Migration cv_base64 appliquée avec succès.")
+            except Exception as e_col:
+                logger.info(f"[Database] Info colonne cv_base64 (déjà présente ou ignorée) : {e_col}")
     except Exception as e:
         logger.error(f"[Database] Erreur lors de l'initialisation des tables : {e}")
