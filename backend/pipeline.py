@@ -15,6 +15,7 @@ import shutil
 import logging
 import re
 import uuid
+import base64
 from typing import Tuple
 from sqlalchemy.orm import Session
 
@@ -86,21 +87,6 @@ def executer_pipeline_complet(
     email_candidat: str = None,
     mode_anonyme: bool = False
 ) -> Candidature:
-    """
-    Exécute le pipeline end-to-end : Ingestion ➔ Sauvegarde CV ➔ IA Agentique ➔ DB.
-
-    Args:
-        chemin_fichier_cv (str): Chemin physique du fichier CV temporaire.
-        nom_original_cv (str): Nom du fichier uploadé.
-        offre_id (int): Identifiant de l'offre visée.
-        db (Session): Session SQLAlchemy.
-        nom_candidat (str): Nom saisi manuellement (prioritaire sur extraction).
-        email_candidat (str): Email saisi manuellement (prioritaire sur extraction).
-        mode_anonyme (bool): Si True, anonymise le profil (Blind Recruitment).
-
-    Returns:
-        Candidature: Objet ORM Candidature complet enregistré en DB.
-    """
     debut = time.perf_counter()
 
     # 1. Vérifier l'existence de l'offre
@@ -110,12 +96,21 @@ def executer_pipeline_complet(
 
     logger.info(f"[Pipeline] Traitement de '{nom_original_cv}' pour l'offre '{offre.titre}' (Anonyme: {mode_anonyme})")
 
-    # 2. ✅ Sauvegarder le CV en permanent AVANT toute suppression du temp
+    # 2. ✅ Encodage Base64 permanent du fichier CV original pour persistance Vercel + Sauvegarde physique
     chemin_cv_stocke = None
+    cv_base64_str = None
     try:
         chemin_cv_stocke = _sauvegarder_cv_permanent(chemin_fichier_cv, nom_original_cv)
     except Exception as e:
-        logger.warning(f"[Pipeline] Impossible de sauvegarder le CV : {e}")
+        logger.warning(f"[Pipeline] Impossible de sauvegarder le CV physique : {e}")
+
+    try:
+        if os.path.exists(chemin_fichier_cv):
+            with open(chemin_fichier_cv, "rb") as f_cv:
+                cv_bytes = f_cv.read()
+                cv_base64_str = base64.b64encode(cv_bytes).decode("utf-8")
+    except Exception as err_b64:
+        logger.warning(f"[Pipeline] Erreur conversion base64 CV : {err_b64}")
 
     # 3. TÂCHE 1 : Ingestion du CV
     try:
@@ -166,6 +161,8 @@ def executer_pipeline_complet(
         candidat_existant.telephone = tel_cand or candidat_existant.telephone
         candidat_existant.cv_fichier_nom = nom_original_cv
         candidat_existant.cv_chemin_stocke = chemin_cv_stocke
+        if cv_base64_str:
+            candidat_existant.cv_base64 = cv_base64_str
         db.flush()
         candidat = candidat_existant
     else:
@@ -174,7 +171,8 @@ def executer_pipeline_complet(
             email=email_final,
             telephone=tel_cand,
             cv_fichier_nom=nom_original_cv,
-            cv_chemin_stocke=chemin_cv_stocke
+            cv_chemin_stocke=chemin_cv_stocke,
+            cv_base64=cv_base64_str
         )
         db.add(candidat)
         db.flush()  # ✅ flush pour obtenir l'ID avant de créer la Candidature

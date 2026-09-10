@@ -50,6 +50,7 @@ class Candidat(Base):
     telephone = Column(String(50), nullable=True)
     cv_fichier_nom = Column(String(255), nullable=False)
     cv_chemin_stocke = Column(String(500), nullable=True)   # ✅ Chemin physique du CV sauvegardé
+    cv_base64 = Column(Text, nullable=True)                   # ✅ Encodage Base64 permanent du CV original
     created_at = Column(DateTime, default=datetime.utcnow)
 
     candidatures = relationship("Candidature", back_populates="candidat", cascade="all, delete-orphan")

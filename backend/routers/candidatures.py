@@ -8,9 +8,10 @@ import json
 import shutil
 import tempfile
 import logging
+import base64
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from sqlalchemy.orm import Session
 
 from backend.database import get_db
@@ -455,7 +456,7 @@ def telecharger_cv_original(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Télécharger le fichier CV original d'un candidat (avec génération de secours dynamique si absent)."""
+    """Télécharger le fichier CV original exact d'un candidat."""
     cand = db.query(Candidature).filter(Candidature.id == candidature_id).first()
     if not cand:
         raise HTTPException(status_code=404, detail=f"Candidature ID {candidature_id} introuvable.")
@@ -464,28 +465,45 @@ def telecharger_cv_original(
     if not candidat:
         raise HTTPException(status_code=404, detail="Dossier candidat non disponible pour cette candidature.")
 
-    chemin_cv = candidat.cv_chemin_stocke
     nom_fichier = candidat.cv_fichier_nom or f"CV_{candidat.nom or candidat.id}.pdf"
-    if not nom_fichier.endswith('.pdf'):
-        nom_fichier += '.pdf'
 
-    # Vérification de l'existence physique du fichier sur le disque
-    if not chemin_cv or not os.path.exists(chemin_cv):
-        # Génération dynamique d'un document CV de secours
-        tmp_dir = os.path.join(tempfile.gettempdir(), "uploads", "cv")
-        os.makedirs(tmp_dir, exist_ok=True)
-        fallback_path = os.path.join(tmp_dir, f"CV_Gen_{candidat.id}.pdf")
-        ok = generer_cv_fallback_pdf(candidat, cand, fallback_path)
-        if ok and os.path.exists(fallback_path):
-            chemin_cv = fallback_path
-        else:
-            raise HTTPException(status_code=404, detail="Fichier CV non disponible sur le serveur.")
+    # 1. ✅ Tenter la restitution exacte depuis la Base64 stockée en base de données (100% permanent sur Vercel)
+    if candidat.cv_base64:
+        try:
+            content_bytes = base64.b64decode(candidat.cv_base64)
+            media_type = "application/pdf"
+            if nom_fichier.lower().endswith(".docx"):
+                media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            return Response(
+                content=content_bytes,
+                media_type=media_type,
+                headers={"Content-Disposition": f'inline; filename="{nom_fichier}"'}
+            )
+        except Exception as err_dec:
+            logger.warning(f"[CV Base64 Decode Error] {err_dec}")
 
-    return FileResponse(
-        chemin_cv,
-        filename=nom_fichier,
-        media_type="application/pdf"
-    )
+    # 2. ✅ Tenter de lire le fichier physique local sur le serveur
+    chemin_cv = candidat.cv_chemin_stocke
+    if chemin_cv and os.path.exists(chemin_cv):
+        return FileResponse(
+            chemin_cv,
+            filename=nom_fichier,
+            media_type="application/pdf"
+        )
+
+    # 3. Fallback de secours ultime si aucune copie n'est disponible
+    tmp_dir = os.path.join(tempfile.gettempdir(), "uploads", "cv")
+    os.makedirs(tmp_dir, exist_ok=True)
+    fallback_path = os.path.join(tmp_dir, f"CV_Gen_{candidat.id}.pdf")
+    ok = generer_cv_fallback_pdf(candidat, cand, fallback_path)
+    if ok and os.path.exists(fallback_path):
+        return FileResponse(
+            fallback_path,
+            filename=nom_fichier,
+            media_type="application/pdf"
+        )
+
+    raise HTTPException(status_code=404, detail="Fichier CV non disponible sur le serveur.")
 
 
 @router.get("/api/candidatures/{candidature_id}/pdf", tags=["Candidatures"])
