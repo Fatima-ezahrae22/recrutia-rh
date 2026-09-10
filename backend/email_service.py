@@ -81,10 +81,24 @@ def generer_html_convocation(
         <div class="detail-row">🗺️ <strong>Lieu / Lien :</strong> <span style="color:#FFF;">{lieu_ou_lien}</span></div>
       </div>
 
-      {f'<div class="msg-rh">💬 <strong>Message de l\'Équipe RH :</strong><br>{message_personnalise}</div>' if message_personnalise else ""}
+      <div style="background: rgba(79, 70, 229, 0.15); border: 1px solid #6366F1; border-radius: 14px; padding: 18px; margin: 24px 0; text-align: center;">
+        <div style="font-size: 14px; font-weight: 800; color: #F59E0B; margin-bottom: 8px;">
+          📌 COMMENT CONFIRMER VOTRE PRÉSENCE OU DEMANDER UN REPORT ?
+        </div>
+        <div style="font-size: 13px; color: #CBD5E1; line-height: 1.6;">
+          Rendez-vous sur la plateforme <strong>RecrutIA RH</strong> où vous avez postulé :<br>
+          1. Accédez à la rubrique <strong>« Suivre ma candidature »</strong><br>
+          2. Entrez votre adresse e-mail<br>
+          3. Cliquez sur le bouton <strong>« ✅ Confirmer ma présence »</strong> ou <strong>« ⚠️ Demander un report »</strong>.
+        </div>
+        <div style="margin-top: 14px;">
+          <a href="https://recrutia-rh-sigma.vercel.app/candidat" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%); color: #FFFFFF; font-weight: 800; font-size: 13px; padding: 10px 22px; border-radius: 99px; text-decoration: none; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+            🚀 Confirmer ma présence sur la plateforme RecrutIA
+          </a>
+        </div>
+      </div>
 
       <p style="font-size: 13.5px; color: #94A3B8; line-height: 1.6; margin-top: 24px;">
-        Merci de bien vouloir nous confirmer votre disponibilité en répondant à cet e-mail.<br><br>
         Cordialement,<br>
         <strong style="color:#FFF;">L'Équipe RH — ArtiWeb Fès</strong><br>
         <em style="font-size: 11px; color: #64748B;">Plateforme d'Évaluation & Scoring IA RecrutIA</em>
