@@ -917,41 +917,66 @@
     }
 
     /* ========== MOBILE (768px) ========== */
-    @media (max-width: 768px) {
+        @media (max-width: 768px) {
       .hamburger-btn { display: flex !important; }
       .sidebar-close-btn { display: flex !important; }
 
       .sidebar {
         position: fixed !important;
-        left: -280px !important;
+        left: -290px !important;
         top: 0 !important;
         height: 100vh !important;
-        width: 260px !important;
-        min-width: 260px !important;
-        transition: left 0.3s ease !important;
-        z-index: 200 !important;
+        width: 270px !important;
+        min-width: 270px !important;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 9999 !important;
+        box-shadow: 4px 0 25px rgba(0,0,0,0.5) !important;
       }
       .sidebar.open { left: 0 !important; }
 
+      /* HEADER CLEAN ON MOBILE */
       header {
-        padding: 0 14px !important;
-        height: 58px !important;
-        flex-wrap: nowrap;
+        padding: 0 12px !important;
+        height: 56px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+      .header-title {
+        flex: 1 !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
       }
       .header-title h2 {
-        font-size: 13px !important;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin: 0 !important;
       }
       .header-title p { display: none !important; }
-      .header-right { gap: 5px !important; flex-wrap: nowrap; overflow: hidden; }
+
+      /* HIDE BULKY DESKTOP BUTTONS FROM MOBILE HEADER */
+      .header-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+      .header-chip-desktop {
+        display: none !important;
+      }
+
+      .stat-chip {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        height: 34px !important;
+      }
       #anonyme-label, #ws-status-text { display: none !important; }
-      .stat-chip { padding: 6px 8px !important; font-size: 11px; }
 
       .content-body { padding: 12px !important; gap: 14px !important; }
-
       .auth-card { padding: 24px 18px !important; }
 
       .charts-row { grid-template-columns: 1fr !important; }
@@ -960,8 +985,8 @@
 
       table { display: block !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; width: 100% !important; }
 
-      .panel { padding: 16px !important; }
-      .chart-wrapper { height: 170px !important; }
+      .panel { padding: 14px !important; }
+      .chart-wrapper { height: 180px !important; }
 
       .notif-dropdown { width: calc(100vw - 30px) !important; right: -5px !important; }
     }
@@ -1025,28 +1050,28 @@
       </div>
 
       <nav class="sidebar-nav">
-        <a class="nav-item active" onclick="navTo('dashboard')">
+        <a class="nav-item active" onclick="closeSidebar(); navTo('dashboard')">
           <div class="nav-item-left"><i class="fa-solid fa-chart-pie"></i><span>Tableau de bord</span></div>
         </a>
-        <a class="nav-item" onclick="navTo('candidats')">
+        <a class="nav-item" onclick="closeSidebar(); navTo('candidats')">
           <div class="nav-item-left"><i class="fa-solid fa-users"></i><span>Candidats & CVs</span></div>
           <span class="nav-badge" id="sb-count-candidats">0</span>
         </a>
-        <a class="nav-item" onclick="navTo('offres')">
+        <a class="nav-item" onclick="closeSidebar(); navTo('offres')">
           <div class="nav-item-left"><i class="fa-solid fa-briefcase"></i><span>Offres d'emploi</span></div>
           <span class="nav-badge" id="sb-count-offres">0</span>
         </a>
-        <a class="nav-item" onclick="ouvrirCalendrier()">
+        <a class="nav-item" onclick="closeSidebar(); ouvrirCalendrier()">
           <div class="nav-item-left"><i class="fa-solid fa-calendar-days"></i><span>Calendrier RH</span></div>
           <span class="nav-badge" id="sb-count-entretiens" style="background:var(--accent-gold); color:#1E1B4B;">0</span>
         </a>
-        <a class="nav-item" onclick="ouvrirConfigIA()">
+        <a class="nav-item" onclick="closeSidebar(); ouvrirConfigIA()">
           <div class="nav-item-left"><i class="fa-solid fa-sliders"></i><span>Paramètres IA & Ollama</span></div>
         </a>
-        <a class="nav-item" onclick="ouvrirAudit()">
+        <a class="nav-item" onclick="closeSidebar(); ouvrirAudit()">
           <div class="nav-item-left"><i class="fa-solid fa-clipboard-list"></i><span>Journal d'Audit</span></div>
         </a>
-        <a class="nav-item" onclick="ouvrirProfilRH()">
+        <a class="nav-item" onclick="closeSidebar(); ouvrirProfilRH()">
           <div class="nav-item-left"><i class="fa-solid fa-user-gear"></i><span>Profil RH</span></div>
         </a>
         <a href="/candidat" target="_blank" class="nav-item">
@@ -1057,7 +1082,7 @@
     </div>
 
     <!-- User profile box opening Profil RH Modal -->
-    <div class="sidebar-user" onclick="ouvrirProfilRH()" title="Gérer mon Profil RH">
+    <div class="sidebar-user" onclick="closeSidebar(); ouvrirProfilRH()" title="Gérer mon Profil RH">
       <div class="user-info">
         <div class="user-avatar" id="sb-avatar">R</div>
         <div class="user-details">
@@ -1109,15 +1134,15 @@
         </button>
 
         <!-- ⚙️ BOUTON CONFIGURATION IA & MODÈLE OLLAMA / GEMINI -->
-        <button class="stat-chip" onclick="ouvrirConfigIA()" style="cursor:pointer; border:none; background:#F3E8FF; color:#6B21A8; font-weight:700;" title="Changer le modèle d'IA (Ollama, Gemini, Llama3...)">
+        <button class="stat-chip header-chip-desktop" onclick="closeSidebar(); ouvrirConfigIA()" style="cursor:pointer; border:none; background:#F3E8FF; color:#6B21A8; font-weight:700;" title="Changer le modèle d'IA (Ollama, Gemini, Llama3...)">
           <i class="fa-solid fa-sliders"></i> Config IA
         </button>
 
-        <button class="stat-chip" onclick="ouvrirAudit()" style="cursor:pointer; border:none; background:var(--accent-gold-light); color:var(--accent-gold); font-weight:700;" title="Consulter le journal des actions RH">
+        <button class="stat-chip header-chip-desktop" onclick="closeSidebar(); ouvrirAudit()" style="cursor:pointer; border:none; background:var(--accent-gold-light); color:var(--accent-gold); font-weight:700;" title="Consulter le journal des actions RH">
           <i class="fa-solid fa-clipboard-list"></i> Audit
         </button>
 
-        <button class="stat-chip" onclick="ouvrirCalendrier()" style="cursor:pointer; border:none; background:var(--primary); color:#fff; font-weight:700;" title="Planning des entretiens planifiés">
+        <button class="stat-chip header-chip-desktop" onclick="closeSidebar(); ouvrirCalendrier()" style="cursor:pointer; border:none; background:var(--primary); color:#fff; font-weight:700;" title="Planning des entretiens planifiés">
           <i class="fa-solid fa-calendar-days"></i> Calendrier RH
         </button>
       </div>
