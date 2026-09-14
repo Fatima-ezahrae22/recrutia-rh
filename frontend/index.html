@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -857,6 +857,121 @@
       from { transform: translateY(20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+    /* =====================================================
+       RESPONSIVE DESIGN — MOBILE & TABLET
+       ===================================================== */
+
+    /* Hamburger Button */
+    .hamburger-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--primary-light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--primary);
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+    .hamburger-btn:hover { background: var(--primary); color: #fff; }
+
+    /* Sidebar Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 150;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* Close button inside sidebar */
+    .sidebar-close-btn {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      z-index: 10;
+    }
+    .sidebar-close-btn:hover { background: rgba(239,68,68,0.3); }
+
+    /* ========== TABLET (769px – 1024px) ========== */
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; min-width: 220px; padding: 20px 14px; }
+      .content-body { padding: 20px 22px; }
+    }
+
+    /* ========== MOBILE (768px) ========== */
+    @media (max-width: 768px) {
+      .hamburger-btn { display: flex !important; }
+      .sidebar-close-btn { display: flex !important; }
+
+      .sidebar {
+        position: fixed !important;
+        left: -280px !important;
+        top: 0 !important;
+        height: 100vh !important;
+        width: 260px !important;
+        min-width: 260px !important;
+        transition: left 0.3s ease !important;
+        z-index: 200 !important;
+      }
+      .sidebar.open { left: 0 !important; }
+
+      header {
+        padding: 0 14px !important;
+        height: 58px !important;
+        flex-wrap: nowrap;
+      }
+      .header-title h2 {
+        font-size: 13px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+      }
+      .header-title p { display: none !important; }
+      .header-right { gap: 5px !important; flex-wrap: nowrap; overflow: hidden; }
+      #anonyme-label, #ws-status-text { display: none !important; }
+      .stat-chip { padding: 6px 8px !important; font-size: 11px; }
+
+      .content-body { padding: 12px !important; gap: 14px !important; }
+
+      .auth-card { padding: 24px 18px !important; }
+
+      .charts-row { grid-template-columns: 1fr !important; }
+      .top-panels { grid-template-columns: 1fr !important; }
+      .master-detail { grid-template-columns: 1fr !important; }
+
+      table { display: block !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; width: 100% !important; }
+
+      .panel { padding: 16px !important; }
+      .chart-wrapper { height: 170px !important; }
+
+      .notif-dropdown { width: calc(100vw - 30px) !important; right: -5px !important; }
+    }
+
+    /* ========== SMALL MOBILE (480px) ========== */
+    @media (max-width: 480px) {
+      .header-title h2 { max-width: 110px !important; font-size: 12px !important; }
+      .content-body { padding: 10px !important; }
+      .auth-card { padding: 20px 14px !important; }
+    }
   </style>
 </head>
 <body>
@@ -896,9 +1011,10 @@
 
 <!-- ─── APP SCREEN WITH SIDEBAR ───────────────────────────────────── -->
 <div id="app-screen">
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <!-- ── SIDEBAR ── -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar"><button class="sidebar-close-btn" onclick="closeSidebar()" title="Fermer"><i class="fa-solid fa-xmark"></i></button>
     <div>
       <div class="sidebar-brand">
         <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
@@ -959,6 +1075,7 @@
   <div class="main-content">
 
     <header>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" title="Menu"><i class="fa-solid fa-bars"></i></button>
       <div class="header-title">
         <h2 id="page-title">Tableau de bord RH & Scoring IA Multi-Critères</h2>
         <p>Gestion d'offres, Ingestion de CVs & Explicabilité</p>
@@ -2299,6 +2416,28 @@
       }
     } catch {}
   }
+</script>
+<script>
+/* ===== RESPONSIVE SIDEBAR TOGGLE ===== */
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('hamburger-btn');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+  if (btn) btn.innerHTML = sidebar.classList.contains('open') ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+}
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('hamburger-btn');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+  if (btn) btn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+}
+window.addEventListener('resize', function() {
+  if (window.innerWidth > 768) closeSidebar();
+});
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -703,15 +703,15 @@
                 </div>
               </a>
 
-              <nav class="flex items-center gap-4">
-                <button onClick={() => scrollToSection('offres-section')} class="hidden md:flex text-slate-200 hover:text-amber-400 px-4 py-2 rounded-full hover:bg-amber-400/10 transition-all text-sm font-bold">
-                  <i class="fa-solid fa-briefcase text-amber-400 mr-2 mt-0.5"></i> Offres d'emploi
+              <nav class="flex items-center gap-1.5 sm:gap-4">
+                <button onClick={() => scrollToSection('offres-section')} class="hidden md:flex text-slate-200 hover:text-amber-400 px-3 sm:px-4 py-2 rounded-full hover:bg-amber-400/10 transition-all text-xs sm:text-sm font-bold">
+                  <i class="fa-solid fa-briefcase text-amber-400 mr-1.5 sm:mr-2 mt-0.5"></i> <span class="hidden sm:inline">Offres d'emploi</span><span class="sm:hidden">Offres</span>
                 </button>
-                <button onClick={() => scrollToSection('suivi-section')} class="text-slate-200 hover:text-amber-400 px-4 py-2 rounded-full hover:bg-indigo-500/10 transition-all text-sm font-bold">
-                  <i class="fa-solid fa-magnifying-glass text-indigo-400 mr-2 mt-0.5"></i> Suivre ma candidature
+                <button onClick={() => scrollToSection('suivi-section')} class="text-slate-200 hover:text-amber-400 px-2.5 sm:px-4 py-2 rounded-full hover:bg-indigo-500/10 transition-all text-xs sm:text-sm font-bold">
+                  <i class="fa-solid fa-magnifying-glass text-indigo-400 mr-1 sm:mr-2 mt-0.5"></i> <span class="hidden sm:inline">Suivre ma candidature</span><span class="sm:hidden">Suivi</span>
                 </button>
-                <button onClick={() => handleOpenModal('')} class="bg-gradient-to-r from-amber-500 via-indigo-600 to-purple-600 hover:from-amber-400 hover:to-indigo-500 text-white font-extrabold text-sm px-6 py-2.5 rounded-full shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 active:scale-95 transition-all">
-                  <i class="fa-solid fa-paper-plane mr-2"></i> Postuler maintenant
+                <button onClick={() => handleOpenModal('')} class="bg-gradient-to-r from-amber-500 via-indigo-600 to-purple-600 hover:from-amber-400 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm px-3 sm:px-6 py-2 sm:py-2.5 rounded-full shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 active:scale-95 transition-all whitespace-nowrap">
+                  <i class="fa-solid fa-paper-plane mr-1 sm:mr-2"></i> <span class="hidden sm:inline">Postuler maintenant</span><span class="sm:hidden">Postuler</span>
                 </button>
               </nav>
 
