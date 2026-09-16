@@ -302,10 +302,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def _lire_html(relative_path: str) -> str:
     try:
-        chemin = os.path.join(BASE_DIR, relative_path)
-        if os.path.exists(chemin):
-            with open(chemin, "r", encoding="utf-8") as f:
-                return f.read()
+        # Essayer depuis BASE_DIR, le dossier courant, et un niveau au-dessus
+        chemins = [
+            os.path.join(BASE_DIR, relative_path),
+            os.path.join(os.getcwd(), relative_path),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", relative_path),
+        ]
+        for chemin in chemins:
+            if os.path.exists(chemin):
+                with open(chemin, "r", encoding="utf-8") as f:
+                    return f.read()
     except Exception as e:
         logger.error(f"[HTML] Erreur lecture {relative_path} : {e}")
     return f"<h1>Interface RecrutIA RH — ({relative_path} non disponible)</h1>"
@@ -313,6 +319,7 @@ def _lire_html(relative_path: str) -> str:
 
 @app.get("/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/candidat", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/candidat/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_candidat():
     """Sert l'interface publique candidat (Page d'accueil principale)."""
     headers = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
@@ -321,6 +328,7 @@ def servir_dashboard_candidat():
 
 
 @app.get("/rh/register", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/rh/register/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_inscription_rh():
     """Sert la page d'inscription RH."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
@@ -329,8 +337,11 @@ def servir_inscription_rh():
 
 
 @app.get("/rh", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/rh/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/admin", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/admin/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard Web UI"])
+@app.get("/dashboard/", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_rh():
     """Sert l'interface RH (tableau de bord recruteur protégé)."""
     no_cache = {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0", "Pragma": "no-cache", "Expires": "0"}
