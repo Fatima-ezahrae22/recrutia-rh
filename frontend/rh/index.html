@@ -1020,15 +1020,16 @@
         <input type="password" id="login-pass" value="recruteur123" placeholder="••••••••" required>
       </div>
       <button class="btn-auth" type="submit" id="btn-login">
-        <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+        <i class="fa-solid fa-right-to-bracket"></i> Se connecter à l'Espace RH
       </button>
     </form>
-    <div class="demo-hint" style="text-align:left; font-size:11px; line-height:1.6;">
-      <strong>Comptes disponibles :</strong><br>
-      • 👤 Recruteur 1 : <strong>fatimamekki</strong> / <strong>fatima123</strong><br>
-      • 👤 Recruteur 2 : <strong>recruteur</strong> / <strong>recruteur123</strong>
+    
+    <div style="margin-top:16px; padding:10px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; font-size:11px; color:#C7D2FE; display:flex; align-items:center; gap:8px; justify-content:center;">
+      <i class="fa-solid fa-shield-halved" style="color:#F59E0B;"></i>
+      <span>Accès sécurisé par jetons <strong>JWT</strong> & hachage <strong>bcrypt</strong></span>
     </div>
-    <p style="text-align: center; margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.6);">
+
+    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.6);">
       Vous n'avez pas de compte ? <a href="/rh/register" style="color: #F59E0B; font-weight: 700; text-decoration: underline;">Créer un compte</a>
     </p>
   </div>
@@ -2315,6 +2316,10 @@
     if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
     localStorage.removeItem("recrutia_token");
     localStorage.removeItem("recrutia_username");
+    fermerProfilRH();
+    if (typeof fermerCalendrier === 'function') fermerCalendrier();
+    if (typeof fermerAudit === 'function') fermerAudit();
+    if (typeof fermerConfigIA === 'function') fermerConfigIA();
     document.getElementById("app-screen").classList.remove("visible");
     document.getElementById("auth-screen").classList.remove("hidden");
   }
