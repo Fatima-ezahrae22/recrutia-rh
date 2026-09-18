@@ -2444,18 +2444,34 @@
       const comps = Array.isArray(o.competences_obligatoires) ? o.competences_obligatoires : (typeof o.competences_obligatoires === 'string' ? o.competences_obligatoires.split(',') : []);
       const reqsHtml = comps.map((c, i) => `<span class="badge-skill ${colorClasses[i % colorClasses.length]}">${c.trim()}</span>`).join(" ");
       const accent = borderAccents[idx % borderAccents.length];
+      const countCands = (toutesCandidatures || []).filter(c => c.offre_id === o.id).length;
 
       const card = document.createElement("div");
-      card.style.cssText = `background:var(--bg-white); border:1px solid var(--border); border-top:4px solid ${accent}; border-radius:12px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; box-shadow:var(--shadow-sm); transition:transform 0.2s, box-shadow 0.2s;`;
+      card.style.cssText = `background:var(--bg-white); border:1px solid var(--border); border-top:4px solid ${accent}; border-radius:14px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; box-shadow:var(--shadow-sm); transition:transform 0.2s, box-shadow 0.2s;`;
       card.onmouseenter = () => { card.style.transform = 'translateY(-3px)'; card.style.boxShadow = 'var(--shadow-md)'; };
       card.onmouseleave = () => { card.style.transform = 'none'; card.style.boxShadow = 'var(--shadow-sm)'; };
 
       card.innerHTML = `
         <div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px;">
-            <strong style="font-size:15px; font-weight:700; color:var(--text-primary);">${o.titre}</strong>
-            <span style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; border:1px solid #FDE68A; flex-shrink:0;">Seuil: ${o.seuil_score_min || 70}%</span>
+            <strong style="font-size:15px; font-weight:800; color:var(--text-primary); font-family:'Outfit', sans-serif;">${o.titre}</strong>
+            <span style="background:#D1FAE5; color:#047857; font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; border:1px solid #A7F3D0; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span> Active
+            </span>
           </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+            <span style="background:#EEF2FF; color:#4338CA; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #C7D2FE;">
+              <i class="fa-solid fa-briefcase"></i> ${o.type_contrat || 'CDI'}
+            </span>
+            <span style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #FDE68A;">
+              <i class="fa-solid fa-bullseye"></i> Seuil IA: ${o.seuil_score_min || 70}%
+            </span>
+            <span style="background:#F1F5F9; color:#475569; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #CBD5E1;">
+              <i class="fa-solid fa-users"></i> ${countCands} candidature(s)
+            </span>
+          </div>
+
           <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:12px;">${o.description ? (o.description.length > 110 ? o.description.substring(0, 110) + '...' : o.description) : 'Description non disponible.'}</p>
           <div style="margin-top:6px;">${reqsHtml || '<span style="font-size:11px; color:var(--text-muted);">Compétences non spécifiées</span>'}</div>
         </div>
