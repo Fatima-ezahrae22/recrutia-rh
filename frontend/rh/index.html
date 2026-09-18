@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -1184,28 +1184,81 @@
           </div>
           <form id="form-offre" onsubmit="creerOffre(event)">
             <div class="form-group">
-              <label>Titre du Poste</label>
-              <input type="text" id="offre-titre" class="form-control" placeholder="ex: Développeur Senior Python / FastAPI" required>
+              <label><i class="fa-solid fa-heading" style="color:var(--primary);"></i> Titre du Poste</label>
+              <input type="text" id="offre-titre" class="form-control" placeholder="ex: Développeur Senior Python / FastAPI & IA" required>
             </div>
+            
             <div class="form-group">
-              <label>Description du Poste</label>
-              <textarea id="offre-desc" class="form-control" placeholder="Missions et compétences recherchées..." required></textarea>
+              <label><i class="fa-solid fa-align-left" style="color:var(--primary);"></i> Description & Missions du Poste</label>
+              <textarea id="offre-desc" class="form-control" rows="3" placeholder="Missions détaillées, contexte du projet et profil recherché..." required></textarea>
             </div>
+            
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
               <div class="form-group">
-                <label>Expérience Min (ans)</label>
+                <label><i class="fa-solid fa-briefcase" style="color:var(--primary);"></i> Type de Contrat</label>
+                <select id="offre-contrat" class="form-control">
+                  <option value="CDI">CDI (Contrat Indéterminé)</option>
+                  <option value="CDD">CDD (Contrat Déterminé)</option>
+                  <option value="Stage PFE">Stage PFE / Pré-embauche</option>
+                  <option value="Freelance / Mission">Freelance / Mission</option>
+                  <option value="Alternance">Alternance</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-graduation-cap" style="color:var(--primary);"></i> Niveau d'Étude Requis</label>
+                <select id="offre-formation" class="form-control">
+                  <option value="Master / Ingénieur (Bac+5)" selected>Master / Ingénieur (Bac+5)</option>
+                  <option value="Licence / Bachelor (Bac+3)">Licence / Bachelor (Bac+3)</option>
+                  <option value="DUT / BTS (Bac+2)">DUT / BTS (Bac+2)</option>
+                  <option value="Doctorat / PhD (Bac+8)">Doctorat / PhD (Bac+8)</option>
+                  <option value="Autodidacte / Expérimenté">Autodidacte / Expérimenté</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label><i class="fa-solid fa-clock" style="color:var(--primary);"></i> Expérience Min (ans)</label>
                 <input type="number" id="offre-exp" class="form-control" value="2" min="0">
               </div>
               <div class="form-group">
-                <label>Seuil Score Min (%)</label>
+                <label><i class="fa-solid fa-bullseye" style="color:var(--primary);"></i> Seuil Score Min (%)</label>
                 <input type="number" id="offre-seuil" class="form-control" value="70" min="40" max="95" style="font-weight:700; color:var(--primary);">
               </div>
             </div>
+
             <div class="form-group">
-              <label>Compétences Obligatoires (séparées par virgule)</label>
-              <input type="text" id="offre-req" class="form-control" placeholder="Python, FastAPI, PostgreSQL">
+              <label><i class="fa-solid fa-star" style="color:#DC2626;"></i> Compétences Obligatoires (séparées par virgule)</label>
+              <input type="text" id="offre-req" class="form-control" placeholder="Python, FastAPI, PostgreSQL, Git" required>
             </div>
-            <button type="submit" class="btn btn-primary" id="btn-creer-offre">
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-wand-magic-sparkles" style="color:#8B5CF6;"></i> Compétences Souhaitées (Bonus IA, séparées par virgule)</label>
+              <input type="text" id="offre-souhaitees" class="form-control" placeholder="Docker, Kubernetes, AWS, PyTorch, CI/CD">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label><i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> Localisation / Mode</label>
+                <select id="offre-loc" class="form-control">
+                  <option value="Fès, Maroc (Hybride)">Fès (Hybride)</option>
+                  <option value="Fès, Maroc (Présentiel)">Fès (Présentiel)</option>
+                  <option value="Full Remote (Télétravail 100%)">Full Remote</option>
+                  <option value="Casablanca, Maroc (Hybride)">Casablanca (Hybride)</option>
+                  <option value="Rabat, Maroc (Hybride)">Rabat (Hybride)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-money-bill-wave" style="color:var(--primary);"></i> Salaire Estimé</label>
+                <input type="text" id="offre-salaire" class="form-control" placeholder="ex: 12 000 - 18 000 DH">
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-users" style="color:var(--primary);"></i> Postes Ouverts</label>
+                <input type="number" id="offre-postes" class="form-control" value="1" min="1">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-creer-offre" style="margin-top:6px;">
               <i class="fa-solid fa-paper-plane"></i> Publier l'Offre RH
             </button>
           </form>
@@ -1527,9 +1580,9 @@
 
 <!-- ✏️ MODAL MODIFIER OFFRE -->
 <div id="modal-modifier-offre" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:560px; width:90%; position:relative; background:#fff; border-radius:16px; padding:32px; color:var(--text-primary);">
+  <div class="auth-card" style="max-width:620px; width:92%; position:relative; background:#fff; border-radius:16px; padding:28px 32px; color:var(--text-primary); max-height:90vh; overflow-y:auto;">
     <button onclick="fermerModalModifierOffre()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:22px; color:var(--text-muted); cursor:pointer;">&times;</button>
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
       <div style="width:44px; height:44px; border-radius:12px; background:var(--primary-light); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:20px;">
         <i class="fa-solid fa-pen-to-square"></i>
       </div>
@@ -1539,32 +1592,68 @@
       </div>
     </div>
 
-    <form onsubmit="sauvegarderModificationOffre(event)" style="display:flex; flex-direction:column; gap:14px;">
+    <form onsubmit="sauvegarderModificationOffre(event)" style="display:flex; flex-direction:column; gap:12px;">
       <input type="hidden" id="edit-offre-id">
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Titre du Poste</label>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Titre du Poste</label>
         <input type="text" id="edit-offre-titre" class="form-control" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
       </div>
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Description du Poste</label>
-        <textarea id="edit-offre-desc" class="form-control" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);"></textarea>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Description du Poste</label>
+        <textarea id="edit-offre-desc" class="form-control" rows="3" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);"></textarea>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="form-field">
-          <label style="color:var(--text-secondary);">Expérience Min (ans)</label>
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Type de Contrat</label>
+          <select id="edit-offre-contrat" class="form-control">
+            <option value="CDI">CDI</option>
+            <option value="CDD">CDD</option>
+            <option value="Stage PFE">Stage PFE / Pré-embauche</option>
+            <option value="Freelance / Mission">Freelance / Mission</option>
+            <option value="Alternance">Alternance</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Niveau d'Étude</label>
+          <select id="edit-offre-formation" class="form-control">
+            <option value="Master / Ingénieur (Bac+5)">Master / Ingénieur (Bac+5)</option>
+            <option value="Licence / Bachelor (Bac+3)">Licence / Bachelor (Bac+3)</option>
+            <option value="DUT / BTS (Bac+2)">DUT / BTS (Bac+2)</option>
+            <option value="Doctorat / PhD (Bac+8)">Doctorat / PhD (Bac+8)</option>
+            <option value="Autodidacte / Expérimenté">Autodidacte / Expérimenté</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Expérience Min (ans)</label>
           <input type="number" id="edit-offre-exp" class="form-control" min="0" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
         </div>
         <div class="form-field">
-          <label style="color:var(--text-secondary);">Seuil Score Min (%)</label>
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Seuil Score Min (%)</label>
           <input type="number" id="edit-offre-seuil" class="form-control" min="40" max="95" style="color:var(--primary); font-weight:700; background:#fff; border:1px solid var(--border);">
         </div>
       </div>
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Compétences Obligatoires</label>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Compétences Obligatoires</label>
         <input type="text" id="edit-offre-req" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
       </div>
+      <div class="form-field">
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Compétences Souhaitées (Bonus IA)</label>
+        <input type="text" id="edit-offre-souhaitees" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Localisation</label>
+          <input type="text" id="edit-offre-loc" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+        </div>
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Salaire Estimé</label>
+          <input type="text" id="edit-offre-salaire" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+        </div>
+      </div>
 
-      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Enregistrer les Modifications</button>
+      <button type="submit" class="btn btn-primary" style="margin-top:8px;"><i class="fa-solid fa-save"></i> Enregistrer les Modifications</button>
     </form>
   </div>
 </div>
@@ -1692,7 +1781,7 @@
   const WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + (window.location.host || '127.0.0.1:8000') + '/ws/notifications';
   let TOKEN = localStorage.getItem("recrutia_token") || null;
   let USERNAME = localStorage.getItem("recrutia_username") || "recruteur";
-  let USER_ROLE = null; // Rôle global de l'utilisateur connecté (admin / recruteur)
+  let USER_ROLE = null; // Rôle global de l'utilisateur connecté (recruteur)
   let toutesOffres = [];
   let toutesCandidatures = [];
   let knownCandidateIds = new Set();
@@ -2124,28 +2213,16 @@
     btn.disabled = false;
   }
 
-  // Délégué vers chargerGestionComptesAdmin (qui met à jour aussi admin-users-list)
-  function chargerListeUtilisateursAdmin() {
-    chargerGestionComptesAdmin();
-  }
+  // Fonctions de gestion des comptes (simplifiées — rôle unique Recruteur RH)
+  function chargerListeUtilisateursAdmin() { /* non utilisé */ }
+  function ouvrirGestionComptes() { /* non utilisé */ }
+  function fermerGestionComptes() { /* non utilisé */ }
+  function toggleFormNouveauCompteAdmin() { /* non utilisé */ }
+  async function basculerStatutUserAdmin() { /* non utilisé */ }
+  async function chargerGestionComptesAdmin() { /* non utilisé */ }
+  async function doCreerUserAdmin() { /* non utilisé */ }
+  async function supprimerUserAdmin() { /* non utilisé */ }
 
-  // 👥 GESTION DES COMPTES ADMINISTRATEUR
-  function ouvrirGestionComptes() {
-    document.getElementById("modal-gestion-comptes").style.display = "flex";
-    chargerGestionComptesAdmin();
-  }
-
-  function fermerGestionComptes() {
-    document.getElementById("modal-gestion-comptes").style.display = "none";
-    document.getElementById("form-creer-user-admin").style.display = "none";
-  }
-
-  function toggleFormNouveauCompteAdmin() {
-    const f = document.getElementById("form-creer-user-admin");
-    f.style.display = f.style.display === "none" ? "block" : "none";
-  }
-
-  // chargerCountUsersAdmin fusionné dans chargerGestionComptesAdmin — plus besoin de cet appel séparé
 
   function exporterCandidaturesCSV() {
     const token = localStorage.getItem("recrutia_token");
@@ -2153,161 +2230,7 @@
     toast("Téléchargement du fichier CSV des candidatures...", "success");
   }
 
-  async function basculerStatutUserAdmin(id, username) {
-    try {
-      const res = await fetch(`${API}/auth/users/${id}/status`, { method: "PATCH", headers: headers() });
-      const data = await res.json();
-      if (res.ok) {
-        toast(data.message || "Statut mis à jour.");
-        chargerGestionComptesAdmin();
-      } else {
-        toast(data.detail || "Erreur lors de la mise à jour.", "error");
-      }
-    } catch {
-      toast("Erreur de connexion.", "error");
-    }
-  }
 
-  async function chargerGestionComptesAdmin() {
-    const tbody = document.getElementById("table-users-admin-body");
-    const mainTbody = document.getElementById("admin-main-users-table");
-    const kpiUsers = document.getElementById("admin-kpi-users");
-    const compactList = document.getElementById("admin-users-list"); // Liste compacte dans le modal profil
-
-    try {
-      const res = await fetch(`${API}/auth/users`, { headers: headers() });
-
-      if (res.status === 401) {
-        handleAuthError();
-        return;
-      }
-
-      if (res.ok) {
-        const users = await res.json();
-        // Mise à jour des compteurs (sidebar + KPI admin)
-        const badge = document.getElementById("sb-count-users");
-        if (badge) badge.innerText = users.length || 0;
-        if (kpiUsers) kpiUsers.innerText = users.length || 0;
-
-        // ── Tableau principal (panneau admin) ──
-        let rowsHtml = "";
-        if (!users || users.length === 0) {
-          rowsHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Aucun compte utilisateur trouvé.</td></tr>';
-        } else {
-          users.forEach(u => {
-            const isSelf = u.username === USERNAME;
-            const roleBadge = u.role === 'admin'
-              ? '<span style="background:#FEF3C7; color:#D97706; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #FDE68A;">⚙️ Administrateur</span>'
-              : '<span style="background:#EEF2FF; color:#4F46E5; padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px; border:1px solid #C7D2FE;">👤 Recruteur RH</span>';
-            const statusBadge = u.is_active
-              ? '<span style="color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Actif</span>'
-              : '<span style="color:#DC2626; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Suspendu</span>';
-
-            rowsHtml += `
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:12px 16px; font-weight:700;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">${u.username.charAt(0).toUpperCase()}</div>
-                    <div>
-                      <span>${u.username}</span> ${isSelf ? '<span style="color:var(--accent-green); font-size:11px; font-weight:700;">(Vous)</span>' : ''}
-                    </div>
-                  </div>
-                </td>
-                <td style="padding:12px 16px;">${roleBadge}</td>
-                <td style="padding:12px 16px;">${statusBadge}</td>
-                <td style="padding:12px 16px; color:var(--text-muted); font-size:12px;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
-                <td style="padding:12px 16px; text-align:right;">
-                  ${!isSelf ? `
-                    <button onclick="basculerStatutUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#EEF2FF; color:#4F46E5; border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; margin-right:4px;">${u.is_active ? '⏸️ Suspendre' : '▶️ Activer'}</button>
-                    <button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:5px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;" title="Supprimer ce compte"><i class="fa-solid fa-trash"></i></button>
-                  ` : '<span style="color:var(--text-muted); font-size:11px; font-weight:600;">Compte actif</span>'}
-                </td>
-              </tr>
-            `;
-          });
-        }
-
-        if (tbody) tbody.innerHTML = rowsHtml;
-        if (mainTbody) mainTbody.innerHTML = rowsHtml;
-
-        // ── Liste compacte du modal profil (éliminer la redondance de chargerListeUtilisateursAdmin) ──
-        if (compactList) {
-          if (!users || users.length === 0) {
-            compactList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Aucun compte enregistré.</div>';
-          } else {
-            compactList.innerHTML = users.map(u => {
-              const isSelf = u.username === USERNAME;
-              return `<div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#fff; border:1px solid var(--border); border-radius:8px; font-size:12px;">
-                <div>
-                  <strong>${u.username} ${isSelf ? '<span style="color:var(--primary); font-size:10px;">(Vous)</span>' : ''}</strong>
-                  <div style="font-size:10px; color:var(--text-muted);">${u.role === 'admin' ? '⚙️ Administrateur' : '👤 Recruteur RH'} • ${new Date(u.created_at).toLocaleDateString('fr-FR')}</div>
-                </div>
-                ${!isSelf ? `<button onclick="supprimerUserAdmin(${u.id}, '${u.username}')" style="padding:4px 8px; background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-trash"></i> Supprimer</button>` : ''}
-              </div>`;
-            }).join('');
-          }
-        }
-
-      } else {
-        const errHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Impossible de charger la liste. Veuillez vous reconnecter.</td></tr>';
-        if (tbody) tbody.innerHTML = errHtml;
-        if (mainTbody) mainTbody.innerHTML = errHtml;
-      }
-    } catch {
-      const errHtml = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Erreur de connexion avec le serveur.</td></tr>';
-      if (tbody) tbody.innerHTML = errHtml;
-      if (mainTbody) mainTbody.innerHTML = errHtml;
-    }
-  }
-
-  async function doCreerUserAdmin(e) {
-    e.preventDefault();
-    const btn = document.getElementById("btn-submit-user-admin");
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enregistrement...';
-    btn.disabled = true;
-
-    try {
-      const res = await fetch(`${API}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: document.getElementById("admin-new-user").value.trim(),
-          password: document.getElementById("admin-new-pass").value,
-          role: document.getElementById("admin-new-role").value
-        })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast(`Compte "${data.username}" créé avec succès !`);
-        document.getElementById("admin-new-user").value = "";
-        document.getElementById("admin-new-pass").value = "";
-        toggleFormNouveauCompteAdmin();
-        chargerGestionComptesAdmin();
-      } else {
-        toast(data.detail || "Erreur de création du compte.", "error");
-      }
-    } catch {
-      toast("Erreur de connexion.", "error");
-    }
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> Enregistrer';
-    btn.disabled = false;
-  }
-
-  async function supprimerUserAdmin(id, username) {
-    if (!confirm(`Voulez-vous vraiment supprimer le compte "${username}" ?`)) return;
-    try {
-      const res = await fetch(`${API}/auth/users/${id}`, { method: "DELETE", headers: headers() });
-      const data = await res.json();
-      if (res.ok) {
-        toast(`Compte "${username}" supprimé.`);
-        chargerGestionComptesAdmin();
-      } else {
-        toast(data.detail || "Erreur de suppression.", "error");
-      }
-    } catch {
-      toast("Erreur de connexion.", "error");
-    }
-  }
 
   async function doLogin(e) {
     e.preventDefault();
@@ -2493,12 +2416,18 @@
     const o = toutesOffres.find(item => item.id === offreId);
     if (!o) return;
     document.getElementById("edit-offre-id").value = o.id;
-    document.getElementById("edit-offre-titre").value = o.titre;
+    document.getElementById("edit-offre-titre").value = o.titre || "";
     document.getElementById("edit-offre-desc").value = o.description || "";
+    document.getElementById("edit-offre-contrat").value = o.type_contrat || "CDI";
+    document.getElementById("edit-offre-formation").value = o.formation_exigee || "Master / Ingénieur (Bac+5)";
     document.getElementById("edit-offre-exp").value = o.experience_min_annees || 0;
     document.getElementById("edit-offre-seuil").value = o.seuil_score_min || 70;
     const comps = Array.isArray(o.competences_obligatoires) ? o.competences_obligatoires.join(", ") : (o.competences_obligatoires || "");
     document.getElementById("edit-offre-req").value = comps;
+    const souhaits = Array.isArray(o.competences_souhaitees) ? o.competences_souhaitees.join(", ") : (o.competences_souhaitees || "");
+    document.getElementById("edit-offre-souhaitees").value = souhaits;
+    document.getElementById("edit-offre-loc").value = o.localisation || "Fès, Maroc (Hybride)";
+    document.getElementById("edit-offre-salaire").value = o.salaire_estime || "Selon profil";
     document.getElementById("modal-modifier-offre").style.display = "flex";
   }
 
@@ -2510,9 +2439,14 @@
     const payload = {
       titre: document.getElementById("edit-offre-titre").value.trim(),
       description: document.getElementById("edit-offre-desc").value.trim(),
+      type_contrat: document.getElementById("edit-offre-contrat").value,
+      formation_exigee: document.getElementById("edit-offre-formation").value,
       experience_min_annees: parseInt(document.getElementById("edit-offre-exp").value) || 0,
       seuil_score_min: parseFloat(document.getElementById("edit-offre-seuil").value) || 70,
-      competences_obligatoires: document.getElementById("edit-offre-req").value.split(",").map(s => s.trim()).filter(Boolean)
+      competences_obligatoires: document.getElementById("edit-offre-req").value.split(",").map(s => s.trim()).filter(Boolean),
+      competences_souhaitees: document.getElementById("edit-offre-souhaitees").value ? document.getElementById("edit-offre-souhaitees").value.split(",").map(s => s.trim()).filter(Boolean) : [],
+      localisation: document.getElementById("edit-offre-loc").value.trim(),
+      salaire_estime: document.getElementById("edit-offre-salaire").value.trim()
     };
 
     try {
@@ -3054,21 +2988,30 @@
     const payload = {
       titre: document.getElementById('offre-titre').value.trim(),
       description: document.getElementById('offre-desc').value.trim(),
+      type_contrat: document.getElementById('offre-contrat').value,
+      formation_exigee: document.getElementById('offre-formation').value,
       experience_min_annees: parseInt(document.getElementById('offre-exp').value) || 0,
       seuil_score_min: parseFloat(document.getElementById('offre-seuil').value) || 70,
       competences_obligatoires: document.getElementById('offre-req').value.split(',').map(s => s.trim()).filter(Boolean),
-      competences_souhaitees: [],
-      formation_exigee: 'Non spécifiée'
+      competences_souhaitees: document.getElementById('offre-souhaitees').value ? document.getElementById('offre-souhaitees').value.split(',').map(s => s.trim()).filter(Boolean) : [],
+      localisation: document.getElementById('offre-loc').value,
+      salaire_estime: document.getElementById('offre-salaire').value.trim() || 'Selon profil',
+      nombre_postes: parseInt(document.getElementById('offre-postes').value) || 1
     };
     try {
       const res = await fetch(`${API}/offres`, { method: "POST", headers: headers(), body: JSON.stringify(payload) });
       if (res.ok) {
-        toast("Offre RH Publiée !", "success");
+        toast("🎉 Offre RH Publiée avec succès !", "success");
         ajouterNotification(`Nouvelle offre d'emploi publiée : ${payload.titre}`);
         document.getElementById('form-offre').reset();
         chargerOffres();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast(err.detail || "Erreur lors de la publication de l'offre.", "error");
       }
-    } catch {}
+    } catch {
+      toast("Erreur de connexion au serveur.", "error");
+    }
   }
 </script>
 <script>
