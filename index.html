@@ -1025,8 +1025,8 @@
     </form>
     <div class="demo-hint" style="text-align:left; font-size:11px; line-height:1.6;">
       <strong>Comptes disponibles :</strong><br>
-      • ⚙️ <strong>Administrateur :</strong> <strong>admin</strong> / <strong>admin123</strong><br>
-      • 👤 <strong>Recruteur RH :</strong> <strong>recruteur</strong> / <strong>recruteur123</strong>
+      • 👤 Recruteur 1 : <strong>fatimamekki</strong> / <strong>fatima123</strong><br>
+      • 👤 Recruteur 2 : <strong>recruteur</strong> / <strong>recruteur123</strong>
     </div>
     <p style="text-align: center; margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.6);">
       Vous n'avez pas de compte ? <a href="/rh/register" style="color: #F59E0B; font-weight: 700; text-decoration: underline;">Créer un compte</a>
@@ -1045,36 +1045,36 @@
         <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
         <div class="sidebar-brand-text">
           <h1>RecrutIA</h1>
-          <p>ArtiWeb RH</p>
+          <p id="sb-brand-sub">ArtiWeb RH</p>
         </div>
       </div>
 
       <nav class="sidebar-nav">
-        <a class="nav-item active" onclick="closeSidebar(); navTo('dashboard')">
-          <div class="nav-item-left"><i class="fa-solid fa-chart-pie"></i><span>Tableau de bord</span></div>
+        <a class="nav-item active" id="nav-item-dashboard" onclick="closeSidebar(); navTo('dashboard')">
+          <div class="nav-item-left"><i class="fa-solid fa-chart-pie"></i><span id="sb-dashboard-label">Tableau de bord</span></div>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); navTo('candidats')">
+        <a class="nav-item" id="nav-rh-candidats" onclick="closeSidebar(); navTo('candidats')">
           <div class="nav-item-left"><i class="fa-solid fa-users"></i><span>Candidats & CVs</span></div>
           <span class="nav-badge" id="sb-count-candidats">0</span>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); navTo('offres')">
+        <a class="nav-item" id="nav-rh-offres" onclick="closeSidebar(); navTo('offres')">
           <div class="nav-item-left"><i class="fa-solid fa-briefcase"></i><span>Offres d'emploi</span></div>
           <span class="nav-badge" id="sb-count-offres">0</span>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); ouvrirCalendrier()">
+        <a class="nav-item" id="nav-rh-calendrier" onclick="closeSidebar(); ouvrirCalendrier()">
           <div class="nav-item-left"><i class="fa-solid fa-calendar-days"></i><span>Calendrier RH</span></div>
           <span class="nav-badge" id="sb-count-entretiens" style="background:var(--accent-gold); color:#1E1B4B;">0</span>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); ouvrirConfigIA()">
+        <a class="nav-item" id="nav-config-ia" onclick="closeSidebar(); ouvrirConfigIA()">
           <div class="nav-item-left"><i class="fa-solid fa-sliders"></i><span>Paramètres IA & Ollama</span></div>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); ouvrirAudit()">
+        <a class="nav-item" id="nav-audit" onclick="closeSidebar(); ouvrirAudit()">
           <div class="nav-item-left"><i class="fa-solid fa-clipboard-list"></i><span>Journal d'Audit</span></div>
         </a>
-        <a class="nav-item" onclick="closeSidebar(); ouvrirProfilRH()">
-          <div class="nav-item-left"><i class="fa-solid fa-user-gear"></i><span>Profil RH</span></div>
+        <a class="nav-item" id="nav-profil" onclick="closeSidebar(); ouvrirProfilRH()">
+          <div class="nav-item-left"><i class="fa-solid fa-user-gear"></i><span id="sb-profil-label">Profil RH</span></div>
         </a>
-        <a href="/candidat" target="_blank" class="nav-item">
+        <a href="/candidat" target="_blank" class="nav-item" id="nav-portail">
           <div class="nav-item-left"><i class="fa-solid fa-globe"></i><span>Portail Candidat</span></div>
           <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px; opacity:0.6;"></i>
         </a>
@@ -1087,7 +1087,7 @@
         <div class="user-avatar" id="sb-avatar">R</div>
         <div class="user-details">
           <p id="sb-user-name">recruteur</p>
-          <span>Responsable RH</span>
+          <span id="sb-user-role">Responsable RH</span>
         </div>
       </div>
       <button class="btn-logout-sidebar" onclick="event.stopPropagation(); doLogout();" title="Déconnexion">
@@ -1103,7 +1103,7 @@
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" title="Menu"><i class="fa-solid fa-bars"></i></button>
       <div class="header-title">
         <h2 id="page-title">Tableau de bord RH & Scoring IA Multi-Critères</h2>
-        <p>Gestion d'offres, Ingestion de CVs & Explicabilité</p>
+        <p id="page-subtitle">Gestion d'offres, Ingestion de CVs & Explicabilité</p>
       </div>
 
       <div class="header-right">
@@ -1142,6 +1142,10 @@
           <i class="fa-solid fa-clipboard-list"></i> Audit
         </button>
 
+        <button class="stat-chip header-chip-desktop" onclick="exporterCandidaturesCSV()" style="cursor:pointer; border:none; background:#D1FAE5; color:#047857; font-weight:700;" title="Télécharger l'ensemble des candidatures au format CSV / Excel">
+          <i class="fa-solid fa-file-csv"></i> Exporter CSV
+        </button>
+
         <button class="stat-chip header-chip-desktop" onclick="closeSidebar(); ouvrirCalendrier()" style="cursor:pointer; border:none; background:var(--primary); color:#fff; font-weight:700;" title="Planning des entretiens planifiés">
           <i class="fa-solid fa-calendar-days"></i> Calendrier RH
         </button>
@@ -1149,6 +1153,9 @@
     </header>
 
     <div class="content-body">
+
+      <!-- 💼 TABLEAU DE BORD RECRUTEUR RH -->
+      <div id="rh-dashboard-container">
 
       <!-- 📊 SECTION GRAPHES RH -->
       <div class="charts-row" id="section-graphes">
@@ -1177,28 +1184,81 @@
           </div>
           <form id="form-offre" onsubmit="creerOffre(event)">
             <div class="form-group">
-              <label>Titre du Poste</label>
-              <input type="text" id="offre-titre" class="form-control" placeholder="ex: Développeur Senior Python / FastAPI" required>
+              <label><i class="fa-solid fa-heading" style="color:var(--primary);"></i> Titre du Poste</label>
+              <input type="text" id="offre-titre" class="form-control" placeholder="ex: Développeur Senior Python / FastAPI & IA" required>
             </div>
+            
             <div class="form-group">
-              <label>Description du Poste</label>
-              <textarea id="offre-desc" class="form-control" placeholder="Missions et compétences recherchées..." required></textarea>
+              <label><i class="fa-solid fa-align-left" style="color:var(--primary);"></i> Description & Missions du Poste</label>
+              <textarea id="offre-desc" class="form-control" rows="3" placeholder="Missions détaillées, contexte du projet et profil recherché..." required></textarea>
             </div>
+            
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
               <div class="form-group">
-                <label>Expérience Min (ans)</label>
+                <label><i class="fa-solid fa-briefcase" style="color:var(--primary);"></i> Type de Contrat</label>
+                <select id="offre-contrat" class="form-control">
+                  <option value="CDI">CDI (Contrat Indéterminé)</option>
+                  <option value="CDD">CDD (Contrat Déterminé)</option>
+                  <option value="Stage PFE">Stage PFE / Pré-embauche</option>
+                  <option value="Freelance / Mission">Freelance / Mission</option>
+                  <option value="Alternance">Alternance</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-graduation-cap" style="color:var(--primary);"></i> Niveau d'Étude Requis</label>
+                <select id="offre-formation" class="form-control">
+                  <option value="Master / Ingénieur (Bac+5)" selected>Master / Ingénieur (Bac+5)</option>
+                  <option value="Licence / Bachelor (Bac+3)">Licence / Bachelor (Bac+3)</option>
+                  <option value="DUT / BTS (Bac+2)">DUT / BTS (Bac+2)</option>
+                  <option value="Doctorat / PhD (Bac+8)">Doctorat / PhD (Bac+8)</option>
+                  <option value="Autodidacte / Expérimenté">Autodidacte / Expérimenté</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label><i class="fa-solid fa-clock" style="color:var(--primary);"></i> Expérience Min (ans)</label>
                 <input type="number" id="offre-exp" class="form-control" value="2" min="0">
               </div>
               <div class="form-group">
-                <label>Seuil Score Min (%)</label>
+                <label><i class="fa-solid fa-bullseye" style="color:var(--primary);"></i> Seuil Score Min (%)</label>
                 <input type="number" id="offre-seuil" class="form-control" value="70" min="40" max="95" style="font-weight:700; color:var(--primary);">
               </div>
             </div>
+
             <div class="form-group">
-              <label>Compétences Obligatoires (séparées par virgule)</label>
-              <input type="text" id="offre-req" class="form-control" placeholder="Python, FastAPI, PostgreSQL">
+              <label><i class="fa-solid fa-star" style="color:#DC2626;"></i> Compétences Obligatoires (séparées par virgule)</label>
+              <input type="text" id="offre-req" class="form-control" placeholder="Python, FastAPI, PostgreSQL, Git" required>
             </div>
-            <button type="submit" class="btn btn-primary" id="btn-creer-offre">
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-wand-magic-sparkles" style="color:#8B5CF6;"></i> Compétences Souhaitées (Bonus IA, séparées par virgule)</label>
+              <input type="text" id="offre-souhaitees" class="form-control" placeholder="Docker, Kubernetes, AWS, PyTorch, CI/CD">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label><i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> Localisation / Mode</label>
+                <select id="offre-loc" class="form-control">
+                  <option value="Fès, Maroc (Hybride)">Fès (Hybride)</option>
+                  <option value="Fès, Maroc (Présentiel)">Fès (Présentiel)</option>
+                  <option value="Full Remote (Télétravail 100%)">Full Remote</option>
+                  <option value="Casablanca, Maroc (Hybride)">Casablanca (Hybride)</option>
+                  <option value="Rabat, Maroc (Hybride)">Rabat (Hybride)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-money-bill-wave" style="color:var(--primary);"></i> Salaire Estimé</label>
+                <input type="text" id="offre-salaire" class="form-control" placeholder="ex: 12 000 - 18 000 DH">
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-users" style="color:var(--primary);"></i> Postes Ouverts</label>
+                <input type="number" id="offre-postes" class="form-control" value="1" min="1">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-creer-offre" style="margin-top:6px;">
               <i class="fa-solid fa-paper-plane"></i> Publier l'Offre RH
             </button>
           </form>
@@ -1284,6 +1344,7 @@
           </div>
         </div>
       </div>
+      </div> <!-- /rh-dashboard-container -->
 
     </div>
   </div>
@@ -1342,50 +1403,186 @@
   </div>
 </div>
 
-<!-- 👤 MODAL PROFIL RH -->
-<div id="modal-profil-rh" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.65); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:500px; width:90%; position:relative; background:#fff; border-radius:16px; padding:32px; color:var(--text-primary);">
-    <button onclick="fermerProfilRH()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:22px; color:var(--text-muted); cursor:pointer;">&times;</button>
-    <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; margin-bottom:20px;">
-      <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent-gold)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
+<!-- 👤 MODAL PROFIL RH ENRICHI (INFOS, PRÉFÉRENCES, SIGNATURE & SÉCURITÉ) -->
+<div id="modal-profil-rh" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;">
+  <div class="auth-card" style="max-width:680px; width:92%; max-height:92vh; overflow-y:auto; position:relative; background:#fff; border-radius:18px; padding:28px; color:var(--text-primary); box-shadow:0 25px 50px rgba(0,0,0,0.35);">
+    <button onclick="fermerProfilRH()" style="position:absolute; top:18px; right:18px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
+    
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:18px;">
+      <div style="width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg, #4F46E5, #F59E0B); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 8px 20px rgba(79,70,229,0.3);" id="profil-modal-avatar">
         R
       </div>
-      <div>
-        <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
-        <span style="background:#EEF2FF; color:var(--primary); font-size:12px; font-weight:700; padding:3px 12px; border-radius:20px; border:1px solid #C7D2FE;">Responsable Recrutement RH</span>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <h3 style="font-size:22px; font-weight:800; color:var(--text-primary);" id="profil-modal-name">recruteur</h3>
+          <span id="profil-modal-badge" style="background:#EEF2FF; color:var(--primary); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; border:1px solid #C7D2FE;">👤 Responsable RH</span>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:2px;" id="profil-modal-title-display">Responsable Recrutement — ArtiWeb RH</p>
       </div>
     </div>
 
-    <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:20px; font-size:13px; display:flex; flex-direction:column; gap:10px;">
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-building" style="color:var(--primary);"></i> Entreprise</span>
-        <strong>ArtiWeb Fès — Maroc</strong>
+    <!-- STATS RAPIDES RECRUTEUR -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px;">
+      <div style="background:var(--primary-light); border:1px solid #C7D2FE; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-briefcase"></i> Offres Actives</span>
+        <div style="font-size:20px; font-weight:800; color:var(--primary);" id="profil-stat-offres">0</div>
       </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> E-mail officiel</span>
-        <strong>recruteur@artiweb.ma</strong>
+      <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-users"></i> Candidatures</span>
+        <div style="font-size:20px; font-weight:800; color:#D97706;" id="profil-stat-candidats">0</div>
       </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-shield-halved" style="color:var(--accent-green);"></i> Statut compte</span>
-        <strong style="color:var(--accent-green);">Actif & Sécurisé</strong>
-      </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span style="color:var(--text-muted);"><i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Rôle API</span>
-        <strong>Administrateur RH</strong>
+      <div style="background:#D1FAE5; border:1px solid #A7F3D0; border-radius:12px; padding:14px; text-align:center;">
+        <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-calendar-check"></i> Entretiens</span>
+        <div style="font-size:20px; font-weight:800; color:#059669;" id="profil-stat-entretiens">0</div>
       </div>
     </div>
 
-    <button class="btn btn-primary" onclick="doLogout()" style="background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3);">
-      <i class="fa-solid fa-power-off"></i> Se déconnecter du compte
-    </button>
+    <!-- BARRE D'ONGLETS DU PROFIL RH -->
+    <div style="display:flex; gap:8px; border-bottom:1px solid var(--border); margin-bottom:18px; overflow-x:auto; padding-bottom:4px;">
+      <button onclick="changerOngletProfil('infos')" id="tab-btn-infos" class="tab-profil-btn active-tab" style="padding:8px 14px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">
+        <i class="fa-solid fa-id-card"></i> Infos Personnelles
+      </button>
+      <button onclick="changerOngletProfil('prefs')" id="tab-btn-prefs" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-sliders"></i> Préférences RH
+      </button>
+      <button onclick="changerOngletProfil('signature')" id="tab-btn-signature" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-pen-nib"></i> Signature E-mail
+      </button>
+      <button onclick="changerOngletProfil('securite')" id="tab-btn-securite" class="tab-profil-btn" style="padding:8px 14px; background:#fff; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-lock"></i> Sécurité
+      </button>
+    </div>
+
+    <!-- 📌 TAB 1 : INFOS PERSONNELLES -->
+    <div id="tab-content-infos" class="tab-profil-content" style="display:block;">
+      <form onsubmit="sauvegarderInfosProfilRH(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Nom & Prénom</label>
+            <input type="text" id="profil-fullname" placeholder="ex: Fatima Mekki" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Adresse E-mail Pro</label>
+            <input type="email" id="profil-email-input" placeholder="recruteur@artiweb.ma" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Intitulé du Poste</label>
+            <input type="text" id="profil-title-input" placeholder="ex: Responsable Recrutement Tech" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Téléphone Professionnel</label>
+            <input type="tel" id="profil-phone-input" placeholder="+212 6 00 00 00 00" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Département / Filiale</label>
+          <input type="text" id="profil-dept-input" placeholder="ex: Direction RH & Talents — ArtiWeb Fès" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-floppy-disk"></i> Enregistrer les Informations
+        </button>
+      </form>
+    </div>
+
+    <!-- ⚙️ TAB 2 : PRÉFÉRENCES RH & NOTIFICATIONS -->
+    <div id="tab-content-prefs" class="tab-profil-content" style="display:none;">
+      <form onsubmit="sauvegarderPrefsProfilRH(event)" style="display:flex; flex-direction:column; gap:14px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🔊 Signal Sonore de Réception CV</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Joue un son discret lors de la réception d'un nouveau CV en direct.</p>
+          </div>
+          <input type="checkbox" id="pref-sound-toggle" checked style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary);">
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🛡️ Activation du Mode Anonyme au Démarrage</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Masque automatiquement les noms et e-mails des candidats lors de la connexion.</p>
+          </div>
+          <input type="checkbox" id="pref-anonyme-auto" style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary);">
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <strong style="font-size:13px; color:var(--text-primary);">🔔 Notifications Système Navigateur</strong>
+            <p style="font-size:11px; color:var(--text-muted);">Affiche des popups système lorsque vous êtes sur un autre onglet.</p>
+          </div>
+          <button type="button" onclick="demanderPermissionNotifsNav()" style="padding:6px 12px; background:var(--primary-light); color:var(--primary); border:1px solid #C7D2FE; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">
+            <i class="fa-solid fa-bell"></i> Tester / Autoriser
+          </button>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Seuil d'Alerte IA Prioritaire (%)</label>
+          <input type="number" id="pref-seuil-alerte" value="80" min="50" max="95" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none; font-weight:700; color:var(--primary);">
+          <span style="font-size:11px; color:var(--text-muted);">Les candidats avec un score supérieur à ce seuil afficheront une alerte dorée prioritaire.</span>
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-sliders"></i> Enregistrer les Préférences
+        </button>
+      </form>
+    </div>
+
+    <!-- ✍️ TAB 3 : SIGNATURE & MODÈLES CONVOCATIONS -->
+    <div id="tab-content-signature" class="tab-profil-content" style="display:none;">
+      <form onsubmit="sauvegarderSignatureRH(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Signature par Défaut pour Convocations E-mail</label>
+          <textarea id="profil-signature-input" rows="4" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:12px; outline:none; font-family:monospace;" placeholder="Bien cordialement,&#10;L'Équipe Recrutement ArtiWeb&#10;Contact : recrutement@artiweb.ma"></textarea>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Note / Modèle de Convocations Rapide</label>
+          <input type="text" id="profil-convoc-note" placeholder="ex: Se présenter à l'accueil avec une pièce d'identité 10 min avant l'entretien." style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:12px; outline:none;">
+        </div>
+
+        <button type="submit" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; display:flex; align-items:center; gap:6px; margin-top:4px;">
+          <i class="fa-solid fa-pen-nib"></i> Enregistrer la Signature
+        </button>
+      </form>
+    </div>
+
+    <!-- 🔒 TAB 4 : SÉCURITÉ & MOT DE PASSE -->
+    <div id="tab-content-securite" class="tab-profil-content" style="display:none;">
+      <form onsubmit="doChangerMotDePasse(event)" style="display:flex; flex-direction:column; gap:12px; background:var(--bg-page); border:1px solid var(--border); border-radius:12px; padding:16px;">
+        <h4 style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">
+          <i class="fa-solid fa-key" style="color:var(--accent-gold);"></i> Modifier mon mot de passe de connexion
+        </h4>
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:4px;">Ancien mot de passe</label>
+          <input type="password" id="change-pass-old" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:4px;">Nouveau mot de passe (min. 6 caractères)</label>
+          <input type="password" id="change-pass-new" placeholder="••••••••" required minlength="6" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none;">
+        </div>
+        <button type="submit" id="btn-change-pass" style="padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-self:flex-end; transition:all 0.2s; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-check"></i> Mettre à jour le mot de passe
+        </button>
+      </form>
+    </div>
+
+    <!-- BOUTON SE DÉCONNECTER -->
+    <div style="display:flex; gap:10px; margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+      <button class="btn btn-primary" onclick="doLogout()" style="flex:1; background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.3); padding:11px; font-weight:700;">
+        <i class="fa-solid fa-power-off"></i> Se déconnecter du compte
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- ✏️ MODAL MODIFIER OFFRE -->
 <div id="modal-modifier-offre" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
-  <div class="auth-card" style="max-width:560px; width:90%; position:relative; background:#fff; border-radius:16px; padding:32px; color:var(--text-primary);">
+  <div class="auth-card" style="max-width:620px; width:92%; position:relative; background:#fff; border-radius:16px; padding:28px 32px; color:var(--text-primary); max-height:90vh; overflow-y:auto;">
     <button onclick="fermerModalModifierOffre()" style="position:absolute; top:16px; right:16px; border:none; background:none; font-size:22px; color:var(--text-muted); cursor:pointer;">&times;</button>
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
       <div style="width:44px; height:44px; border-radius:12px; background:var(--primary-light); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:20px;">
         <i class="fa-solid fa-pen-to-square"></i>
       </div>
@@ -1395,32 +1592,68 @@
       </div>
     </div>
 
-    <form onsubmit="sauvegarderModificationOffre(event)" style="display:flex; flex-direction:column; gap:14px;">
+    <form onsubmit="sauvegarderModificationOffre(event)" style="display:flex; flex-direction:column; gap:12px;">
       <input type="hidden" id="edit-offre-id">
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Titre du Poste</label>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Titre du Poste</label>
         <input type="text" id="edit-offre-titre" class="form-control" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
       </div>
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Description du Poste</label>
-        <textarea id="edit-offre-desc" class="form-control" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);"></textarea>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Description du Poste</label>
+        <textarea id="edit-offre-desc" class="form-control" rows="3" required style="color:var(--text-primary); background:#fff; border:1px solid var(--border);"></textarea>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="form-field">
-          <label style="color:var(--text-secondary);">Expérience Min (ans)</label>
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Type de Contrat</label>
+          <select id="edit-offre-contrat" class="form-control">
+            <option value="CDI">CDI</option>
+            <option value="CDD">CDD</option>
+            <option value="Stage PFE">Stage PFE / Pré-embauche</option>
+            <option value="Freelance / Mission">Freelance / Mission</option>
+            <option value="Alternance">Alternance</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Niveau d'Étude</label>
+          <select id="edit-offre-formation" class="form-control">
+            <option value="Master / Ingénieur (Bac+5)">Master / Ingénieur (Bac+5)</option>
+            <option value="Licence / Bachelor (Bac+3)">Licence / Bachelor (Bac+3)</option>
+            <option value="DUT / BTS (Bac+2)">DUT / BTS (Bac+2)</option>
+            <option value="Doctorat / PhD (Bac+8)">Doctorat / PhD (Bac+8)</option>
+            <option value="Autodidacte / Expérimenté">Autodidacte / Expérimenté</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Expérience Min (ans)</label>
           <input type="number" id="edit-offre-exp" class="form-control" min="0" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
         </div>
         <div class="form-field">
-          <label style="color:var(--text-secondary);">Seuil Score Min (%)</label>
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Seuil Score Min (%)</label>
           <input type="number" id="edit-offre-seuil" class="form-control" min="40" max="95" style="color:var(--primary); font-weight:700; background:#fff; border:1px solid var(--border);">
         </div>
       </div>
       <div class="form-field">
-        <label style="color:var(--text-secondary);">Compétences Obligatoires</label>
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Compétences Obligatoires</label>
         <input type="text" id="edit-offre-req" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
       </div>
+      <div class="form-field">
+        <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Compétences Souhaitées (Bonus IA)</label>
+        <input type="text" id="edit-offre-souhaitees" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Localisation</label>
+          <input type="text" id="edit-offre-loc" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+        </div>
+        <div class="form-field">
+          <label style="color:var(--text-secondary); font-size:11px; font-weight:700;">Salaire Estimé</label>
+          <input type="text" id="edit-offre-salaire" class="form-control" style="color:var(--text-primary); background:#fff; border:1px solid var(--border);">
+        </div>
+      </div>
 
-      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Enregistrer les Modifications</button>
+      <button type="submit" class="btn btn-primary" style="margin-top:8px;"><i class="fa-solid fa-save"></i> Enregistrer les Modifications</button>
     </form>
   </div>
 </div>
@@ -1548,12 +1781,14 @@
   const WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + (window.location.host || '127.0.0.1:8000') + '/ws/notifications';
   let TOKEN = localStorage.getItem("recrutia_token") || null;
   let USERNAME = localStorage.getItem("recrutia_username") || "recruteur";
+  let USER_ROLE = null; // Rôle global de l'utilisateur connecté (recruteur)
   let toutesOffres = [];
   let toutesCandidatures = [];
   let knownCandidateIds = new Set();
   let candidatureActive = null;
   let filtreActif = 'TOUS';
   let modeAnonymeActif = false;
+  let pollingInterval = null; // Référence au setInterval pour pouvoir l'arrêter
 
   // 🔔 NOTIFICATIONS PERSISTANTES STOCKÉES EN LOCALSTORAGE (REQUIS PAR L'UTILISATEUR)
   let notificationsList = JSON.parse(localStorage.getItem("recrutia_notifications") || "[]");
@@ -1568,11 +1803,13 @@
         if (res.ok) {
           const me = await res.json();
           USERNAME = me.username;
+          USER_ROLE = me.role;
           afficherApp();
           return;
         }
       } catch {}
-      TOKEN = null; 
+      TOKEN = null;
+      USER_ROLE = null;
       localStorage.removeItem("recrutia_token");
       localStorage.removeItem("recrutia_username");
     }
@@ -1582,10 +1819,22 @@
     initialiserApp();
     initWebSocket();
     afficherNotifications();
-    setInterval(chargerCandidatures, 3000); // Surveillance active en continu
+    // Le polling des candidatures est démarré dans afficherApp() uniquement pour les RH
   });
 
   function headers() { return { "Content-Type": "application/json", "Authorization": `Bearer ${TOKEN}` }; }
+
+  // ── Gestion centralisée des erreurs d'authentification 401 ───────────────────
+  function handleAuthError() {
+    TOKEN = null;
+    USER_ROLE = null;
+    localStorage.removeItem("recrutia_token");
+    localStorage.removeItem("recrutia_username");
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+    document.getElementById("app-screen").classList.remove("visible");
+    document.getElementById("auth-screen").classList.remove("hidden");
+    toast("Session expirée. Veuillez vous reconnecter.", "error");
+  }
 
   // ── WEBSOCKET EN DIRECT & NOTIFICATIONS PERSISTANTES ──────────────────────────────
   function jouerSonNotification() {
@@ -1695,6 +1944,12 @@
     notificationsList.unshift(item);
     localStorage.setItem("recrutia_notifications", JSON.stringify(notificationsList));
     afficherNotifications();
+    const bell = document.getElementById("notif-bell-chip");
+    if (bell) {
+      bell.classList.remove("bell-animate");
+      void bell.offsetWidth;
+      bell.classList.add("bell-animate");
+    }
   }
 
   function afficherNotifications() {
@@ -1809,13 +2064,173 @@
     fermerConfigIA();
   }
 
-  // 👤 PROFIL RH MODAL
-  function ouvrirProfilRH() {
+  // 👤 PROFIL RH MODAL & GESTION DES PREFERENCES
+  let userRole = 'recruteur';
+
+  function changerOngletProfil(tabName) {
+    document.querySelectorAll(".tab-profil-btn").forEach(btn => {
+      btn.style.background = "#fff";
+      btn.style.color = "var(--text-secondary)";
+      btn.style.borderColor = "var(--border)";
+      btn.classList.remove("active-tab");
+    });
+    document.querySelectorAll(".tab-profil-content").forEach(content => {
+      content.style.display = "none";
+    });
+
+    const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+    if (activeBtn) {
+      activeBtn.style.background = "var(--primary-light)";
+      activeBtn.style.color = "var(--primary)";
+      activeBtn.style.borderColor = "#C7D2FE";
+      activeBtn.classList.add("active-tab");
+    }
+    const activeContent = document.getElementById(`tab-content-${tabName}`);
+    if (activeContent) activeContent.style.display = "block";
+  }
+
+  function chargerDetailsProfilRH() {
+    const infos = JSON.parse(localStorage.getItem("recrutia_rh_infos") || '{}');
+    document.getElementById("profil-fullname").value = infos.fullname || (USERNAME === 'fatimamekki' ? 'Fatima Mekki' : 'Responsable RH');
+    document.getElementById("profil-email-input").value = infos.email || `${USERNAME}@artiweb.ma`;
+    document.getElementById("profil-title-input").value = infos.title || 'Senior Talent Acquisition Manager';
+    document.getElementById("profil-phone-input").value = infos.phone || '+212 6 61 00 11 22';
+    document.getElementById("profil-dept-input").value = infos.dept || 'Direction RH & Talents — ArtiWeb Fès';
+    
+    const displayTitle = document.getElementById("profil-modal-title-display");
+    if (displayTitle) displayTitle.innerText = `${infos.title || 'Responsable Recrutement'} — ${infos.dept || 'ArtiWeb RH'}`;
+
+    const prefs = JSON.parse(localStorage.getItem("recrutia_rh_prefs") || '{"sound":true,"anonyme":false,"seuil":80}');
+    document.getElementById("pref-sound-toggle").checked = prefs.sound !== false;
+    document.getElementById("pref-anonyme-auto").checked = prefs.anonyme === true;
+    document.getElementById("pref-seuil-alerte").value = prefs.seuil || 80;
+
+    const sig = JSON.parse(localStorage.getItem("recrutia_rh_signature") || '{}');
+    document.getElementById("profil-signature-input").value = sig.text || `Bien cordialement,\n${infos.fullname || USERNAME}\n${infos.title || 'Département Recrutement'}\nArtiWeb Fès — ${infos.email || USERNAME + '@artiweb.ma'}`;
+    document.getElementById("profil-convoc-note").value = sig.note || "Se présenter à l'accueil 10 min avant l'heure fixée.";
+  }
+
+  function sauvegarderInfosProfilRH(e) {
+    e.preventDefault();
+    const infos = {
+      fullname: document.getElementById("profil-fullname").value.trim(),
+      email: document.getElementById("profil-email-input").value.trim(),
+      title: document.getElementById("profil-title-input").value.trim(),
+      phone: document.getElementById("profil-phone-input").value.trim(),
+      dept: document.getElementById("profil-dept-input").value.trim()
+    };
+    localStorage.setItem("recrutia_rh_infos", JSON.stringify(infos));
+    const displayTitle = document.getElementById("profil-modal-title-display");
+    if (displayTitle) displayTitle.innerText = `${infos.title} — ${infos.dept}`;
+    toast("Informations personnelles mises à jour !", "success");
+    ajouterNotification(`Profil RH mis à jour : ${infos.fullname} (${infos.title})`);
+  }
+
+  function sauvegarderPrefsProfilRH(e) {
+    e.preventDefault();
+    const prefs = {
+      sound: document.getElementById("pref-sound-toggle").checked,
+      anonyme: document.getElementById("pref-anonyme-auto").checked,
+      seuil: parseFloat(document.getElementById("pref-seuil-alerte").value) || 80
+    };
+    localStorage.setItem("recrutia_rh_prefs", JSON.stringify(prefs));
+    toast("Préférences RH enregistrées !", "success");
+  }
+
+  function sauvegarderSignatureRH(e) {
+    e.preventDefault();
+    const sig = {
+      text: document.getElementById("profil-signature-input").value.trim(),
+      note: document.getElementById("profil-convoc-note").value.trim()
+    };
+    localStorage.setItem("recrutia_rh_signature", JSON.stringify(sig));
+    toast("Signature d'e-mail enregistrée avec succès !", "success");
+  }
+
+  function demanderPermissionNotifsNav() {
+    if ("Notification" in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          new Notification("🔔 RecrutIA RH", { body: "Les notifications du navigateur sont bien activées !" });
+          toast("Notifications navigateur activées !", "success");
+        } else {
+          toast("Permission refusée par le navigateur.", "error");
+        }
+      });
+    } else {
+      toast("Votre navigateur ne supporte pas les notifications.", "error");
+    }
+  }
+
+  async function ouvrirProfilRH() {
     document.getElementById("profil-modal-name").innerText = USERNAME;
-    document.getElementById("profil-modal-avatar").innerText = USERNAME.charAt(0).toUpperCase();
+    document.getElementById("profil-modal-avatar").innerText = USERNAME ? USERNAME.charAt(0).toUpperCase() : 'R';
+    document.getElementById("profil-stat-offres").innerText = toutesOffres ? toutesOffres.length : 0;
+    document.getElementById("profil-stat-candidats").innerText = toutesCandidatures ? toutesCandidatures.length : 0;
+    document.getElementById("profil-stat-entretiens").innerText = document.getElementById("sb-count-entretiens") ? document.getElementById("sb-count-entretiens").innerText : 0;
+
+    const badge = document.getElementById("profil-modal-badge");
+    if (badge) {
+      badge.innerText = "👤 Responsable RH";
+      badge.style.background = "#EEF2FF";
+      badge.style.color = "#4F46E5";
+      badge.style.borderColor = "#C7D2FE";
+    }
+
+    chargerDetailsProfilRH();
+    changerOngletProfil('infos');
     document.getElementById("modal-profil-rh").style.display = "flex";
   }
+
   function fermerProfilRH() { document.getElementById("modal-profil-rh").style.display = "none"; }
+
+  async function doChangerMotDePasse(e) {
+    e.preventDefault();
+    const oldPass = document.getElementById("change-pass-old").value;
+    const newPass = document.getElementById("change-pass-new").value;
+    const btn = document.getElementById("btn-change-pass");
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mise à jour...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API}/auth/change-password`, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ old_password: oldPass, new_password: newPass })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast("Mot de passe modifié avec succès !");
+        document.getElementById("change-pass-old").value = "";
+        document.getElementById("change-pass-new").value = "";
+      } else {
+        toast(data.detail || "Erreur lors du changement de mot de passe.", "error");
+      }
+    } catch (err) {
+      toast("Erreur de connexion serveur.", "error");
+    }
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Mettre à jour le mot de passe';
+    btn.disabled = false;
+  }
+
+  // Fonctions de gestion des comptes (simplifiées — rôle unique Recruteur RH)
+  function chargerListeUtilisateursAdmin() { /* non utilisé */ }
+  function ouvrirGestionComptes() { /* non utilisé */ }
+  function fermerGestionComptes() { /* non utilisé */ }
+  function toggleFormNouveauCompteAdmin() { /* non utilisé */ }
+  async function basculerStatutUserAdmin() { /* non utilisé */ }
+  async function chargerGestionComptesAdmin() { /* non utilisé */ }
+  async function doCreerUserAdmin() { /* non utilisé */ }
+  async function supprimerUserAdmin() { /* non utilisé */ }
+
+
+  function exporterCandidaturesCSV() {
+    const token = localStorage.getItem("recrutia_token");
+    window.location.href = `${API}/candidatures/export/csv?token=${encodeURIComponent(token || '')}`;
+    toast("Téléchargement du fichier CSV des candidatures...", "success");
+  }
+
+
 
   async function doLogin(e) {
     e.preventDefault();
@@ -1835,18 +2250,58 @@
   }
 
   function doLogout() {
-    TOKEN = null; USERNAME = null;
-    localStorage.removeItem("recrutia_token"); 
+    TOKEN = null; USERNAME = null; USER_ROLE = null;
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+    localStorage.removeItem("recrutia_token");
     localStorage.removeItem("recrutia_username");
     document.getElementById("app-screen").classList.remove("visible");
     document.getElementById("auth-screen").classList.remove("hidden");
   }
 
-  function afficherApp() {
+  async function afficherApp() {
     document.getElementById("auth-screen").classList.add("hidden");
     document.getElementById("app-screen").classList.add("visible");
     document.getElementById("sb-user-name").innerText = USERNAME;
     document.getElementById("sb-avatar").innerText = USERNAME.substring(0, 1).toUpperCase();
+
+    const navCandidats = document.getElementById("nav-rh-candidats");
+    const navOffres = document.getElementById("nav-rh-offres");
+    const navCalendrier = document.getElementById("nav-rh-calendrier");
+    const rhContainer = document.getElementById("rh-dashboard-container");
+    const pageTitle = document.getElementById("page-title");
+    const pageSub = document.getElementById("page-subtitle");
+    const roleSpan = document.getElementById("sb-user-role");
+    const brandSub = document.getElementById("sb-brand-sub");
+    const dashboardLabel = document.getElementById("sb-dashboard-label");
+    const profilLabel = document.getElementById("sb-profil-label");
+
+    try {
+      const res = await fetch(`${API}/auth/me`, { headers: headers() });
+      if (res.status === 401) { handleAuthError(); return; }
+      if (res.ok) {
+        const me = await res.json();
+        USER_ROLE = me.role;
+      }
+    } catch {}
+
+    // --- BARRE LATÉRALE ET ESPACE DÉDIÉS AU RECRUTEUR RH ---
+    if (roleSpan) roleSpan.innerText = 'Responsable RH';
+    if (brandSub) brandSub.innerText = 'ArtiWeb RH';
+    if (dashboardLabel) dashboardLabel.innerText = 'Tableau de bord';
+    if (profilLabel) profilLabel.innerText = 'Mon Profil RH';
+
+    if (navCandidats) navCandidats.style.display = 'flex';
+    if (navOffres) navOffres.style.display = 'flex';
+    if (navCalendrier) navCalendrier.style.display = 'flex';
+
+    if (rhContainer) rhContainer.style.display = 'block';
+
+    if (pageTitle) pageTitle.innerText = 'Tableau de bord RH & Scoring IA Multi-Critères';
+    if (pageSub) pageSub.innerText = "Gestion d'offres, Ingestion de CVs & Explicabilité";
+
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(chargerCandidatures, 3000);
+
     chargerOffres();
     fetch(`${API}/entretiens`, { headers: headers() })
       .then(r => r.ok ? r.json() : [])
@@ -1860,23 +2315,44 @@
 
   async function chargerAudit() {
     const container = document.getElementById("audit-list-container");
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Chargement...</div>';
+    const feedContainer = document.getElementById("admin-main-audit-feed");
+    const kpiAudits = document.getElementById("admin-kpi-audits");
+    if (container) container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Chargement...</div>';
+    
     try {
       const res = await fetch(`${API}/audit`, { headers: headers() });
       if (res.ok) {
         const logs = await res.json();
-        container.innerHTML = "";
-        logs.forEach(log => {
-          container.innerHTML += `
-            <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:12px;">
-              <div style="display:flex; justify-content:space-between;">
-                <strong><i class="fa-solid fa-user-circle"></i> ${log.utilisateur || 'Système'}</strong>
-                <span style="color:var(--text-muted);">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
-              </div>
-              <div style="color:var(--primary); font-weight:600; margin-top:4px;">${log.action}</div>
-              <div style="color:var(--text-secondary); font-family:monospace; font-size:11px; margin-top:4px;">${JSON.stringify(log.details)}</div>
-            </div>`;
-        });
+        if (kpiAudits) kpiAudits.innerText = logs.length || 0;
+
+        if (container) {
+          container.innerHTML = "";
+          logs.forEach(log => {
+            container.innerHTML += `
+              <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:12px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <strong><i class="fa-solid fa-user-circle"></i> ${log.utilisateur || 'Système'}</strong>
+                  <span style="color:var(--text-muted);">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+                </div>
+                <div style="color:var(--primary); font-weight:600; margin-top:4px;">${log.action}</div>
+                <div style="color:var(--text-secondary); font-family:monospace; font-size:11px; margin-top:4px;">${JSON.stringify(log.details)}</div>
+              </div>`;
+          });
+        }
+
+        if (feedContainer) {
+          feedContainer.innerHTML = "";
+          logs.slice(0, 8).forEach(log => {
+            feedContainer.innerHTML += `
+              <div style="background:var(--bg-page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12px; display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <strong><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> ${log.utilisateur || 'Système'}</strong>
+                  <span style="margin-left:8px; color:var(--primary); font-weight:600;">${log.action}</span>
+                </div>
+                <span style="color:var(--text-muted); font-size:11px;">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+              </div>`;
+          });
+        }
       }
     } catch {}
   }
@@ -1940,12 +2416,18 @@
     const o = toutesOffres.find(item => item.id === offreId);
     if (!o) return;
     document.getElementById("edit-offre-id").value = o.id;
-    document.getElementById("edit-offre-titre").value = o.titre;
+    document.getElementById("edit-offre-titre").value = o.titre || "";
     document.getElementById("edit-offre-desc").value = o.description || "";
+    document.getElementById("edit-offre-contrat").value = o.type_contrat || "CDI";
+    document.getElementById("edit-offre-formation").value = o.formation_exigee || "Master / Ingénieur (Bac+5)";
     document.getElementById("edit-offre-exp").value = o.experience_min_annees || 0;
     document.getElementById("edit-offre-seuil").value = o.seuil_score_min || 70;
     const comps = Array.isArray(o.competences_obligatoires) ? o.competences_obligatoires.join(", ") : (o.competences_obligatoires || "");
     document.getElementById("edit-offre-req").value = comps;
+    const souhaits = Array.isArray(o.competences_souhaitees) ? o.competences_souhaitees.join(", ") : (o.competences_souhaitees || "");
+    document.getElementById("edit-offre-souhaitees").value = souhaits;
+    document.getElementById("edit-offre-loc").value = o.localisation || "Fès, Maroc (Hybride)";
+    document.getElementById("edit-offre-salaire").value = o.salaire_estime || "Selon profil";
     document.getElementById("modal-modifier-offre").style.display = "flex";
   }
 
@@ -1957,9 +2439,14 @@
     const payload = {
       titre: document.getElementById("edit-offre-titre").value.trim(),
       description: document.getElementById("edit-offre-desc").value.trim(),
+      type_contrat: document.getElementById("edit-offre-contrat").value,
+      formation_exigee: document.getElementById("edit-offre-formation").value,
       experience_min_annees: parseInt(document.getElementById("edit-offre-exp").value) || 0,
       seuil_score_min: parseFloat(document.getElementById("edit-offre-seuil").value) || 70,
-      competences_obligatoires: document.getElementById("edit-offre-req").value.split(",").map(s => s.trim()).filter(Boolean)
+      competences_obligatoires: document.getElementById("edit-offre-req").value.split(",").map(s => s.trim()).filter(Boolean),
+      competences_souhaitees: document.getElementById("edit-offre-souhaitees").value ? document.getElementById("edit-offre-souhaitees").value.split(",").map(s => s.trim()).filter(Boolean) : [],
+      localisation: document.getElementById("edit-offre-loc").value.trim(),
+      salaire_estime: document.getElementById("edit-offre-salaire").value.trim()
     };
 
     try {
@@ -2127,6 +2614,11 @@
     const endpoint = (sel.value === "ALL" || !sel.value) ? `${API}/candidatures/toutes` : `${API}/offres/${sel.value}/candidatures`;
     try {
       const res = await fetch(endpoint, { headers: headers() });
+      if (res.status === 401) {
+        if (typeof ouvrirModalAuth === 'function') ouvrirModalAuth();
+        document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-lock"></i><p>Veuillez vous connecter pour afficher les candidats.</p></div>';
+        return;
+      }
       if (res.ok) {
         const cands = await res.json();
         
@@ -2138,18 +2630,33 @@
               const titre = c.offre?.titre || "Offre RH";
               const score = c.score || 0;
               ajouterNotification(`Nouveau CV reçu : ${nom} (${Math.round(score)}/100)`);
-              afficherNotificationCandidatureRiche(nom, score, titre, c.id);
+              if (typeof afficherNotificationCandidatureRiche === 'function') {
+                afficherNotificationCandidatureRiche(nom, score, titre, c.id);
+              }
             }
           });
         }
         
         knownCandidateIds = new Set(cands.map(c => c.id));
-        toutesCandidatures = cands;
-        document.getElementById("sb-count-candidats").innerText = toutesCandidatures.length;
+        toutesCandidatures = cands || [];
+        const countEl = document.getElementById("sb-count-candidats");
+        if (countEl) countEl.innerText = toutesCandidatures.length;
         filtrerListe();
         mettreAJourGraphiques();
+
+        // ✅ Rafraîchir automatiquement le dossier candidat actif s'il est affiché à l'écran
+        if (candidatureActive) {
+          const updated = toutesCandidatures.find(c => c.id === candidatureActive.id);
+          if (updated) {
+            afficherDetail(updated);
+          }
+        }
+      } else {
+        document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-folder-open"></i><p>Aucune candidature enregistrée pour le moment.</p></div>';
       }
-    } catch {}
+    } catch(err) {
+      document.getElementById("master-col").innerHTML = '<div class="list-empty"><i class="fa-solid fa-folder-open"></i><p>Aucune candidature disponible.</p></div>';
+    }
   }
 
   function mettreAJourGraphiques() {
@@ -2256,6 +2763,42 @@
         </div>
       </div>
 
+      ${dt.confirmation_entretien ? `
+        <div class="detail-section" style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:10px; padding:14px; margin-bottom:12px;">
+          <h4 style="color:#047857; margin-bottom:6px;"><i class="fa-solid fa-calendar-check"></i> Statut Réponse Entretien (Candidat)</h4>
+          <div style="font-size:13px; font-weight:800; color:${dt.confirmation_entretien.statut === 'CONFIRME' ? '#047857' : '#D97706'};">
+            ${dt.confirmation_entretien.statut === 'CONFIRME' ? '✅ PRÉSENCE CONFIRMÉE PAR LE CANDIDAT' : '⚠️ DEMANDE DE REPORT D\'ENTRETIEN'}
+          </div>
+          <div style="font-size:11px; color:#065F46; margin-top:4px;"><i class="fa-regular fa-clock"></i> Reçu le : ${dt.confirmation_entretien.date_reponse || ''}</div>
+          ${dt.confirmation_entretien.message ? `<div style="font-size:12px; color:#334155; margin-top:6px; font-style:italic; background:#FFF; padding:6px 10px; border-radius:6px;">"${dt.confirmation_entretien.message}"</div>` : ''}
+        </div>
+      ` : ''}
+
+      <div class="detail-section" style="background:#EEF2FF; border:1px solid #C7D2FE; border-radius:10px; padding:14px; margin-bottom:12px;">
+        <h4 style="color:#4338CA; margin-bottom:8px;"><i class="fa-solid fa-comments"></i> Fil de Discussion & Messagerie Candidat (${dt.messages_candidat ? dt.messages_candidat.length : 0})</h4>
+        
+        ${dt.messages_candidat && dt.messages_candidat.length > 0 ? `
+          <div style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto; padding-right:4px; margin-bottom:12px;">
+            ${dt.messages_candidat.map(m => `
+              <div style="background:${m.is_rh ? '#E0E7FF' : '#FFF'}; border:1px solid ${m.is_rh ? '#818CF8' : '#C7D2FE'}; border-radius:8px; padding:8px 12px; font-size:12px; margin-left:${m.is_rh ? '16px' : '0'};">
+                <div style="display:flex; justify-content:space-between; color:${m.is_rh ? '#3730A3' : 'var(--text-muted)'}; font-size:10px; font-weight:700; margin-bottom:4px;">
+                  <span><i class="fa-solid ${m.is_rh ? 'fa-user-shield' : 'fa-user'}"></i> ${m.expediteur || 'Candidat'}</span>
+                  <span><i class="fa-regular fa-clock"></i> ${m.date || ''}</span>
+                </div>
+                <div style="color:var(--text-primary); font-weight:600; line-height:1.4;">${m.texte}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : '<div style="font-size:12px; color:var(--text-muted); font-style:italic; margin-bottom:10px;">Aucun message échangé pour le moment.</div>'}
+
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-reponse-rh-${c.id}" placeholder="Écrivez votre réponse RH au candidat..." style="flex:1; padding:8px 12px; border:1px solid #C7D2FE; border-radius:6px; font-size:12px; outline:none;" onkeypress="if(event.key==='Enter') envoyerReponseRH(${c.id})">
+          <button onclick="envoyerReponseRH(${c.id})" style="padding:8px 14px; background:#4F46E5; color:#FFF; border:none; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-paper-plane"></i> Répondre
+          </button>
+        </div>
+      </div>
+
       <div class="detail-section">
         <h4><i class="fa-solid fa-chart-pie"></i> Décomposition des 4 Sous-Scores Multi-Critères</h4>
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; text-align:center;">
@@ -2296,6 +2839,26 @@
   function embaucherConfetti() {
     if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
     prendreDecision('EMBAUCHE');
+  }
+
+  async function envoyerReponseRH(candId) {
+    const inputEl = document.getElementById(`input-reponse-rh-${candId}`);
+    if (!inputEl || !inputEl.value.trim()) return;
+    const texte = inputEl.value.trim();
+    try {
+      const res = await fetch(`${API}/candidatures/${candId}/repondre-message`, {
+        method: "POST", headers: headers(),
+        body: JSON.stringify({ message: texte })
+      });
+      if (res.ok) {
+        toast("Réponse envoyée au candidat avec succès !", "success");
+        chargerCandidatures(); // Rafraîchir pour voir le message
+      } else {
+        toast("Erreur lors de l'envoi de la réponse.", "error");
+      }
+    } catch {
+      toast("Erreur serveur.", "error");
+    }
   }
 
   async function prendreDecision(decision) {
@@ -2425,21 +2988,30 @@
     const payload = {
       titre: document.getElementById('offre-titre').value.trim(),
       description: document.getElementById('offre-desc').value.trim(),
+      type_contrat: document.getElementById('offre-contrat').value,
+      formation_exigee: document.getElementById('offre-formation').value,
       experience_min_annees: parseInt(document.getElementById('offre-exp').value) || 0,
       seuil_score_min: parseFloat(document.getElementById('offre-seuil').value) || 70,
       competences_obligatoires: document.getElementById('offre-req').value.split(',').map(s => s.trim()).filter(Boolean),
-      competences_souhaitees: [],
-      formation_exigee: 'Non spécifiée'
+      competences_souhaitees: document.getElementById('offre-souhaitees').value ? document.getElementById('offre-souhaitees').value.split(',').map(s => s.trim()).filter(Boolean) : [],
+      localisation: document.getElementById('offre-loc').value,
+      salaire_estime: document.getElementById('offre-salaire').value.trim() || 'Selon profil',
+      nombre_postes: parseInt(document.getElementById('offre-postes').value) || 1
     };
     try {
       const res = await fetch(`${API}/offres`, { method: "POST", headers: headers(), body: JSON.stringify(payload) });
       if (res.ok) {
-        toast("Offre RH Publiée !", "success");
+        toast("🎉 Offre RH Publiée avec succès !", "success");
         ajouterNotification(`Nouvelle offre d'emploi publiée : ${payload.titre}`);
         document.getElementById('form-offre').reset();
         chargerOffres();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast(err.detail || "Erreur lors de la publication de l'offre.", "error");
       }
-    } catch {}
+    } catch {
+      toast("Erreur de connexion au serveur.", "error");
+    }
   }
 </script>
 <script>
