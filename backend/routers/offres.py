@@ -48,6 +48,10 @@ async def creer_offre(offre_in: OffreCreate, db: Session = Depends(get_db), curr
         competences_souhaitees=offre_in.competences_souhaitees,
         formation_exigee=offre_in.formation_exigee,
         seuil_score_min=offre_in.seuil_score_min or 70.0,
+        type_contrat=offre_in.type_contrat or "CDI",
+        localisation=offre_in.localisation or "Fès, Maroc (Hybride)",
+        salaire_estime=offre_in.salaire_estime or "Selon profil",
+        nombre_postes=offre_in.nombre_postes or 1,
         statut="ACTIF"
     )
     db.add(nouvelle_offre)
@@ -107,6 +111,10 @@ def modifier_offre(offre_id: int, offre_in: OffreUpdate, db: Session = Depends(g
     if offre_in.competences_souhaitees is not None: offre.competences_souhaitees = offre_in.competences_souhaitees
     if offre_in.formation_exigee is not None: offre.formation_exigee = offre_in.formation_exigee
     if offre_in.seuil_score_min is not None: offre.seuil_score_min = offre_in.seuil_score_min
+    if offre_in.type_contrat is not None: offre.type_contrat = offre_in.type_contrat
+    if offre_in.localisation is not None: offre.localisation = offre_in.localisation
+    if offre_in.salaire_estime is not None: offre.salaire_estime = offre_in.salaire_estime
+    if offre_in.nombre_postes is not None: offre.nombre_postes = offre_in.nombre_postes
     if offre_in.statut is not None: offre.statut = offre_in.statut
 
     db.commit()

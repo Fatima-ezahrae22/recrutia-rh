@@ -19,7 +19,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(100), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
-    role = Column(String(50), default="recruteur")   # recruteur, admin
+    role = Column(String(50), default="recruteur")   # recruteur
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -35,6 +35,10 @@ class Offre(Base):
     competences_souhaitees = Column(JSON, default=list)
     formation_exigee = Column(String(100), default="Master / Ingénieur")
     seuil_score_min = Column(Float, default=70.0)  # ✅ Seuil d'adéquation configurable par offre
+    type_contrat = Column(String(50), default="CDI")
+    localisation = Column(String(100), default="Fès, Maroc (Hybride)")
+    salaire_estime = Column(String(100), default="Selon profil")
+    nombre_postes = Column(Integer, default=1)
     statut = Column(String(50), default="ACTIF")
     created_at = Column(DateTime, default=datetime.utcnow)
 

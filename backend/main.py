@@ -315,7 +315,6 @@ def servir_inscription_rh():
 
 
 @app.get("/rh", response_class=HTMLResponse, tags=["Dashboard Web UI"])
-@app.get("/admin", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 @app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard Web UI"])
 def servir_dashboard_rh():
     """Sert l'interface RH (tableau de bord recruteur protégé)."""

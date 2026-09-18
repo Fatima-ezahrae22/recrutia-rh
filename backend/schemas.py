@@ -29,6 +29,10 @@ class OffreCreate(BaseModel):
     competences_souhaitees: List[str] = Field(default_factory=list, json_schema_extra={"example": ["Docker", "PostgreSQL"]})
     formation_exigee: str = Field("Master / Ingénieur", json_schema_extra={"example": "Master / Ingénieur"})
     seuil_score_min: float = Field(70.0, json_schema_extra={"example": 70.0})
+    type_contrat: Optional[str] = Field("CDI", json_schema_extra={"example": "CDI"})
+    localisation: Optional[str] = Field("Fès, Maroc (Hybride)", json_schema_extra={"example": "Fès, Maroc (Hybride)"})
+    salaire_estime: Optional[str] = Field("Selon profil", json_schema_extra={"example": "12 000 - 18 000 DH"})
+    nombre_postes: Optional[int] = Field(1, json_schema_extra={"example": 1})
 
     @field_validator("competences_obligatoires", "competences_souhaitees", mode="before")
     @classmethod
@@ -44,6 +48,10 @@ class OffreUpdate(BaseModel):
     competences_souhaitees: Optional[List[str]] = None
     formation_exigee: Optional[str] = None
     seuil_score_min: Optional[float] = None
+    type_contrat: Optional[str] = None
+    localisation: Optional[str] = None
+    salaire_estime: Optional[str] = None
+    nombre_postes: Optional[int] = None
     statut: Optional[str] = None
 
     @field_validator("competences_obligatoires", "competences_souhaitees", mode="before")

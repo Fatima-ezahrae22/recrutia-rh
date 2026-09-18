@@ -23,15 +23,14 @@ router = APIRouter(prefix="/api/auth", tags=["Authentification"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
-    """Inscription d'un nouveau compte recruteur ou administrateur."""
+    """Inscription d'un nouveau compte recruteur."""
     existing = db.query(User).filter(User.username == user_in.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Ce nom d'utilisateur est déjà pris.")
-    role_choisi = user_in.role if user_in.role in ["recruteur", "admin"] else "recruteur"
     user = User(
         username=user_in.username,
         hashed_password=hash_password(user_in.password),
-        role=role_choisi
+        role="recruteur"
     )
     db.add(user)
     db.commit()
@@ -71,26 +70,6 @@ def lister_utilisateurs(
     return db.query(User).order_by(User.created_at.desc()).all()
 
 
-@router.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
-def supprimer_utilisateur(
-    user_id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """Permet à un Admin de supprimer un compte utilisateur."""
-    if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Seul un Administrateur peut supprimer des comptes.")
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
-    if user.username == current_user.username:
-        raise HTTPException(status_code=400, detail="Vous ne pouvez pas supprimer votre propre compte.")
-    db.delete(user)
-    db.commit()
-    logger.info(f"[Auth] Compte {user.username} supprimé par l'admin {current_user.username}")
-    return {"message": f"Le compte '{user.username}' a été supprimé avec succès."}
-
-
 @router.post("/change-password", status_code=status.HTTP_200_OK)
 def changer_mot_de_passe(
     body: PasswordChangeRequest,
@@ -106,24 +85,3 @@ def changer_mot_de_passe(
     db.commit()
     logger.info(f"[Auth] Mot de passe modifié pour l'utilisateur {current_user.username}")
     return {"message": "Mot de passe modifié avec succès."}
-
-
-@router.patch("/users/{user_id}/status", status_code=status.HTTP_200_OK)
-def basculer_statut_utilisateur(
-    user_id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """Permet à un Admin d'activer ou suspendre un compte utilisateur."""
-    if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Seul un Administrateur peut modifier le statut des comptes.")
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
-    if user.username == current_user.username:
-        raise HTTPException(status_code=400, detail="Vous ne pouvez pas modifier le statut de votre propre compte.")
-    user.is_active = not user.is_active
-    db.commit()
-    etat = "activé" if user.is_active else "suspendu"
-    logger.info(f"[Auth] Compte {user.username} {etat} par {current_user.username}")
-    return {"message": f"Le compte '{user.username}' est désormais {etat}.", "is_active": user.is_active}
