@@ -3022,6 +3022,7 @@
     if (!container || !content) return;
 
     container.style.display = 'block';
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
     content.innerHTML = '<div style="text-align:center; padding:12px; color:#4F46E5; font-size:12px; font-weight:700;"><i class="fa-solid fa-spinner fa-spin"></i> Analyse sémantique du CV et génération des 5 questions...</div>';
 
     setTimeout(() => {
@@ -3067,6 +3068,9 @@
         </div>
       `;
       toast("5 Questions d'entretien générées par l'IA !", "success");
+      setTimeout(() => {
+        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
     }, 400);
   }
 
@@ -3217,6 +3221,15 @@
         </div>
       </div>
 
+      <!-- 🤖 CONTAINER QUESTIONS D'ENTRETIEN IA -->
+      <div class="detail-section" id="container-questions-ia-${c.id}" style="display:none; background:#F8FAFC; border:1.5px solid #818CF8; border-radius:12px; padding:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="color:#4338CA; margin:0;"><i class="fa-solid fa-clipboard-question"></i> Guide d'Entretien Technique & RH Généré par IA</h4>
+          <span style="font-size:10px; background:#EEF2FF; color:#4338CA; padding:3px 8px; border-radius:10px; font-weight:700;">Personnalisé CV</span>
+        </div>
+        <div id="content-questions-ia-${c.id}"></div>
+      </div>
+
       ${dt.confirmation_entretien ? `
         <div class="detail-section" style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:10px; padding:14px; margin-bottom:12px;">
           <h4 style="color:#047857; margin-bottom:6px;"><i class="fa-solid fa-calendar-check"></i> Statut Réponse Entretien (Candidat)</h4>
@@ -3259,14 +3272,7 @@
         ${genererSkillGapHTML(c)}
       </div>
 
-      <!-- 🤖 CONTAINER QUESTIONS D'ENTRETIEN IA -->
-      <div class="detail-section" id="container-questions-ia-${c.id}" style="display:none; background:#F8FAFC; border:1.5px solid #818CF8; border-radius:12px; padding:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <h4 style="color:#4338CA; margin:0;"><i class="fa-solid fa-clipboard-question"></i> Guide d'Entretien Technique & RH Généré par IA</h4>
-          <span style="font-size:10px; background:#EEF2FF; color:#4338CA; padding:3px 8px; border-radius:10px; font-weight:700;">Personnalisé CV</span>
-        </div>
-        <div id="content-questions-ia-${c.id}"></div>
-      </div>
+
 
       <div class="detail-section">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
