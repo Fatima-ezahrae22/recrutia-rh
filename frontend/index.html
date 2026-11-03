@@ -1020,15 +1020,16 @@
         <input type="password" id="login-pass" value="recruteur123" placeholder="••••••••" required>
       </div>
       <button class="btn-auth" type="submit" id="btn-login">
-        <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+        <i class="fa-solid fa-right-to-bracket"></i> Se connecter à l'Espace RH
       </button>
     </form>
-    <div class="demo-hint" style="text-align:left; font-size:11px; line-height:1.6;">
-      <strong>Comptes disponibles :</strong><br>
-      • 👤 Recruteur 1 : <strong>fatimamekki</strong> / <strong>fatima123</strong><br>
-      • 👤 Recruteur 2 : <strong>recruteur</strong> / <strong>recruteur123</strong>
+    
+    <div style="margin-top:16px; padding:10px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; font-size:11px; color:#C7D2FE; display:flex; align-items:center; gap:8px; justify-content:center;">
+      <i class="fa-solid fa-shield-halved" style="color:#F59E0B;"></i>
+      <span>Accès sécurisé par jetons <strong>JWT</strong> & hachage <strong>bcrypt</strong></span>
     </div>
-    <p style="text-align: center; margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.6);">
+
+    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.6);">
       Vous n'avez pas de compte ? <a href="/rh/register" style="color: #F59E0B; font-weight: 700; text-decoration: underline;">Créer un compte</a>
     </p>
   </div>
@@ -1131,6 +1132,11 @@
         <!-- Mode Anonyme Toggle Button -->
         <button class="stat-chip" onclick="toggleModeAnonyme()" id="btn-anonyme-toggle" style="cursor:pointer; background:#EEF2FF; border-color:#C7D2FE; color:#4338CA; font-weight:700;" title="Activer le recrutement à l'aveugle (masquage auto des noms/emails)">
           <i class="fa-solid fa-user-shield"></i> <span id="anonyme-label">Mode Anonyme : OFF</span>
+        </button>
+
+        <!-- ⚖️ BOUTON COMPARATEUR IA CANDIDATS (NOUVEAUTÉ DÉMO) -->
+        <button class="stat-chip header-chip-desktop" onclick="closeSidebar(); ouvrirComparateur()" style="cursor:pointer; border:none; background:#FEF3C7; color:#92400E; font-weight:700;" title="Comparer instantanément les 2 meilleurs candidats">
+          <i class="fa-solid fa-scale-balanced"></i> Comparateur IA
         </button>
 
         <!-- ⚙️ BOUTON CONFIGURATION IA & MODÈLE OLLAMA / GEMINI -->
@@ -1407,6 +1413,33 @@
       </div>
       </div> <!-- /rh-dashboard-container -->
 
+    </div>
+  </div>
+</div>
+
+<!-- ⚖️ MODAL COMPARATEUR IA CANDIDATS (CÔTE À CÔTE) -->
+<div id="modal-comparateur" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;">
+  <div class="auth-card" style="max-width:850px; width:94%; max-height:90vh; overflow-y:auto; position:relative; background:#fff; border-radius:20px; padding:28px; color:var(--text-primary); box-shadow:0 25px 50px rgba(0,0,0,0.35);">
+    <button onclick="fermerComparateur()" style="position:absolute; top:18px; right:18px; border:none; background:none; font-size:24px; color:var(--text-muted); cursor:pointer;">&times;</button>
+    
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:16px;">
+      <div style="width:48px; height:48px; border-radius:14px; background:#FEF3C7; color:#D97706; display:flex; align-items:center; justify-content:center; font-size:22px;">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </div>
+      <div>
+        <h3 style="font-size:20px; font-weight:800; color:var(--text-primary);">Comparateur Sémantique IA — Match Décisionnel</h3>
+        <p style="font-size:12px; color:var(--text-muted);">Comparaison vectorielle directe des 2 meilleurs profils candidats pour l'offre sélectionnée.</p>
+      </div>
+    </div>
+
+    <div id="comparateur-content" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <!-- Rempli dynamiquement en JS -->
+    </div>
+
+    <div style="margin-top:20px; text-align:right;">
+      <button onclick="fermerComparateur()" class="btn" style="background:#EEF2FF; color:#4338CA; border:1px solid #C7D2FE; font-weight:700;">
+        Fermer la comparaison
+      </button>
     </div>
   </div>
 </div>
@@ -2091,6 +2124,74 @@
     if (candidatureActive) afficherDetail(candidatureActive);
   }
 
+  // ⚖️ COMPARATEUR DE CANDIDATS (AIDE À LA DÉCISION)
+  function ouvrirComparateur() {
+    if (!toutesCandidatures || toutesCandidatures.length < 2) {
+      toast("Il faut au moins 2 candidatures enregistrées pour comparer !", "warning");
+      return;
+    }
+    // Prendre les 2 meilleurs candidats triés par score décroissant
+    const cands = [...toutesCandidatures].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 2);
+    const container = document.getElementById("comparateur-content");
+
+    container.innerHTML = cands.map((c, idx) => {
+      const dt = c.details_scoring || {};
+      const nom = modeAnonymeActif ? `Candidat Anonyme #${c.id}` : (c.candidat ? c.candidat.nom : 'Candidat');
+      const score = Math.round(c.score || 0);
+      const isWinner = idx === 0 && score > (cands[1]?.score || 0);
+
+      return `
+        <div style="background:${isWinner ? '#F0FDF4' : '#F8FAFC'}; border:2px solid ${isWinner ? '#10B981' : '#E2E8F0'}; border-radius:16px; padding:18px; position:relative;">
+          ${isWinner ? '<span style="position:absolute; top:-10px; right:12px; background:#10B981; color:#fff; font-size:10px; font-weight:800; padding:3px 10px; border-radius:12px; text-transform:uppercase;"><i class="fa-solid fa-crown mr-1"></i> Profil Prioritaire</span>' : ''}
+          
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:40px; height:40px; border-radius:50%; background:${isWinner ? '#10B981' : '#6366F1'}; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px;">
+              ${nom.charAt(0)}
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:var(--text-primary);">${nom}</div>
+              <div style="font-size:11px; color:var(--text-muted);">${c.offre ? c.offre.titre : 'Poste non spécifié'}</div>
+            </div>
+          </div>
+
+          <!-- Score Global -->
+          <div style="background:#fff; border:1px solid #CBD5E1; border-radius:12px; padding:12px; text-align:center; margin-bottom:14px;">
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Score de Compatibilité IA</div>
+            <div style="font-size:28px; font-weight:900; color:${score >= 70 ? '#059669' : '#D97706'};">${score}%</div>
+          </div>
+
+          <!-- Comparaison des 4 sous-scores -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; font-size:11px;">
+            <div style="background:#fff; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+              <span style="color:#047857; font-weight:700;">Tech (40%) :</span> <b>${dt.score_technique || score}%</b>
+            </div>
+            <div style="background:#fff; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+              <span style="color:#4338CA; font-weight:700;">Expérience :</span> <b>${dt.score_experience || score}%</b>
+            </div>
+            <div style="background:#fff; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+              <span style="color:#6B21A8; font-weight:700;">Soft Skills :</span> <b>${dt.score_soft_skills || score}%</b>
+            </div>
+            <div style="background:#fff; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+              <span style="color:#92400E; font-weight:700;">Forme :</span> <b>${dt.score_formation || score}%</b>
+            </div>
+          </div>
+
+          <!-- Points Forts IA -->
+          <div style="font-size:11px; color:var(--text-secondary); line-height:1.4; background:#fff; padding:10px; border-radius:10px; border:1px solid #E2E8F0;">
+            <b style="color:var(--text-primary); display:block; margin-bottom:4px;"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Synthèse IA :</b>
+            ${c.justification_ia ? c.justification_ia.slice(0, 150) + '...' : 'Évaluation vectorielle conforme aux exigences.'}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById("modal-comparateur").style.display = "flex";
+  }
+
+  function fermerComparateur() {
+    document.getElementById("modal-comparateur").style.display = "none";
+  }
+
   // ⚙️ CONFIGURATION IA & MODÈLE OLLAMA / GEMINI / OPENAI (DEMANDÉ PAR L'UTILISATEUR)
   function ouvrirConfigIA() {
     const config = JSON.parse(localStorage.getItem("recrutia_ai_config") || '{"provider":"OLLAMA","model":"llama3","prompting":"FEW_SHOT","seuil":70}');
@@ -2315,6 +2416,10 @@
     if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
     localStorage.removeItem("recrutia_token");
     localStorage.removeItem("recrutia_username");
+    fermerProfilRH();
+    if (typeof fermerCalendrier === 'function') fermerCalendrier();
+    if (typeof fermerAudit === 'function') fermerAudit();
+    if (typeof fermerConfigIA === 'function') fermerConfigIA();
     document.getElementById("app-screen").classList.remove("visible");
     document.getElementById("auth-screen").classList.remove("hidden");
   }
@@ -2444,18 +2549,34 @@
       const comps = Array.isArray(o.competences_obligatoires) ? o.competences_obligatoires : (typeof o.competences_obligatoires === 'string' ? o.competences_obligatoires.split(',') : []);
       const reqsHtml = comps.map((c, i) => `<span class="badge-skill ${colorClasses[i % colorClasses.length]}">${c.trim()}</span>`).join(" ");
       const accent = borderAccents[idx % borderAccents.length];
+      const countCands = (toutesCandidatures || []).filter(c => c.offre_id === o.id).length;
 
       const card = document.createElement("div");
-      card.style.cssText = `background:var(--bg-white); border:1px solid var(--border); border-top:4px solid ${accent}; border-radius:12px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; box-shadow:var(--shadow-sm); transition:transform 0.2s, box-shadow 0.2s;`;
+      card.style.cssText = `background:var(--bg-white); border:1px solid var(--border); border-top:4px solid ${accent}; border-radius:14px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; box-shadow:var(--shadow-sm); transition:transform 0.2s, box-shadow 0.2s;`;
       card.onmouseenter = () => { card.style.transform = 'translateY(-3px)'; card.style.boxShadow = 'var(--shadow-md)'; };
       card.onmouseleave = () => { card.style.transform = 'none'; card.style.boxShadow = 'var(--shadow-sm)'; };
 
       card.innerHTML = `
         <div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px;">
-            <strong style="font-size:15px; font-weight:700; color:var(--text-primary);">${o.titre}</strong>
-            <span style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; border:1px solid #FDE68A; flex-shrink:0;">Seuil: ${o.seuil_score_min || 70}%</span>
+            <strong style="font-size:15px; font-weight:800; color:var(--text-primary); font-family:'Outfit', sans-serif;">${o.titre}</strong>
+            <span style="background:#D1FAE5; color:#047857; font-size:10px; font-weight:800; padding:3px 10px; border-radius:20px; border:1px solid #A7F3D0; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span> Active
+            </span>
           </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+            <span style="background:#EEF2FF; color:#4338CA; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #C7D2FE;">
+              <i class="fa-solid fa-briefcase"></i> ${o.type_contrat || 'CDI'}
+            </span>
+            <span style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #FDE68A;">
+              <i class="fa-solid fa-bullseye"></i> Seuil IA: ${o.seuil_score_min || 70}%
+            </span>
+            <span style="background:#F1F5F9; color:#475569; font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid #CBD5E1;">
+              <i class="fa-solid fa-users"></i> ${countCands} candidature(s)
+            </span>
+          </div>
+
           <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:12px;">${o.description ? (o.description.length > 110 ? o.description.substring(0, 110) + '...' : o.description) : 'Description non disponible.'}</p>
           <div style="margin-top:6px;">${reqsHtml || '<span style="font-size:11px; color:var(--text-muted);">Compétences non spécifiées</span>'}</div>
         </div>
@@ -2879,8 +3000,13 @@
       </div>
 
       <div class="detail-section">
-        <h4><i class="fa-solid fa-chart-pie"></i> Décomposition des 4 Sous-Scores Multi-Critères</h4>
-        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; text-align:center;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h4 style="margin:0;"><i class="fa-solid fa-chart-pie"></i> Décomposition des 4 Sous-Scores Multi-Critères</h4>
+          <span style="font-size:11px; background:#F3E8FF; color:#6B21A8; padding:2px 8px; border-radius:12px; font-weight:700;">
+            <i class="fa-solid fa-spider"></i> Analyse Vectorielle R^384
+          </span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; text-align:center; margin-bottom:12px;">
           <div style="background:#ECFDF5; padding:10px; border-radius:8px;">
             <div style="font-size:10px; font-weight:700; color:#047857;">TECH (40%)</div>
             <div style="font-size:16px; font-weight:800; color:#047857;">${dt.score_technique || score}%</div>
@@ -2896,6 +3022,17 @@
           <div style="background:#FEF3C7; padding:10px; border-radius:8px;">
             <div style="font-size:10px; font-weight:700; color:#92400E;">FORM (15%)</div>
             <div style="font-size:16px; font-weight:800; color:#92400E;">${dt.score_formation || score}%</div>
+          </div>
+        </div>
+
+        <!-- 🌟 GRAPH RADAR CHART.JS (Pour le Professeur) -->
+        <div style="background:#FAFAFE; border:1px solid #E2E8F0; border-radius:12px; padding:10px; text-align:center;">
+          <div style="font-size:11px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span><i class="fa-solid fa-chart-radar text-indigo-500"></i> Empreinte Sémantique 4D vs Profil Cible</span>
+            <span style="font-size:10px; color:#64748B;">Similarité Cosinus : ${(score/100).toFixed(2)}</span>
+          </div>
+          <div style="position:relative; max-width:320px; height:200px; margin:0 auto;">
+            <canvas id="radarChartCandidat"></canvas>
           </div>
         </div>
       </div>
@@ -2953,6 +3090,78 @@ ${c.raw_ingestion_json?.texte_brut || `PROFIL PROFESSIONNEL & EXPÉRIENCES :
           <button class="btn-dec btn-rejete" onclick="prendreDecision('REJETE')"><i class="fa-solid fa-times"></i> Rejeter</button>
         </div>
       </div>`;
+
+    // 🎯 Rendu dynamique du Radar Chart
+    setTimeout(() => {
+      dessinerRadarCandidat(dt, score, seuil);
+    }, 50);
+  }
+
+  let radarChartInstance = null;
+  function dessinerRadarCandidat(dt, score, seuil) {
+    const canvas = document.getElementById("radarChartCandidat");
+    if (!canvas || typeof Chart === 'undefined') return;
+    if (radarChartInstance) {
+      radarChartInstance.destroy();
+      radarChartInstance = null;
+    }
+
+    const tech = dt.score_technique || score;
+    const exp = dt.score_experience || score;
+    const soft = dt.score_soft_skills || score;
+    const form = dt.score_formation || score;
+
+    radarChartInstance = new Chart(canvas, {
+      type: 'radar',
+      data: {
+        labels: ['Technique (40%)', 'Expérience (25%)', 'Soft Skills (20%)', 'Forme (15%)'],
+        datasets: [
+          {
+            label: 'Profil Candidat',
+            data: [tech, exp, soft, form],
+            backgroundColor: 'rgba(79, 70, 229, 0.25)',
+            borderColor: '#4F46E5',
+            pointBackgroundColor: '#4F46E5',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#4F46E5',
+            borderWidth: 2
+          },
+          {
+            label: 'Seuil Cible Offre',
+            data: [seuil, seuil, seuil, seuil],
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            borderColor: '#F59E0B',
+            borderDash: [4, 4],
+            pointBackgroundColor: '#F59E0B',
+            borderWidth: 1.5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            suggestedMin: 30,
+            suggestedMax: 100,
+            ticks: { display: false, stepSize: 20 },
+            pointLabels: {
+              font: { size: 10, weight: '700' },
+              color: '#475569'
+            },
+            grid: { color: 'rgba(203, 213, 225, 0.6)' },
+            angleLines: { color: 'rgba(203, 213, 225, 0.6)' }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { font: { size: 10, weight: '600' }, boxWidth: 12 }
+          }
+        }
+      }
+    });
   }
 
   function embaucherConfetti() {

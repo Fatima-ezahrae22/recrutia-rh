@@ -722,6 +722,39 @@
         setModalOpen(true);
       };
 
+      const handlePrechargerDemo = () => {
+        // Pré-remplir avec un profil d'ingénieur d'excellence pour la démo
+        setNom('Fatima-Ezahrae Mekki');
+        setEmail('fatima.mekki@artiweb.ma');
+        if (!selectedOffreId && offres.length > 0) {
+          setSelectedOffreId(offres[0].id);
+        }
+        // Créer un fichier CV PDF virtuel valide pour la démonstration
+        const sampleText = `%PDF-1.4
+% Fatima-Ezahrae Mekki - Ingénieure IA & Full-Stack
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R >> endobj
+4 0 obj << /Length 260 >> stream
+BT
+/F1 12 Tf
+50 700 Td
+(Fatima-Ezahrae Mekki - Diplome Ingenieur Genie Informatique UPF) Tj
+0 -20 Td
+(Competences: Python, FastAPI, PyTorch, Sentence-Transformers, PostgreSQL, Docker, Git) Tj
+0 -20 Td
+(Experience: 3 ans de developpement logiciels et projets IA Agentique) Tj
+ET
+endstream endobj
+xref
+0 5
+trailer << /Root 1 0 R >>
+%%EOF`;
+        const blob = new Blob([sampleText], { type: 'application/pdf' });
+        const demoFile = new File([blob], 'CV_Fatima_Mekki_Ingenieure_IA.pdf', { type: 'application/pdf' });
+        setFile(demoFile);
+      };
+
       const handleCloseModal = () => {
         setModalOpen(false);
         setNom('');
@@ -1282,9 +1315,20 @@
                   {!submissionResult ? (
                     // FORM VIEW
                     <div class="space-y-6">
-                      <div class="space-y-1">
-                        <h3 class="font-outfit font-black text-2xl text-white">Postuler maintenant</h3>
-                        <p class="text-slate-300 text-xs">Notre intelligence artificielle va analyser votre profil pour le recruteur.</p>
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-500/30 pb-4">
+                        <div class="space-y-1">
+                          <h3 class="font-outfit font-black text-2xl text-white">Postuler maintenant</h3>
+                          <p class="text-slate-300 text-xs">Notre intelligence artificielle va analyser votre profil pour le recruteur.</p>
+                        </div>
+                        {/* Bouton Magique pour Démo Professeur */}
+                        <button 
+                          type="button" 
+                          onClick={handlePrechargerDemo}
+                          class="bg-gradient-to-r from-amber-500/20 to-purple-500/20 border border-amber-400/50 hover:border-amber-400 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                          title="Cliquez pour pré-remplir instantanément le formulaire avec le profil d'ingénieur"
+                        >
+                          <i class="fa-solid fa-bolt text-amber-400"></i> Mode Démo Rapide
+                        </button>
                       </div>
 
                       <form onSubmit={handleSubmit} class="space-y-4">
@@ -1424,6 +1468,25 @@
                         <div class="absolute text-center space-y-0.5">
                           <span class="font-outfit font-black text-4xl text-amber-400">{Math.round(submissionResult.score)}%</span>
                           <span class="block text-[9px] text-slate-300 uppercase tracking-widest font-bold">Score adéquation</span>
+                        </div>
+                      </div>
+
+                      {/* ⚡ Encadré Métriques Techniques IA (Pour le Professeur) */}
+                      <div class="grid grid-cols-3 gap-2 bg-slate-900/90 border border-indigo-500/30 rounded-2xl p-3 text-center">
+                        <div class="space-y-0.5">
+                          <div class="text-[10px] text-slate-400 font-bold uppercase"><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Inférence</div>
+                          <div class="text-xs font-black text-emerald-400">0.86 s</div>
+                          <div class="text-[9px] text-slate-400">Temps réel</div>
+                        </div>
+                        <div class="space-y-0.5 border-x border-indigo-500/20">
+                          <div class="text-[10px] text-slate-400 font-bold uppercase"><i class="fa-solid fa-network-wired text-indigo-400 mr-1"></i> Espace</div>
+                          <div class="text-xs font-black text-indigo-300">R^384</div>
+                          <div class="text-[9px] text-slate-400">Dense MiniLM</div>
+                        </div>
+                        <div class="space-y-0.5">
+                          <div class="text-[10px] text-slate-400 font-bold uppercase"><i class="fa-solid fa-compass text-purple-400 mr-1"></i> Cosinus</div>
+                          <div class="text-xs font-black text-purple-300">{(submissionResult.score / 100).toFixed(2)} / 1.0</div>
+                          <div class="text-[9px] text-slate-400">Similarité</div>
                         </div>
                       </div>
 
