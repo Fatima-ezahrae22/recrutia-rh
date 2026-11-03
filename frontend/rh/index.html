@@ -1907,6 +1907,26 @@
       localStorage.removeItem("recrutia_token");
       localStorage.removeItem("recrutia_username");
     }
+
+    // ⚡ Auto-connexion transparente pour la démo
+    try {
+      const loginRes = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "recruteur", password: "recruteur123" })
+      });
+      if (loginRes.ok) {
+        const data = await loginRes.json();
+        TOKEN = data.access_token;
+        USERNAME = data.username;
+        USER_ROLE = "recruteur";
+        localStorage.setItem("recrutia_token", TOKEN);
+        localStorage.setItem("recrutia_username", USERNAME);
+        afficherApp();
+      }
+    } catch (e) {
+      console.warn("Auto-login impossible:", e);
+    }
   }
 
   window.addEventListener("DOMContentLoaded", () => {
