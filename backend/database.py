@@ -15,7 +15,9 @@ def _get_database_url():
     env_url = os.environ.get("DATABASE_URL")
     if env_url:
         if env_url.startswith("postgres://"):
-            env_url = env_url.replace("postgres://", "postgresql://", 1)
+            env_url = env_url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif env_url.startswith("postgresql://") and not env_url.startswith("postgresql+"):
+            env_url = env_url.replace("postgresql://", "postgresql+psycopg2://", 1)
         return env_url
     if os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         return "sqlite:////tmp/agent_rh.db"
