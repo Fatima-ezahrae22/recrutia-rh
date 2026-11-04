@@ -124,9 +124,7 @@ def _creer_candidatures_demo():
                         nom=c_data["nom"],
                         email=c_data["email"],
                         telephone=c_data["tel"],
-                        annees_experience=c_data["exp"],
-                        competences_json=c_data["comp"],
-                        diplome="Master / Ingénieur"
+                        cv_fichier_nom="CV_demo.pdf"
                     )
                     db.add(candidat)
                     db.flush()
